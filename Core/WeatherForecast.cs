@@ -1,4 +1,4 @@
-namespace ProjectBank.Shared
+namespace ProjectBank.Core
 {
     public class WeatherForecast
     {

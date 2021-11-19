@@ -14,7 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Client\ProjectBank.Client.csproj" />
-    <ProjectReference Include="..\Shared\ProjectBank.Shared.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
