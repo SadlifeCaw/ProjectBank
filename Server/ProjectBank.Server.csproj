@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>ProjectBank.Server-882CBBF0-1F5F-4090-9538-C3D5A0279757</UserSecretsId>
+    <UserSecretsId>ProjectBank.Server-837DB720-1094-4FD3-A708-7C14CC722E40</UserSecretsId>
     <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
   </PropertyGroup>
 
@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\ProjectBank.Client.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
