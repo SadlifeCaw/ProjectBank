@@ -8,6 +8,7 @@
             "args": [
                 "build",
                 "${workspaceFolder}/Server/ProjectBank.Server.csproj",
+                "${workspaceFolder}/Infrastructure/Infrastructure.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,6 +20,7 @@
             "type": "process",
             "args": [
                 "publish",
+                "${workspaceFolder}/Infrastructure/Infrastructure.csproj",
                 "${workspaceFolder}/Server/ProjectBank.Server.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
@@ -33,6 +35,7 @@
                 "watch",
                 "run",
                 "${workspaceFolder}/Server/ProjectBank.Server.csproj",
+                "${workspaceFolder}/Infrastructure/Infrastructure.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
