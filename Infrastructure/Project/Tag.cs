@@ -1,11 +1,7 @@
-
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-
 [Index(nameof(Name), IsUnique = true)]
 public class Tag
 {
-    //public int Id { get; set; }
+    public int Id { get; set; }
 
     [Required]
     [StringLength(50)]

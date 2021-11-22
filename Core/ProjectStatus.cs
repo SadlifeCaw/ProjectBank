@@ -1,3 +1,4 @@
+namespace ProjectBank.Core;
 public enum ProjectStatus
 {
     PUBLIC,

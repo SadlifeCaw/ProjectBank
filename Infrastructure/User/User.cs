@@ -1,9 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-
 [Index(nameof(Email), IsUnique = true)]
-public class User 
+public abstract class User 
 {
+    public int Id { get; set; }
 
     [Required]
     [EmailAddress]

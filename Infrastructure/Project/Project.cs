@@ -1,11 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-
-using ProjectBank.Core;
-
 [Index(nameof(Title), IsUnique = true)]
 public class Project
 {
+    public int Id { get; set; }
 
     [Required]
     [StringLength(50)]
