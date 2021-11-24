@@ -14,3 +14,7 @@ public record InstitutionDTO(
     ICollection<int> FacultyIDs
 
 ) : CategoryDTO(Id, Title, Description);
+
+public record InstitutionCreateDTO{
+    // Not implemented
+}
