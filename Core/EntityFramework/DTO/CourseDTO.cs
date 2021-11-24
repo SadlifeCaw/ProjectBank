@@ -19,3 +19,8 @@ public record CourseDTO(
     ICollection<StudentDTO> Students
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
+
+public record CourseCreateDTO{
+    // Not implemented
+}
+

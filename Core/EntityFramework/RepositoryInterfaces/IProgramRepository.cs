@@ -6,3 +6,4 @@ public interface IProgramRepository
     Task<ProgramDTO> ReadFacultyByIDAsync(int programID);
     Task<IReadOnlyCollection<ProgramDTO>> ReadAllAsync();
 }
+
