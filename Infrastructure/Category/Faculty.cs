@@ -1,5 +1,7 @@
 namespace ProjectBank.Infrastructure;
 
 public class Faculty: Category {
-    public ICollection<Institution> Institutions {get; set;}  = null!;
+
+    [Required]
+    public Institution? Institution {get; set;}
 }
