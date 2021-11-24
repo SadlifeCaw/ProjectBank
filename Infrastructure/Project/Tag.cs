@@ -1,3 +1,5 @@
+namespace ProjectBank.Infrastructure;
+
 [Index(nameof(Name), IsUnique = true)]
 public class Tag
 {

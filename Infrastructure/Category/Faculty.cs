@@ -1,4 +1,7 @@
-public class Faculty {
-    public int Id { get; set; }
-    
+namespace ProjectBank.Infrastructure;
+
+public class Faculty: Category {
+  
+    [Required]
+    public Institution? Institution {get; set;}
 }

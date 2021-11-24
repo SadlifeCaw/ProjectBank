@@ -1,3 +1,6 @@
+
+namespace ProjectBank.Infrastructure;
+
 [Index(nameof(Title), IsUnique = true)]
 public class Project
 {
@@ -15,5 +18,5 @@ public class Project
     public ProjectStatus Status {get; set;}
 
     [Required]
-    public ICollection<Tag>? Tags {get; set;}
+    public ICollection<Tag> Tags {get; set;}  = null!;
 }

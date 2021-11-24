@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using ProjectBank.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Connect to database
+builder.Services.AddDbContext<ProjectBankContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectBank"))
+);
+
 
 var app = builder.Build();
 
@@ -41,4 +49,20 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
+//connect to database
+/* var configuration = LoadConfiguration();
+var connectionString = configuration.GetConnectionString("ProjectBank");
+var optionsBuilder = new DbContextOptionsBuilder<ProjectBankContext>().UseNpgsql(connectionString);
+ */
 app.Run();
+
+
+static IConfiguration LoadConfiguration()
+{
+    var builder = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .AddUserSecrets<Program>();
+
+    return builder.Build();
+}
