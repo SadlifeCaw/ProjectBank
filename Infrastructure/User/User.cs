@@ -1,4 +1,5 @@
 namespace ProjectBank.Infrastructure;
+
 [Index(nameof(Email), IsUnique = true)]
 public abstract class User 
 {
@@ -11,9 +12,7 @@ public abstract class User
 
 
     [Required]
-    [StringLength(1000)]
     public Institution? Institution { get; set; }
-    
 
     [Required]
     [StringLength(50)]

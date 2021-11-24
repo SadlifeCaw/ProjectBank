@@ -6,5 +6,4 @@ public class Student : User
     public int ProgramId {get; set;}
 
     public ICollection<Course> Courses {get; set;} = null!;
-
 }

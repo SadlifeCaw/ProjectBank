@@ -1,3 +1,4 @@
+
 namespace ProjectBank.Infrastructure;
 
 [Index(nameof(Title), IsUnique = true)]

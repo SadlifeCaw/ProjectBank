@@ -1,3 +1,4 @@
+
 namespace ProjectBank.Infrastructure;
 public abstract class Category 
 

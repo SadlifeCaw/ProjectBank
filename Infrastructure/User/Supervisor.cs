@@ -4,4 +4,6 @@ public class Supervisor : User
 {
     [Required]
     public int FacultyId {get;set;}
+    
 }
+
