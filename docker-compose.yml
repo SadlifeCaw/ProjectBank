@@ -24,8 +24,8 @@ services:
       ASPNETCORE_KestrelCertificatesDefaultPath: /https/aspnetapp.pfx
       ASPNETCORE_KestrelCertificatesDefaultPassword: localhost
     ports:
-      - 5077:80
-      - 7207:443
+      - 5178:80
+      - 7038:443
     depends_on:
       - db
     secrets:
