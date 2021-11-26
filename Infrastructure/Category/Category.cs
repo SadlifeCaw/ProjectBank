@@ -11,4 +11,11 @@ public abstract class Category
 
     [StringLength(1000)]
     public string? Description {get; set;}
+
+    //constructor to be inherited
+    protected Category(string Title, string? Description) 
+    {
+        this.Title = Title;
+        this.Description = Description;
+    }
 }

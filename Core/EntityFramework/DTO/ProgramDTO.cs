@@ -14,10 +14,24 @@ public record ProgramDTO(
     [Required]
     string Code,
 
-    ICollection<CourseDTO> Courses
+    ICollection<int> CourseIDS
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
 
 public record ProgramCreateDTO {
-    // Not implemented
+    public int Id {get; init;}
+    [Required, StringLength(100)]
+    public string Title {get; init;}
+
+    [StringLength(1000)]
+    public string Description {get; init;}
+
+    [Required]
+    public int FacultyID {get; init;}
+
+    [Required]
+    public string Code {get; init;}
+    public ICollection<int> CourseIDs {get; init;}
+    
+    
 }

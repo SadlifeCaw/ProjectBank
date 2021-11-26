@@ -16,5 +16,14 @@ public record InstitutionDTO(
 ) : CategoryDTO(Id, Title, Description);
 
 public record InstitutionCreateDTO{
-    // Not implemented
+
+    [Required, StringLength(100)]
+    public string Title {get; init;}
+
+    [StringLength(1000)]
+    public string Description {get; init;}
+
+    [Required]
+    public ICollection<int>? FacultyIDs {get; init;}
+
 }

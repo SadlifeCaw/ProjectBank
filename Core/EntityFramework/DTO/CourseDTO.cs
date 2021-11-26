@@ -30,13 +30,13 @@ public record CourseCreateDTO{
     public string?  Description{get; init;}
 
     [Required]
-    int FacultyID {get; init;}
+    public int FacultyID {get; init;}
 
     [Required]
-    string? Code {get; init;}
-    ICollection<ProgramDTO>? Programs {get; init;}
+    public string? Code {get; init;}
+    public ICollection<ProgramDTO>? Programs {get; init;}
 
-    ICollection<StudentDTO>? Students {get; init;}
+    public ICollection<StudentDTO>? Students {get; init;}
 }
 
 

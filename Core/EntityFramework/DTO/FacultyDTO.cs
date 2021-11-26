@@ -10,10 +10,18 @@ public record FacultyDTO(
     string Description,
 
     [Required]
-    ICollection<int> InstitutionIDs
+    int InstitutionID
 
 ) : CategoryDTO(Id, Title, Description);
 
-public record FacultyCreateDTO{
-    // Not implemented
-}
+public record FacultyCreateDTO 
+{
+    [Required, StringLength(100)] 
+    public string Title { get; init; }
+
+    [StringLength(1000)]
+    public string Description { get; init; }
+
+    [Required]
+    public int InstitutionID { get; init; }
+};
