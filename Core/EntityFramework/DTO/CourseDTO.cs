@@ -21,6 +21,27 @@ public record CourseDTO(
 ) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
 
 public record CourseCreateDTO{
-    // Not implemented
+
+    [Required]
+    [StringLength(100)]
+    public string? Title { get; init; }
+
+    [StringLength(1000)]
+    public string?  Description{get; init;}
+
+    [Required]
+    int FacultyID {get; init;}
+
+    [Required]
+    string? Code {get; init;}
+    ICollection<ProgramDTO>? Programs {get; init;}
+
+    ICollection<StudentDTO>? Students {get; init;}
 }
+
+
+
+
+
+
 

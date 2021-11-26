@@ -2,7 +2,7 @@ using Xunit;
 
 namespace EntityFramework.Tests;
 
-public class UnitTest1
+public class CourseRepositoryTest
 {
     [Fact]
     public void Test1()
