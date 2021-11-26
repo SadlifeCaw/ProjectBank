@@ -11,3 +11,4 @@ public record UserDTO(
     [Required, StringLength(50)]
     string LastName
 );
+

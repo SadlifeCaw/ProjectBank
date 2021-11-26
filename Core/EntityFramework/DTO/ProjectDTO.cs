@@ -15,3 +15,9 @@ public record ProjectDTO(
     [Required]
     ICollection<int> TagIDs
 );
+
+public record ProjectCreateDTO
+{
+    
+}
+
