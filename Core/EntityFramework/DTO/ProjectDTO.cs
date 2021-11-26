@@ -18,6 +18,21 @@ public record ProjectDTO(
 
 public record ProjectCreateDTO
 {
+    [Required, StringLength(50)]
+    string? Title{get; init;}
+
+    [Required,StringLength(1000)]
+    string? Description {get; init;}
+
+    [Required]
+    ProjectStatus Status{get; init;}
     
+    [Required]
+    ICollection<int>? TagIDs{get; init;}
+}
+
+public record ProjectUpdateDTO : ProjectCreateDTO
+{
+     public int Id { get; init; }
 }
 

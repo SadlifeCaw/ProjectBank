@@ -9,6 +9,9 @@ public class Project
     public int Id { get; set; }
 
     [Required]
+    public Supervisor? Author {get;}
+
+    [Required]
     [StringLength(50)]
     public string? Title {get; set;}
 
@@ -21,4 +24,10 @@ public class Project
 
     [Required]
     public ICollection<Tag> Tags {get; set;}  = null!;
+
+    [Required]
+    public ICollection<Student> Students {get; set;}  = null!;
+
+    [Required]
+    public ICollection<Supervisor> Collaborators {get; set;}  = null!;
 }

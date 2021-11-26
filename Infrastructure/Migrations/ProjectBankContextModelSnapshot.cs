@@ -215,6 +215,12 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ProgramId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int")
+                        .HasColumnName("Student_ProjectId");
+
+                    b.HasIndex("ProjectId");
+
                     b.HasDiscriminator().HasValue("Student");
                 });
 
@@ -224,6 +230,11 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasDiscriminator().HasValue("Supervisor");
                 });
@@ -333,6 +344,20 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProjectBank.Infrastructure.Student", b =>
+                {
+                    b.HasOne("ProjectBank.Infrastructure.Project", null)
+                        .WithMany("Students")
+                        .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("ProjectBank.Infrastructure.Supervisor", b =>
+                {
+                    b.HasOne("ProjectBank.Infrastructure.Project", null)
+                        .WithMany("Collaborators")
+                        .HasForeignKey("ProjectId");
+                });
+
             modelBuilder.Entity("ProjectBank.Infrastructure.Course", b =>
                 {
                     b.HasOne("ProjectBank.Infrastructure.CodedCategory", null)
@@ -353,6 +378,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Project", b =>
                 {
+                    b.Navigation("Collaborators");
+
+                    b.Navigation("Students");
+
                     b.Navigation("Tags");
                 });
 

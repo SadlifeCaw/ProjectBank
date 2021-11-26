@@ -107,7 +107,9 @@ namespace Infrastructure.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProgramId = table.Column<int>(type: "int", nullable: true),
-                    FacultyId = table.Column<int>(type: "int", nullable: true)
+                    Student_ProjectId = table.Column<int>(type: "int", nullable: true),
+                    FacultyId = table.Column<int>(type: "int", nullable: true),
+                    ProjectId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -118,6 +120,16 @@ namespace Infrastructure.Migrations
                         principalTable: "Institutions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Users_Projects_Student_ProjectId",
+                        column: x => x.Student_ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -271,6 +283,16 @@ namespace Infrastructure.Migrations
                 name: "IX_Users_InstitutionId",
                 table: "Users",
                 column: "InstitutionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ProjectId",
+                table: "Users",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Student_ProjectId",
+                table: "Users",
+                column: "Student_ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -294,10 +316,10 @@ namespace Infrastructure.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "CodedCategories");
 
             migrationBuilder.DropTable(
-                name: "CodedCategories");
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Faculties");
