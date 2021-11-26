@@ -18,4 +18,7 @@ public abstract class Category
         this.Title = Title;
         this.Description = Description;
     }
+
+    // Empty constructor to please the EF Gods
+    protected Category() {}
 }

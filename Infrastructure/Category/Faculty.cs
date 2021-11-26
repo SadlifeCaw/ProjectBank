@@ -10,4 +10,7 @@ public class Faculty: Category {
     {
         this.Institution = Institution;
     }
+
+    // Empty constructor to please the EF Gods
+    public Faculty() {}
 }

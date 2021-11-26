@@ -1,6 +1,6 @@
 namespace ProjectBank.Infrastructure;
 
-public class CodedCategory : Category
+public abstract class CodedCategory : Category
 {
     
     [Required]
@@ -8,4 +8,14 @@ public class CodedCategory : Category
 
     [Required]
     public string? Code {get; set;}
+
+    protected CodedCategory(string Title, string? Description, Faculty Faculty, string Code) 
+    : base(Title, Description) 
+    {
+        this.Faculty = Faculty;
+        this.Code = Code;
+    }
+
+    // Empty constructor to please the EF Gods
+    protected CodedCategory() {}
 }
