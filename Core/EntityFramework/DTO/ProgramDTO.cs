@@ -14,7 +14,7 @@ public record ProgramDTO(
     [Required]
     string Code,
 
-    ICollection<int> CourseIDS
+    IEnumerable<int> CourseIDS
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
 
@@ -31,7 +31,7 @@ public record ProgramCreateDTO {
 
     [Required]
     public string Code {get; init;}
-    public ICollection<int> CourseIDs {get; init;}
+    public IEnumerable<int> CourseIDs {get; init;}
     
     
 }
