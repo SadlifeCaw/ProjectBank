@@ -2,11 +2,11 @@ using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ProjectBank.Infrastructure.Entities
+namespace ProjectBank.Infrastructure.Entities.ReferenceSystem
 {
     public class Signature
     {
-        IReadOnlyCollection<string> Hashes;
+        public IReadOnlyCollection<string> Hashes;
 
         public Signature(IReadOnlyCollection<Tag> tags)
         {
@@ -25,22 +25,22 @@ namespace ProjectBank.Infrastructure.Entities
             foreach (Tag tag in tags)
             {
                 var SHA1 = ComputeSHA1(tag.Name);
-                if (minSHA1 == "å" || minSHA1.CompareTo(SHA1) < 0) minSHA1 = SHA1;
+                if (minSHA1 == "å" || minSHA1.CompareTo(SHA1) > 0) minSHA1 = SHA1;
                 
                 var SHA256 = ComputeSHA256(tag.Name);
-                if (minSHA256 == "å" || minSHA256.CompareTo(SHA256) < 0) minSHA256 = SHA256;
+                if (minSHA256 == "å" || minSHA256.CompareTo(SHA256) > 0) minSHA256 = SHA256;
 
                 var MD5 = ComputeMD5(tag.Name);
-                if (minMD5 == "å" || minMD5.CompareTo(MD5) < 0) minMD5 = MD5;
+                if (minMD5 == "å" || minMD5.CompareTo(MD5) > 0) minMD5 = MD5;
 
                 var SHA384 = ComputeSHA384(tag.Name);
-                if (minSHA384 == "å" || minSHA384.CompareTo(SHA384) < 0) minSHA384 = SHA384;
+                if (minSHA384 == "å" || minSHA384.CompareTo(SHA384) > 0) minSHA384 = SHA384;
 
                 var SHA512 = ComputeSHA512(tag.Name);
-                if (minSHA512 == "å" || minSHA512.CompareTo(SHA512) < 0) minSHA512 = SHA512;
+                if (minSHA512 == "å" || minSHA512.CompareTo(SHA512) > 0) minSHA512 = SHA512;
 
                 var SimpleHash = ComputeSimpleHash(tag.Name);
-                if (minSimpleHash == "å" || minSimpleHash.CompareTo(SimpleHash) < 0) minSimpleHash = SimpleHash;
+                if (minSimpleHash == "å" || minSimpleHash.CompareTo(SimpleHash) > 0) minSimpleHash = SimpleHash;
 
             }
 
