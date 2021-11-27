@@ -3,21 +3,21 @@ namespace ProjectBank.Infrastructure;
 public class ProjectBankContext : DbContext
 {
     //User directory
-    public DbSet<User>? Users { get;}
-    public DbSet<Supervisor>? Supervisors { get;}
-    public DbSet<Student>? Students { get;}
+    public DbSet<User> Users { get;}
+    public DbSet<Supervisor> Supervisors { get;}
+    public DbSet<Student> Students { get;}
 
     //Category diretory
-    public DbSet<Category>? Categories { get;}
-    public DbSet<CodedCategory>? CodedCategories { get;}
-    public DbSet<Course>? Courses { get;}
-    public DbSet<Faculty>? Faculties { get;}
-    public DbSet<Institution>?  Institutions { get;}
-    public DbSet<Program>?  Programs {get;}
+    public DbSet<Category> Categories { get;}
+    public DbSet<CodedCategory> CodedCategories { get;}
+    public DbSet<Course> Courses { get;}
+    public DbSet<Faculty> Faculties { get;}
+    public DbSet<Institution>  Institutions { get;}
+    public DbSet<Program>  Programs {get;}
 
     //Project directory
-    public DbSet<Project>? Projects { get;}
-    public DbSet<Tag>? Tags { get;}
+    public DbSet<Project> Projects { get;}
+    public DbSet<Tag> Tags { get;}
 
 
     public ProjectBankContext(DbContextOptions<ProjectBankContext> options) : base(options) { }
@@ -25,6 +25,8 @@ public class ProjectBankContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+        // Create Table-Per-Type
+        // This is slower than Table-Per-Hierarchy, but it makes database updates work
         modelBuilder.Entity<Category>().ToTable("Categories");
         modelBuilder.Entity<CodedCategory>().ToTable("CodedCategories");
         modelBuilder.Entity<Institution>().ToTable("Institutions");

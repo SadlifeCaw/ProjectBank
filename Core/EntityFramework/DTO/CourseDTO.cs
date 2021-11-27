@@ -9,22 +9,22 @@ public record CourseDTO(
     string Description,
 
     [Required]
-    int FacultyID,
+    string FacultyName,
 
     [Required]
     string Code,
 
-    ICollection<ProgramDTO> Programs,
+    IEnumerable<int> Programs,
 
-    ICollection<StudentDTO> Students
+    IEnumerable<int> Students
 
-) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
+) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
 public record CourseCreateDTO{
 
     [Required]
     [StringLength(100)]
-    public string? Title { get; init; }
+    public string Title { get; init; }
 
     [StringLength(1000)]
     public string?  Description{get; init;}
@@ -34,9 +34,9 @@ public record CourseCreateDTO{
 
     [Required]
     public string? Code {get; init;}
-    public ICollection<ProgramDTO>? Programs {get; init;}
+    public ICollection<int> Programs {get; init;}
 
-    public ICollection<StudentDTO>? Students {get; init;}
+    public ICollection<int> Students {get; init;}
 }
 
 

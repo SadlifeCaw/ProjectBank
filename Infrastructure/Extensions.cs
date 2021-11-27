@@ -9,4 +9,12 @@ public static class Extensions
             yield return Category.Id;
         }
     }
+
+    public static IEnumerable<int> ToListOfIDs(this IEnumerable<User> users)
+    {
+        foreach (var User in users)
+        {
+            yield return User.Id;
+        }
+    }
 }

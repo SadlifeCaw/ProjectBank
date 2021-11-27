@@ -9,14 +9,14 @@ public record ProgramDTO(
     string Description,
 
     [Required]
-    int FacultyID,
+    string FacultyName,
 
     [Required]
-    string Code,
+    string Code
 
-    IEnumerable<int> CourseIDS
+    //, ICollection<(string Title, string FacultyName)> Courses
 
-) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
+) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
 public record ProgramCreateDTO {
     public int Id {get; init;}
@@ -27,11 +27,11 @@ public record ProgramCreateDTO {
     public string Description {get; init;}
 
     [Required]
-    public int FacultyID {get; init;}
+    public string FacultyName {get; init;}
 
     [Required]
     public string Code {get; init;}
-    public IEnumerable<int> CourseIDs {get; init;}
+    public ICollection<(string Title, string FacultyName)> Courses {get; init;}
     
     
 }

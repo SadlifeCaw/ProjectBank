@@ -23,7 +23,7 @@ public record CodedCategoryDTO (
     string Description,
 
     [Required]
-    int FacultyID,
+    string FacultyName,
 
     [Required]
     string Code

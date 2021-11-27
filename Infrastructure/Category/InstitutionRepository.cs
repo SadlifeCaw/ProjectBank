@@ -1,4 +1,3 @@
-
 namespace ProjectBank.Infrastructure;
 
  public class InstitutionRepository : IInstitutionRepository
@@ -12,10 +11,11 @@ namespace ProjectBank.Infrastructure;
 
         public async Task<(Response, InstitutionDTO)> CreateAsync(InstitutionCreateDTO institution)
         {
+            //assume that all institions with the same name are equal
             var conflict =
                 await _dbcontext.Institutions
-                              .Where(i => f.Title == institution.Title)
-                              .Select(i => new FacultyDTO(f.Id, f.Title, f.Description, f.Institution.Id))
+                              .Where(i => i.Title == institution.Title)
+                              .Select(i => new InstitutionDTO(i.Id, i.Title, i.Description, i.Faculties.ToListOfIDs()))
                               .FirstOrDefaultAsync();
 
             if (conflict != null)
@@ -23,35 +23,33 @@ namespace ProjectBank.Infrastructure;
                 return (Response.Conflict, conflict);
             }
 
-            //optimize later. necesarry since DTO's cant hold object references
-            //finds the institution related to the faculty by its id
-            //this should not be this class's responsibility
-            var institution =
-                await _dbcontext.Institutions
-                              .Where(i => i.Id == faculty.InstitutionID)
-                              .Select(i => i)
-                              .FirstOrDefaultAsync();
+            //get all faculties in the database corresponding to faculty IDs in InstitutionCreateObject
+            var Faculties = 
+                await _dbcontext.Faculties
+                                .Where(f => institution.FacultyIDs.Contains(f.Id))
+                                .Select(f => f)
+                                .ToListAsync();
 
-            var entity = new Faculty(faculty.Title, faculty.Description, institution);
+            var entity = new Institution(institution.Title, institution.Description, Faculties);
 
-            _dbcontext.Faculties.Add(entity);
+            _dbcontext.Institutions.Add(entity);
 
             await _dbcontext.SaveChangesAsync();
 
-            return (Response.Created, new FacultyDTO(entity.Id, entity.Title, entity.Description, entity.Institution.Id));
+            return (Response.Created, new InstitutionDTO(entity.Id, entity.Title, entity.Description, institution.FacultyIDs));
         }
-        public async Task<FacultyDTO> ReadByIDAsync(int facultyID)
+        public async Task<InstitutionDTO> ReadByIDAsync(int insitutionID)
         {
-            var faculties = from f in _dbcontext.Faculties
-                         where f.Id == facultyID
-                         select new FacultyDTO(f.Id, f.Title, f.Description, f.Institution.Id);
+            var institutions = from i in _dbcontext.Institutions
+                               where i.Id == insitutionID
+                               select new InstitutionDTO(i.Id, i.Title, i.Description, i.Faculties.ToListOfIDs());
 
-            return await faculties.FirstOrDefaultAsync();
+            return await institutions.FirstOrDefaultAsync();
         }
 
-        public async Task<IReadOnlyCollection<FacultyDTO>> ReadAllAsync() =>
-            (await _dbcontext.Faculties
-                           .Select(f => new FacultyDTO(f.Id, f.Title, f.Description, f.Institution.Id))
+        public async Task<IReadOnlyCollection<InstitutionDTO>> ReadAllAsync() =>
+            (await _dbcontext.Institutions
+                           .Select(i => new InstitutionDTO(i.Id, i.Title, i.Description, i.Faculties.ToListOfIDs()))
                            .ToListAsync())
                            .AsReadOnly();
 }

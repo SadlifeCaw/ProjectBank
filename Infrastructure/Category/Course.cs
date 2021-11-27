@@ -3,16 +3,16 @@ namespace ProjectBank.Infrastructure;
 public class Course : CodedCategory 
 {
     [Required]
-    public ICollection<Program>? Programs {get; set;}
+    public IEnumerable<Program> Programs {get; set;}
 
     [Required]
-    public ICollection<Student>? Students {get; set;}
+    public IEnumerable<Student> Students {get; set;}
 
-    public Course(string Title, string? Description, Faculty Faculty, string Code) 
+    public Course(string Title, string? Description, Faculty Faculty, string Code, IEnumerable<Program> Programs, IEnumerable<Student> Students) 
     : base(Title, Description, Faculty, Code)
     {
-        Programs = new List<Program>();
-        Students = new List<Student>();
+        this.Programs = Programs;
+        this.Students = Students;
     }
 
     // Empty constructor to please the EF Gods

@@ -11,19 +11,14 @@ namespace ProjectBank.Infrastructure;
 
         public async Task<(Response, ProgramDTO)> CreateAsync(ProgramCreateDTO program)
         {
-            var courseList =
-                    await _dbcontext.Courses
-                    .Where(c => program.CourseIDs.Contains(c.Id))
-                    .Select(c => c.Id)
-                    .ToListAsync();  
 
             var conflict =
                     await _dbcontext.Programs
                     .Where(p => p.Title == program.Title)
                     .Where(p => p.Description == program.Description)
-                    .Where(p => p.Faculty.Id == program.FacultyID)
+                    .Where(p => p.Faculty.Title == program.FacultyName)
                     .Where(p => p.Code == program.Code)
-                    .Select(p => new ProgramDTO(p.Id, p.Title, p.Description,p.Faculty.Id,p.Code,courseList))
+                    .Select(p => new ProgramDTO(p.Id, p.Title, p.Description,p.Faculty.Title,p.Code))
                     .FirstOrDefaultAsync();
 
             if (conflict != null)
@@ -31,26 +26,58 @@ namespace ProjectBank.Infrastructure;
                 return (Response.Conflict, conflict);
             }
 
-            var entity = new Program(program.Title);
+            //finds the Faculty related to the institution by its id
+            //this should (maybe?) not be this class's responsibility
+            var EntityFaculty =
+                await _dbcontext.Faculties
+                              .Where(f => f.Title == program.FacultyName)
+                              .Select(f => f)
+                              .FirstOrDefaultAsync();
+
+            var entity = new Program
+            {
+                Title = program.Title,
+                Description = program.Description,
+                Faculty = EntityFaculty, 
+                Code = program.Code,
+                Courses = await GetCoursesAsync(program.Courses).ToListAsync()
+            };
 
             _dbcontext.Programs.Add(entity);
 
             await _dbcontext.SaveChangesAsync();
 
-            return (Response.Created, new ProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Id,entity.Code,courseList));
+            return (Response.Created, new ProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Title,entity.Code));
         }
         public async Task<ProgramDTO> ReadProgramByIDAsync(int ProgramID)
         {
-            var tags = from p in _dbcontext.Programs
-                         where p.Id == ProgramID
-                         select new ProgramDTO(p.Id, p.Name);
+            var programs = from p in _dbcontext.Programs
+                           where p.Id == ProgramID
+                           select new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code);
 
-            return await tags.FirstOrDefaultAsync();
+            return await programs.FirstOrDefaultAsync();
         }
 
         public async Task<IReadOnlyCollection<ProgramDTO>> ReadAllAsync() =>
             (await _dbcontext.Programs
-                           .Select(p => new ProgramDTO(p.Id, p.Name))
+                           .Select(p => new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code))
                            .ToListAsync())
                            .AsReadOnly();
+
+        //used to get existing courses based on Title and FacultyName given in DTO
+        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<(string Title, string FacultyName)> inCourses) 
+        {
+            var existing = await _dbcontext.Courses
+                            .Where(c => inCourses
+                                        .Any(inC => inC.Title == c.Title))
+                            .Where(c => inCourses
+                                        .Any(inC => inC.FacultyName == c.Faculty.Title))
+                            .Select(c => c)
+                            .ToListAsync();
+
+            foreach (var course in existing)
+            {
+                yield return course;
+            }
+        }
 }
