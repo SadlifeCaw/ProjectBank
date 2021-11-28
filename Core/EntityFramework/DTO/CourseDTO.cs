@@ -12,11 +12,11 @@ public record CourseDTO(
     string FacultyName,
 
     [Required]
-    string Code,
+    string Code
 
-    IEnumerable<int> Programs,
+    //IEnumerable<int> Programs,
 
-    IEnumerable<int> Students
+   // IEnumerable<int> Students
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
@@ -30,7 +30,7 @@ public record CourseCreateDTO{
     public string?  Description{get; init;}
 
     [Required]
-    public int FacultyID {get; init;}
+    public string FacultyName {get; init;}
 
     [Required]
     public string? Code {get; init;}
