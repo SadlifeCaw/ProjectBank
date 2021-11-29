@@ -65,13 +65,15 @@ namespace ProjectBank.Infrastructure;
                            .AsReadOnly();
 
         //used to get existing courses based on Title and FacultyName given in DTO
-        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<(string Title, string FacultyName)> inCourses) 
+        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<(string Title, string FacultyName, string Code)> inCourses) 
         {
             var existing = await _dbcontext.Courses
                             .Where(c => inCourses
                                         .Any(inC => inC.Title == c.Title))
                             .Where(c => inCourses
                                         .Any(inC => inC.FacultyName == c.Faculty.Title))
+                            .Where(c => inCourses
+                                        .Any(inC => inC.Code == c.Code))
                             .Select(c => c)
                             .ToListAsync();
 

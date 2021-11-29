@@ -31,7 +31,5 @@ public record ProgramCreateDTO {
 
     [Required]
     public string Code {get; init;}
-    public ICollection<(string Title, string FacultyName)> Courses {get; init;}
-    
-    
+    public ICollection<(string Title, string FacultyName, string Code)> Courses {get; init;}
 }
