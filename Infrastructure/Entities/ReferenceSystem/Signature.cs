@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ProjectBank.Infrastructure.Entities.ReferenceSystem
+namespace ProjectBank.Infrastructure.Entities
 {
     public class Signature
     {
@@ -20,7 +20,7 @@ namespace ProjectBank.Infrastructure.Entities.ReferenceSystem
             string minMD5 = "å";
             string minSHA384 = "å";
             string minSHA512 = "å";
-            string minSimpleHash = "å";
+            string minNoHash = "å";
 
             foreach (Tag tag in tags)
             {
@@ -39,12 +39,11 @@ namespace ProjectBank.Infrastructure.Entities.ReferenceSystem
                 var SHA512 = ComputeSHA512(tag.Name);
                 if (minSHA512 == "å" || minSHA512.CompareTo(SHA512) > 0) minSHA512 = SHA512;
 
-                var SimpleHash = ComputeSimpleHash(tag.Name);
-                if (minSimpleHash == "å" || minSimpleHash.CompareTo(SimpleHash) > 0) minSimpleHash = SimpleHash;
-
+                var NoHash = tag.Name;
+                if (minNoHash == "å" || minNoHash.CompareTo(NoHash) > 0) minNoHash = NoHash;
             }
 
-            return new ReadOnlyCollection<string>(new List<string> { minSHA1, minSHA256, minMD5, minSHA384, minSHA512, minSimpleHash});
+            return new ReadOnlyCollection<string>(new List<string> { minSHA1, minSHA256, minMD5, minSHA384, minSHA512, minNoHash});
 
         }
 
@@ -106,11 +105,6 @@ namespace ProjectBank.Infrastructure.Entities.ReferenceSystem
                 var code = ToString(bytes);
                 return code;
             }
-        }
-
-        private string ComputeSimpleHash(string str)
-        {
-            return str.GetHashCode().ToString();
         }
     }
 }
