@@ -1,5 +1,6 @@
 namespace ProjectBank.Infrastructure;
 
+
 public class Institution : Category {
 
     [Required]

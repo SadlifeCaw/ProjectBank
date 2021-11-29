@@ -12,14 +12,15 @@ public record ProgramDTO(
     string FacultyName,
 
     [Required]
-    string Code
+    string Code,
 
-    //, ICollection<(string Title, string FacultyName)> Courses
+    ICollection<string> Courses
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
-public record ProgramCreateDTO {
-    public int Id {get; init;}
+public record ProgramCreateDTO 
+{
+ 
     [Required, StringLength(100)]
     public string Title {get; init;}
 
@@ -31,5 +32,5 @@ public record ProgramCreateDTO {
 
     [Required]
     public string Code {get; init;}
-    public ICollection<(string Title, string FacultyName, string Code)> Courses {get; init;}
+    public ICollection<string> Courses {get; init;}
 }

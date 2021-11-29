@@ -10,7 +10,7 @@ public record FacultyDTO(
     string Description,
 
     [Required]
-    int InstitutionID
+    string InstitutionName
 
 ) : CategoryDTO(Id, Title, Description);
 
@@ -22,6 +22,7 @@ public record FacultyCreateDTO
     [StringLength(1000)]
     public string Description { get; init; }
 
+    //assume InstitutionName to be unique
     [Required]
-    public int InstitutionID { get; init; }
+    public string InstitutionName { get; init; }
 };

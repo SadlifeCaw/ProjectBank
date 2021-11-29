@@ -18,7 +18,7 @@ namespace ProjectBank.Infrastructure;
                     .Where(p => p.Description == program.Description)
                     .Where(p => p.Faculty.Title == program.FacultyName)
                     .Where(p => p.Code == program.Code)
-                    .Select(p => new ProgramDTO(p.Id, p.Title, p.Description,p.Faculty.Title,p.Code))
+                    .Select(p => new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code,program.Courses))
                     .FirstOrDefaultAsync();
 
             if (conflict != null)
@@ -47,33 +47,29 @@ namespace ProjectBank.Infrastructure;
 
             await _dbcontext.SaveChangesAsync();
 
-            return (Response.Created, new ProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Title,entity.Code));
+            return (Response.Created, new ProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Title,entity.Code,program.Courses));
         }
         public async Task<ProgramDTO> ReadProgramByIDAsync(int ProgramID)
         {
             var programs = from p in _dbcontext.Programs
                            where p.Id == ProgramID
-                           select new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code);
+                           select new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList());
 
             return await programs.FirstOrDefaultAsync();
         }
 
         public async Task<IReadOnlyCollection<ProgramDTO>> ReadAllAsync() =>
             (await _dbcontext.Programs
-                           .Select(p => new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code))
+                           .Select(p => new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList()))
                            .ToListAsync())
                            .AsReadOnly();
 
         //used to get existing courses based on Title and FacultyName given in DTO
-        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<(string Title, string FacultyName, string Code)> inCourses) 
+        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<string> inCourses) 
         {
             var existing = await _dbcontext.Courses
                             .Where(c => inCourses
-                                        .Any(inC => inC.Title == c.Title))
-                            .Where(c => inCourses
-                                        .Any(inC => inC.FacultyName == c.Faculty.Title))
-                            .Where(c => inCourses
-                                        .Any(inC => inC.Code == c.Code))
+                                        .Any(inC => inC == c.Code))
                             .Select(c => c)
                             .ToListAsync();
 

@@ -12,11 +12,11 @@ public record CourseDTO(
     string FacultyName,
 
     [Required]
-    string Code
+    string Code,
 
-    //IEnumerable<int> Programs,
+    IEnumerable<string> ProgramCodes,
 
-   // IEnumerable<int> Students
+    IEnumerable<string> StudentEmails
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
@@ -27,17 +27,22 @@ public record CourseCreateDTO{
     public string Title { get; init; }
 
     [StringLength(1000)]
-    public string?  Description{get; init;}
+    public string  Description{get; init;}
 
     [Required]
     public string FacultyName {get; init;}
 
+    //normally this information is stored in thr faculty, but in the DTO faculty is just a string
     [Required]
-    public string? Code {get; init;}
-    public ICollection<int> Programs {get; init;}
+    public string InstitutionName {get; init;}
 
-    public ICollection<int> Students {get; init;}
-}
+    [Required]
+    public string Code {get; init;}
+    public ICollection<string> ProgramCodes {get; init;}
+
+    //string is student emails
+    public ICollection<string> StudentEmails {get; init;}
+} 
 
 
 

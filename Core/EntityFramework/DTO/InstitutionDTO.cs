@@ -10,8 +10,9 @@ public record InstitutionDTO(
     [StringLength(1000)]
     string Description,
 
-    [Required]
-    IEnumerable<int> FacultyIDs
+   [Required]
+   ICollection<string> Faculties
+
 
 ) : CategoryDTO(Id, Title, Description);
 
@@ -24,6 +25,6 @@ public record InstitutionCreateDTO
     public string Description {get; init;}
 
     [Required]
-    public IEnumerable<int>? FacultyIDs {get; init;}
+    public ICollection<string>? Faculties {get; init;}
 
 }
