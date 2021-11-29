@@ -21,7 +21,7 @@ public class TagGenerator : ITagGenerator
 
 
     public void Add(string s) {
-        s.ToLower();
+        s = s.ToLower();
         t.Add(s);
     }
 
@@ -38,7 +38,7 @@ public class TagGenerator : ITagGenerator
     }
 
     public IEnumerable<string> Find(string text) {
-        text.ToLower();
+        text = text.ToLower();
         return t.Find(text);
     }
 }
