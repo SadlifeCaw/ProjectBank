@@ -1,6 +1,8 @@
+namespace ProjectBank.Core.EF.Repository;
+
 public interface ITagRepository 
 {
-    Task<TagDTO> CreateAsync(ProgramCreateDTO program);
-    Task<TagDTO> ReadFacultyByIDAsync(int programID);
+    Task<(Response, TagDTO)> CreateAsync(TagCreateDTO program);
+    Task<TagDTO> ReadTagByIDAsync(int TagID);
     Task<IReadOnlyCollection<TagDTO>> ReadAllAsync();
 }

@@ -10,4 +10,9 @@ public class Tag
     [Required]
     [StringLength(100)]
     public string Name {get; set;}
+
+    public Tag(string name) 
+    {
+        this.Name = name;
+    }
 }
