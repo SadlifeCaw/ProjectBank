@@ -6,16 +6,11 @@ class Program {
 
         ITagGenerator trie = new TagGenerator();
 
-        trie.Add("kom");
-        trie.Add("ko");
-        trie.Add("læge");
+        trie.Add("KOM");
 
         trie.Build();
       
-        String s = "Hej Jeg er blevet sparket af en ko, og ko jeg Ko KO har brug for en læge";
-
-        s = s.ToLower(); 
-        
+        String s = "Hej kom med mig";        
         foreach (string word in trie.Find(s))
         {
             Console.WriteLine(word);
