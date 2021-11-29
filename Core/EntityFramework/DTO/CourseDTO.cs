@@ -24,6 +24,7 @@ public record CourseCreateDTO{
 
     [Required]
     [StringLength(100)]
+
     public string Title { get; init; }
 
     [StringLength(1000)]
@@ -43,10 +44,3 @@ public record CourseCreateDTO{
     //string is student emails
     public ICollection<string> StudentEmails {get; init;}
 } 
-
-
-
-
-
-
-

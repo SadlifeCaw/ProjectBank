@@ -1,8 +1,10 @@
+using System.Data;
 namespace ProjectBank.Infrastructure;
 
 [Index(nameof(Name), IsUnique = true)]
 public class Tag
 {
+    [Key]
     public int Id { get; set; }
 
     [Required]

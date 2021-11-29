@@ -3,6 +3,7 @@ namespace ProjectBank.Infrastructure;
 public class ProjectBankContext : DbContext
 {
     //User directory
+
     public DbSet<User> Users { get;}
     public DbSet<Supervisor> Supervisors { get;}
     public DbSet<Student> Students { get;}
@@ -24,9 +25,10 @@ public class ProjectBankContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+    
         // Create Table-Per-Type
         // This is slower than Table-Per-Hierarchy, but it makes database updates work
+
         modelBuilder.Entity<Category>().ToTable("Categories");
         modelBuilder.Entity<CodedCategory>().ToTable("CodedCategories");
         modelBuilder.Entity<Institution>().ToTable("Institutions");
