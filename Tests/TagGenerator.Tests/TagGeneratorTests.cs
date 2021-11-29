@@ -1,5 +1,6 @@
 using Xunit;
 using System.Linq;
+using ProjectBank.Infrastructure.Generator;
 
 namespace Generator.Tests;
 
