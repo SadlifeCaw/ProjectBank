@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AhoCorasick;
 using System;
 
-namespace Generator;
+namespace ProjectBank.Infrastructure.Generator;
 
 public interface ITagGenerator
 {

@@ -11,7 +11,6 @@ namespace ProjectBank.Infrastructure;
 
         public async Task<(Response, ProgramDTO)> CreateAsync(ProgramCreateDTO program)
         {
-
             var conflict =
                     await _dbcontext.Programs
                     .Where(p => p.Title == program.Title)
