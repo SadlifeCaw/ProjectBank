@@ -4,21 +4,21 @@ public class ProjectBankContext : DbContext
 {
     //User directory
 
-    public DbSet<User> Users { get;}
-    public DbSet<Supervisor> Supervisors { get;}
-    public DbSet<Student> Students { get;}
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Supervisor> Supervisors => Set<Supervisor>();
+    public DbSet<Student> Students => Set<Student>();
 
     //Category diretory
-    public DbSet<Category> Categories { get;}
-    public DbSet<CodedCategory> CodedCategories { get;}
-    public DbSet<Course> Courses { get;}
-    public DbSet<Faculty> Faculties { get;}
-    public DbSet<Institution>  Institutions { get;}
-    public DbSet<Program>  Programs {get;}
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<CodedCategory> CodedCategories => Set<CodedCategory>();
+    public DbSet<Course> Courses => Set<Course>();
+    public DbSet<Faculty> Faculties => Set<Faculty>();
+    public DbSet<Institution> Institutions => Set<Institution>();
+    public DbSet<Program>  Programs => Set<Program>();
 
     //Project directory
-    public DbSet<Project> Projects { get;}
-    public DbSet<Tag> Tags { get;}
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<Tag> Tags => Set<Tag>();
 
 
     public ProjectBankContext(DbContextOptions<ProjectBankContext> options) : base(options) { }

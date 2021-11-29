@@ -7,13 +7,13 @@ public abstract class Category
 
     [Required]
     [StringLength(100)]
-    public string? Title {get; set;}
+    public string Title {get; set;}
 
     [StringLength(1000)]
-    public string? Description {get; set;}
+    public string Description {get; set;}
 
     //constructor to be inherited
-    protected Category(string Title, string? Description) 
+    protected Category(string Title, string Description) 
     {
         this.Title = Title;
         this.Description = Description;
