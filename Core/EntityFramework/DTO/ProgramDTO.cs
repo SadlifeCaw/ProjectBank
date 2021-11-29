@@ -9,15 +9,28 @@ public record ProgramDTO(
     string Description,
 
     [Required]
-    int FacultyID,
+    string FacultyName,
 
     [Required]
     string Code,
 
-    ICollection<CourseDTO> Courses
+    ICollection<string> Courses
 
-) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
+) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
-public record ProgramCreateDTO {
-    // Not implemented
+public record ProgramCreateDTO 
+{
+ 
+    [Required, StringLength(100)]
+    public string Title {get; init;}
+
+    [StringLength(1000)]
+    public string Description {get; init;}
+
+    [Required]
+    public string FacultyName {get; init;}
+
+    [Required]
+    public string Code {get; init;}
+    public ICollection<string> Courses {get; init;}
 }

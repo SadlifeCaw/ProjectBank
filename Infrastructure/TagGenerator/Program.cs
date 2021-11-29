@@ -10,8 +10,7 @@ class Program {
 
         trie.Build();
       
-        String s = "Hej kom med mig";
-        
+        String s = "Hej kom med mig";        
         foreach (string word in trie.Find(s))
         {
             Console.WriteLine(word);
