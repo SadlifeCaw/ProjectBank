@@ -33,7 +33,7 @@ namespace ProjectBank.Infrastructure;
                               .Select(f => f)
                               .FirstOrDefaultAsync();
 
-            var entity = new Program
+            var entity = new TeachingProgram
             {
                 Title = program.Title,
                 Description = program.Description,

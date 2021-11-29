@@ -1,16 +1,16 @@
 namespace ProjectBank.Infrastructure;
 
-public class Program : CodedCategory
+public class TeachingProgram : CodedCategory
 {
     [Required]
     public ICollection<Course>? Courses {get; set;}
 
-    public Program(string Title, string? Description, Faculty Faculty, string Code, ICollection<Course> Courses) 
+    public TeachingProgram(string Title, string Description, Faculty Faculty, string Code, ICollection<Course> Courses) 
     : base(Title, Description, Faculty, Code)
     {
         this.Courses = Courses;
     }
 
     // Empty constructor to please the EF Gods
-    public Program() {}
+    public TeachingProgram() {}
 }

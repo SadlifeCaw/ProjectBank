@@ -14,7 +14,7 @@ public class ProjectBankContext : DbContext
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Faculty> Faculties => Set<Faculty>();
     public DbSet<Institution> Institutions => Set<Institution>();
-    public DbSet<Program>  Programs => Set<Program>();
+    public DbSet<TeachingProgram>  Programs => Set<TeachingProgram>();
 
     //Project directory
     public DbSet<Project> Projects => Set<Project>();
@@ -34,7 +34,7 @@ public class ProjectBankContext : DbContext
         modelBuilder.Entity<Institution>().ToTable("Institutions");
         modelBuilder.Entity<Faculty>().ToTable("Faculties");
         modelBuilder.Entity<Course>().ToTable("Courses");
-        modelBuilder.Entity<Program>().ToTable("Programs");
+        modelBuilder.Entity<TeachingProgram>().ToTable("Programs");
 
         //Save enumerator value as string
         modelBuilder
