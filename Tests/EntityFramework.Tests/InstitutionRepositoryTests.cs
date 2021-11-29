@@ -2,7 +2,6 @@ namespace EntityFramework.Tests;
 
 public class InstitutionRepositoryTest : IDisposable
 {
-    
     private readonly ProjectBankContext _context;
     private readonly InstitutionRepository _repository;
     private bool disposed;
@@ -59,22 +58,22 @@ public class InstitutionRepositoryTest : IDisposable
     }
 
     protected virtual void Dispose(bool disposing)
+    {
+        if (!disposed)
         {
-            if (!disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _context.Dispose();
-                }
-
-                disposed = true;
+                _context.Dispose();
             }
-        }
 
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            disposed = true;
         }
+    }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
