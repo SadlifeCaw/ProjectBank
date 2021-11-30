@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ProjectBank.Infrastructure.Entities
+namespace ProjectBank.Infrastructure
 {
     public class Signature
     {
@@ -10,6 +10,7 @@ namespace ProjectBank.Infrastructure.Entities
 
         public Signature(IReadOnlyCollection<Tag> tags)
         {
+            if(tags.Count() == 0) {throw new ArgumentException("Cannot initialize a signature with an empty list of Tag.");}
             Hashes = GetHashedTags(tags);
         }
 
@@ -21,23 +22,24 @@ namespace ProjectBank.Infrastructure.Entities
             string minSHA384 = "å";
             string minSHA512 = "å";
             string minNoHash = "å";
+            var builder = new HashBuilder();
 
             foreach (Tag tag in tags)
             {
-                var SHA1 = ComputeSHA1(tag.Name);
-                if (minSHA1 == "å" || minSHA1.CompareTo(SHA1) > 0) minSHA1 = SHA1;
+                var SHA1Value = builder.HashString(tag.Name, SHA1.Create());
+                if (minSHA1 == "å" || minSHA1.CompareTo(SHA1Value) > 0) minSHA1 = SHA1Value;
                 
-                var SHA256 = ComputeSHA256(tag.Name);
-                if (minSHA256 == "å" || minSHA256.CompareTo(SHA256) > 0) minSHA256 = SHA256;
+                var SHA256Value = builder.HashString(tag.Name, SHA256.Create());
+                if (minSHA256 == "å" || minSHA256.CompareTo(SHA256Value) > 0) minSHA256 = SHA256Value;
 
-                var MD5 = ComputeMD5(tag.Name);
-                if (minMD5 == "å" || minMD5.CompareTo(MD5) > 0) minMD5 = MD5;
+                var MD5Value = builder.HashString(tag.Name, MD5.Create());
+                if (minMD5 == "å" || minMD5.CompareTo(MD5Value) > 0) minMD5 = MD5Value;
 
-                var SHA384 = ComputeSHA384(tag.Name);
-                if (minSHA384 == "å" || minSHA384.CompareTo(SHA384) > 0) minSHA384 = SHA384;
+                var SHA384Value = builder.HashString(tag.Name, SHA384.Create());
+                if (minSHA384 == "å" || minSHA384.CompareTo(SHA384Value) > 0) minSHA384 = SHA384Value;
 
-                var SHA512 = ComputeSHA512(tag.Name);
-                if (minSHA512 == "å" || minSHA512.CompareTo(SHA512) > 0) minSHA512 = SHA512;
+                var SHA512Value = builder.HashString(tag.Name, SHA512.Create());
+                if (minSHA512 == "å" || minSHA512.CompareTo(SHA512Value) > 0) minSHA512 = SHA512Value;
 
                 var NoHash = tag.Name;
                 if (minNoHash == "å" || minNoHash.CompareTo(NoHash) > 0) minNoHash = NoHash;
@@ -46,7 +48,7 @@ namespace ProjectBank.Infrastructure.Entities
             return new ReadOnlyCollection<string>(new List<string> { minSHA1, minSHA256, minMD5, minSHA384, minSHA512, minNoHash});
 
         }
-
+/*
         private string ToString(byte[] bytes)
         {
             StringBuilder builder = new StringBuilder();
@@ -106,5 +108,6 @@ namespace ProjectBank.Infrastructure.Entities
                 return code;
             }
         }
+         */
     }
 }

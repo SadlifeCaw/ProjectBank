@@ -8,7 +8,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
     {
         private int groupSize = 2;
         private int k = 6;
-        private int NumberOfGroups;
+        public int NumberOfGroups;
         public Dictionary<string, Bucket> Map;
 
         public LocalitySensitiveHashTable()
@@ -24,6 +24,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         public void Insert(ITagable tagable)
         {
+            if (tagable.Tags.Count() == 0) {throw new ArgumentException("Cannot insert project without tags"); }
             var bucketStrings = HashesToBucketString(tagable.Signature);
             foreach (string bucketString in bucketStrings)
             {

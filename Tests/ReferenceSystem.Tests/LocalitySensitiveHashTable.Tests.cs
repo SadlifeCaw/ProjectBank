@@ -47,15 +47,15 @@ namespace ReferenceSystem.Tests
             ComputerScienceAlgorithmsSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = null, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
             AgricultureFarming = new Project { Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = null, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
             ComputerScienceAlgorithmsSimulationSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = null, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            
+
             LSH = new LocalitySensitiveHashTable();
             LSH.Insert(AgricultureFarming);
             LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
             LSH.Insert(ComputerScienceAlgorithmsSecurity);
             LSH.Insert(AgricultureFood);
             LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
-            
-            
+
+
             //LARGE LSH:
             AgricultureFoodIdentical = new Project { Tags = new List<Tag> { Agriculture, Food }, Id = 6, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
             ComputerScienceSimulationAlgorithmsAgricultureIdentical = new Project { Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 7, Author = null, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
@@ -118,7 +118,7 @@ namespace ReferenceSystem.Tests
         }
 
         [Fact]
-        public void Update_given_old_and_new_ITagable_updates_old_to_new()
+        public void Update_Replaces_Project_With_Updated()
         {
             //Arrange
             var tagable = AgricultureFarming;
@@ -154,7 +154,7 @@ namespace ReferenceSystem.Tests
         //When calling Get, all projects have at least two simular tags
         //Only works for k = 6
         [Fact]
-        public void Get_Returns_Tagables_With_One_Or_More_Common_Tags()
+        public void SMALL_Get_Returns_Tagables_With_One_Or_More_Common_Tags()
         {
             //Arrange
             var Singature = ComputerScienceAlgorithmsSecurity.Signature;
@@ -188,12 +188,43 @@ namespace ReferenceSystem.Tests
             }
         }
 
-        //Projects within a bucket have at least N simular tags
+        [Fact]
+        public void LARGE_Get_Returns_Tagables_With_One_Or_More_Common_Tags()
+        {
+            //Arrange
+            var Singature = ComputerScienceAlgorithmsSecurity.Signature;
+            var buckets = new List<string>();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < 3; i++)
+            {
+                builder.Append(Singature.Hashes.ElementAt(i*2));
+                builder.Append(Singature.Hashes.ElementAt(i*2 + 1));
+                buckets.Add(builder.ToString());
+                builder.Clear();
+            }
+            
+            //Act & Assert
+            foreach (var str in buckets)
+            {
+                var bucket = LargeLSH.Map[str];
+                foreach (ITagable project in bucket.Projects)
+                {
+                    int counter = 0;
+                    var tags = project.Tags;
+                    foreach (var tag in tags)
+                    {
+                        counter++;
+                    }
+                    Assert.True(counter > 0);
+                }
+            }
+        }
+
         [Fact]
         public void Projects_Within_Bucket_Has_One_Or_More_Common_Tags()
         {
-            string bucketString = LSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
-            Bucket bucket = LSH.Map[bucketString];
+            string bucketString = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
+            Bucket bucket = LargeLSH.Map[bucketString];
 
             foreach (ITagable tagable in bucket.Projects)
             {
@@ -251,8 +282,7 @@ namespace ReferenceSystem.Tests
         public void LARGE_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
         {
             //Arrange
-            //var expected = new List<ITagable> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurity, ComputerScienceAlgorithmsSimulationSecurityIdentical, LessManyTagsProject2, LessManyTagsProject3, ManyTagsProject ,ComputerScienceSimulationAlgorithmsAgriculture, ComputerScienceSimulationAlgorithmsAgricultureIdentical, SecurityProject, SecurityFoodProject, AgricultureSecurityProject}.AsEnumerable();
-            var expected = new List<ITagable> { ComputerScienceAlgorithmsSecurityIdentical , ComputerScienceAlgorithmsSimulationSecurityIdentical,ComputerScienceAlgorithmsSimulationSecurity, LessManyTagsProject2, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture}.AsEnumerable();
+            var expected = new List<ITagable> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurity, LessManyTagsProject2, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
 
             //Act
             var actual = LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity).AsEnumerable();
@@ -262,52 +292,116 @@ namespace ReferenceSystem.Tests
         }
 
         [Fact]
-        public void Delete_Removes_Project()
+        public void Delete_Removes_All_Groups_In_Buckets()
         {
             //Arrange
-            int expected = -3;
-            foreach (KeyValuePair<string, Bucket> entry in LSH.Map)
+            int expected = 0 - LargeLSH.NumberOfGroups;
+            foreach (KeyValuePair<string, Bucket> entry in LargeLSH.Map)
             {
                 expected += entry.Value.Projects.Count();
             }
             //Act
-            LSH.Delete(AgricultureFarming);
+            LargeLSH.Delete(AgricultureFarming);
             int actual = 0;
-            foreach (KeyValuePair<string, Bucket> entry in LSH.Map)
+            foreach (KeyValuePair<string, Bucket> entry in LargeLSH.Map)
             {
                 actual += entry.Value.Projects.Count();
             }
             //Assert
-            Assert.Equal(expected, actual); //3 DEPENDENT ON K, N, B FROM LSH
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void Update_And_Delete_Throws_Exception_If_Project_Not_Inserted()
+        public void Update_Throws_Exception_If_Project_Not_Inserted_Given_NonEmpty_LSH()
         {
             //Arrange
             var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            var TestLSH = new LocalitySensitiveHashTable();
+            
             //Act and Assert
-            Assert.Throws<ArgumentException>(() => LSH.Update(ComputerSecurity));
-            Assert.Throws<ArgumentException>(() => TestLSH.Update(ComputerSecurity));
+            Assert.Throws<ArgumentException>(() => LargeLSH.Update(ComputerSecurity));
+        }
+
+        [Fact]
+        public void Update_Throws_Exception_If_Project_Not_Inserted_Given_Empty_LSH() {
+            //Arrange
+            var TestLSH = new LocalitySensitiveHashTable();
+            
+            //Act & Assert
+            Assert.Throws<ArgumentException>(() => TestLSH.Update(ComputerScienceAlgorithmsSecurity));
         }
 
         [Fact]
         public void Insert_Throws_Exception_If_Project_Exists()
         {
-            Assert.Throws<ArgumentException>(() => LSH.Insert(ComputerScienceAlgorithmsSecurity));
+            Assert.Throws<ArgumentException>(() => LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
         }
 
         [Fact]
         public void If_signature_group_exists_it_gets_added_to_existing_bucket()
         {
+            //Arrange
+            var TestLSH = new LocalitySensitiveHashTable();
+            var Signature = ComputerScienceAlgorithmsSecurity.Signature;
+            var expected = new List<int>();
+            var actual = new List<int>();
+            
+            var buckets = new List<string>();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
+            {
+                builder.Append(Signature.Hashes.ElementAt(i*2));
+                builder.Append(Signature.Hashes.ElementAt(i*2 + 1));
+                buckets.Add(builder.ToString());
+                builder.Clear();
+            }
 
+            //Act
+            TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
+            var SizeBefore = TestLSH.Map.Count();   
+            for (int i = 0; i < LargeLSH.NumberOfGroups; i++) 
+            {
+                expected.Add(TestLSH.Map[buckets[i]].Projects.Count() + 1);
+            }
+
+            TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
+            var SizeAfter = TestLSH.Map.Count();
+            for (int i = 0; i < LargeLSH.NumberOfGroups; i++) 
+            {
+                actual.Add(TestLSH.Map[buckets[i]].Projects.Count());
+            }
+            //Assert
+            Assert.Equal(SizeBefore, SizeAfter); //Number of buckets should be the same
+            Assert.Equal(expected, actual); //The same buckets get one more group
         }
 
         [Fact]
-        public void Get_Returns_LargeData_()
+        public void HashesToBucketString_Splits_Signature_To_NumberOfGroups()
         {
+            //Arrange
+            var TestLSH = new LocalitySensitiveHashTable();
+            var Signature = AllUnrelatedTags.Signature;
+            var expected = new string[TestLSH.NumberOfGroups];
+            
+            //Act
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < TestLSH.NumberOfGroups; i++) 
+            {
+                builder.Append(Signature.Hashes.ElementAt(i*2));
+                builder.Append(Signature.Hashes.ElementAt(i*2 + 1));
+                expected[i] = builder.ToString();
+                builder.Clear();
+            }
+            var actual = TestLSH.HashesToBucketString(Signature);
+            
+            //Assert
+            Assert.Equal(expected, actual);
+        }
 
+        [Fact]
+        public void Insert_Throws_Exception_If_No_Tags() 
+        {
+            //Arrange, Act & Assert
+            Assert.Throws<ArgumentException>(() => LargeLSH.Insert(new Project { Tags = new List<Tag> {}, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC }));      
         }
 
         private void insertSmallData()
