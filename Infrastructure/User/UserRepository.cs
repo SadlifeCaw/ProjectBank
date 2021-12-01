@@ -13,7 +13,6 @@ public class UserRepository : IUserRepository
     {
         var conflict = await _dbcontext.Users.OfType<Student>()
                         .Where(u => u.Email == user.Email)
-                        .Where(u => (u is Student))
                         .Select(u => new StudentDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Program.Code, 
                                                     u.Program.Faculty.Institution.Title, u.Projects.Select(p => p.Id).ToList()))
                         .FirstOrDefaultAsync();
@@ -33,6 +32,12 @@ public class UserRepository : IUserRepository
                               .Where(p => p.Code == user.ProgramCode)
                               .Select(p => p)
                               .FirstOrDefaultAsync();
+
+        //institution or program doesn't exists
+        if(institution == null || program == null)
+        {
+            return (Response.NotFound, new StudentDTO(-1, user.Email, user.FirstName, user.LastName, user.ProgramCode, user.InstitutionName, user.ProjectIDs));
+        }
 
         var entity = new Student
         {
@@ -54,7 +59,50 @@ public class UserRepository : IUserRepository
 
     public async Task<(Response, SupervisorDTO)> CreateAsync(SupervisorCreateDTO user)
     {
-        throw new NotImplementedException();
+        var conflict = await _dbcontext.Users.OfType<Supervisor>()
+                        .Where(u => u.Email == user.Email)
+                        .Select(u => new SupervisorDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Faculty.Title, u.Institution.Title, 
+                                                       u.Projects.Select(p => p.Id).ToList()))
+                        .FirstOrDefaultAsync();
+
+        if (conflict != null)
+        {
+            return (Response.Conflict, conflict);
+        }
+
+        var institution = await _dbcontext.Institutions
+                              .Where(i => i.Title == user.InstitutionName)
+                              .Select(i => i)
+                              .FirstOrDefaultAsync();
+
+        var faculty = await _dbcontext.Faculties
+                              .Where(f => f.Institution == institution)
+                              .Where(f => f.Title == user.FacultyName)
+                              .Select(f => f)
+                              .FirstOrDefaultAsync();
+
+        //institution or faculty doesn't exists
+        if(institution == null || faculty == null)
+        {
+            return (Response.NotFound, new SupervisorDTO(-1, user.Email, user.FirstName, user.LastName, user.FacultyName, user.InstitutionName, user.ProjectIDs));
+        }
+
+        var entity = new Supervisor
+        {
+            Email = user.Email,
+            Institution = institution,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Projects = await GetProjectsAsync(user.ProjectIDs).ToListAsync(),
+            Faculty = faculty
+        };
+
+        _dbcontext.Users.Add(entity);
+
+        await _dbcontext.SaveChangesAsync();
+
+        return (Response.Created, new SupervisorDTO(entity.Id, entity.Email, entity.FirstName, entity.LastName, entity.Faculty.Title, 
+                                                    entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList()));
     }
 
     public async Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID)
