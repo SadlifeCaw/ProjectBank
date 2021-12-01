@@ -9,57 +9,57 @@ public class UserRepository : IUserRepository
         _dbcontext = context;
     }
 
-    public Task<(Response, StudentDTO)> CreateAsync(StudentCreateDTO user)
+    public async Task<(Response, StudentDTO)> CreateAsync(StudentCreateDTO user)
     {
         throw new NotImplementedException();
     }
 
-    public Task<(Response, SupervisorDTO)> CreateAsync(SupervisorCreateDTO user)
+    public async Task<(Response, SupervisorDTO)> CreateAsync(SupervisorCreateDTO user)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID)
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyCollection<ProjectDTO>> GetProjects(int userID)
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetProjects(int userID)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyCollection<UserDTO>> ReadAllAsync()
+    public async Task<IReadOnlyCollection<UserDTO>> ReadAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync()
+    public async Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync()
+    public async Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<UserDTO> ReadByEmail(string Email)
+    public async Task<UserDTO> ReadByEmail(string Email)
     {
         throw new NotImplementedException();
     }
 
-    public Task<UserDTO> ReadByID(int userID)
+    public async Task<UserDTO> ReadByID(int userID)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Response> UpdateStudentAsync(StudentDTO student)
+    public async Task<Response> UpdateStudentAsync(StudentDTO student)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Response> UpdateSupervisorAsync(SupervisorDTO student)
+    public async Task<Response> UpdateSupervisorAsync(SupervisorDTO student)
     {
         throw new NotImplementedException();
     }
