@@ -32,6 +32,11 @@ namespace ProjectBank.Infrastructure;
                               .Where(f => f.Title == program.FacultyName)
                               .Select(f => f)
                               .FirstOrDefaultAsync();
+                              
+            if(EntityFaculty == null)
+            {
+                return (Response.NotFound, new ProgramDTO(-1, program.Title, program.Description, program.FacultyName, program.Code, program.Courses));
+            }
 
             var entity = new TeachingProgram
             {
@@ -39,7 +44,7 @@ namespace ProjectBank.Infrastructure;
                 Description = program.Description,
                 Faculty = EntityFaculty, 
                 Code = program.Code,
-                Courses = await GetCoursesAsync(program.Courses).ToListAsync()
+                Courses = await GetCoursesAsync(program.Courses, EntityFaculty.Institution.Title).ToListAsync()
             };
 
             _dbcontext.Programs.Add(entity);
@@ -64,9 +69,10 @@ namespace ProjectBank.Infrastructure;
                            .AsReadOnly();
 
         //used to get existing courses based on Title and FacultyName given in DTO
-        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<string> inCourses) 
+        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<string> inCourses, string InstitutionName) 
         {
             var existing = await _dbcontext.Courses
+                            .Where(c => c.Faculty.Institution.Title == InstitutionName)
                             .Where(c => inCourses
                                         .Any(inC => inC == c.Code))
                             .Select(c => c)
