@@ -1,15 +1,15 @@
 namespace ProjectBank.Infrastructure;
 
- public class ProgramRepository : IProgramRepository
+ public class TeachingProgramRepository : ITeachingProgramRepository
     {
         private readonly ProjectBankContext _dbcontext;
 
-        public ProgramRepository(ProjectBankContext context)
+        public TeachingProgramRepository(ProjectBankContext context)
         {
             _dbcontext = context;
         }
 
-        public async Task<(Response, ProgramDTO)> CreateAsync(ProgramCreateDTO program)
+        public async Task<(Response, TeachingProgramDTO)> CreateAsync(TeachingProgramCreateDTO program)
         {
             var conflict =
                     await _dbcontext.Programs
@@ -17,7 +17,7 @@ namespace ProjectBank.Infrastructure;
                     .Where(p => p.Description == program.Description)
                     .Where(p => p.Faculty.Title == program.FacultyName)
                     .Where(p => p.Code == program.Code)
-                    .Select(p => new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code,program.Courses))
+                    .Select(p => new TeachingProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code,program.CourseCodes))
                     .FirstOrDefaultAsync();
 
             if (conflict != null)
@@ -35,7 +35,7 @@ namespace ProjectBank.Infrastructure;
                               
             if(EntityFaculty == null)
             {
-                return (Response.NotFound, new ProgramDTO(-1, program.Title, program.Description, program.FacultyName, program.Code, program.Courses));
+                return (Response.NotFound, new TeachingProgramDTO(-1, program.Title, program.Description, program.FacultyName, program.Code, program.CourseCodes));
             }
 
             var entity = new TeachingProgram
@@ -44,27 +44,27 @@ namespace ProjectBank.Infrastructure;
                 Description = program.Description,
                 Faculty = EntityFaculty, 
                 Code = program.Code,
-                Courses = await GetCoursesAsync(program.Courses, EntityFaculty.Institution.Title).ToListAsync()
+                Courses = await GetCoursesAsync(program.CourseCodes, EntityFaculty.Institution.Title).ToListAsync()
             };
 
             _dbcontext.Programs.Add(entity);
 
             await _dbcontext.SaveChangesAsync();
 
-            return (Response.Created, new ProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Title,entity.Code,program.Courses));
+            return (Response.Created, new TeachingProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Title,entity.Code,program.CourseCodes));
         }
-        public async Task<ProgramDTO> ReadProgramByIDAsync(int ProgramID)
+        public async Task<TeachingProgramDTO> ReadProgramByIDAsync(int ProgramID)
         {
             var programs = from p in _dbcontext.Programs
                            where p.Id == ProgramID
-                           select new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList());
+                           select new TeachingProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList());
 
             return await programs.FirstOrDefaultAsync();
         }
 
-        public async Task<IReadOnlyCollection<ProgramDTO>> ReadAllAsync() =>
+        public async Task<IReadOnlyCollection<TeachingProgramDTO>> ReadAllAsync() =>
             (await _dbcontext.Programs
-                           .Select(p => new ProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList()))
+                           .Select(p => new TeachingProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList()))
                            .ToListAsync())
                            .AsReadOnly();
 
