@@ -16,7 +16,6 @@ public abstract class User
     [Required]
     [StringLength(1000)]
     public Institution? Institution { get; set; }
-    
 
     [Required]
     [StringLength(50)]
