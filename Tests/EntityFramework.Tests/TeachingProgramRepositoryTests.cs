@@ -24,7 +24,7 @@ public class TeachingProgramRepositoryTest : IDisposable
         Faculty faculty = new Faculty("Comp Sci","comp",institution) {Id = 2};
        
 
-        TeachingProgram software =  new TeachingProgram("SWU","Softwareudvikling",faculty,"SWU",new List<Course>()) {Id = 3};
+      TeachingProgram software =  new TeachingProgram("SWU","Softwareudvikling",faculty,"SWU",new List<Course>()) {Id = 3};
 
        Course bdsa = new Course{Id = 4, Title = "BDSA", Description = "Software Design and Architecture", Faculty = faculty, Code ="BDSA2021", Programs = new[] {software}};
        Course idbs = new Course{Id = 5, Title = "IDBS", Description = "Databases", Faculty = faculty, Code ="IDBS2021", Programs = new[] {software}};
@@ -35,7 +35,7 @@ public class TeachingProgramRepositoryTest : IDisposable
         );
 
         context.Programs.AddRange(
-           software =  new TeachingProgram("SWU","Softwareudvikling",faculty,"SWU",new List<Course>())
+           software
         );
 
         context.SaveChanges();
@@ -53,12 +53,10 @@ public class TeachingProgramRepositoryTest : IDisposable
         {
             Title ="DDIT",
             Description ="Det der IT",
-            FacultyName ="Not Agriculture",
+            FacultyName ="Comp Sci",
             Code="DDIT2021",
             CourseCodes = new List<string>()
         };
-
-
 
         //Act
         var created = await _repository.CreateAsync(programDTO);
@@ -75,9 +73,11 @@ public class TeachingProgramRepositoryTest : IDisposable
         Assert.Equal(6, p.Id);
         Assert.Equal("DDIT",p.Title);
         Assert.Equal("Det der IT",p.Description);
-        Assert.Equal("Not Agriculture",p.FacultyName);
+        Assert.Equal("Comp Sci",p.FacultyName);
         Assert.Equal("DDIT2021",p.Code);
     }
+
+    
 
      protected virtual void Dispose(bool disposing)
     {

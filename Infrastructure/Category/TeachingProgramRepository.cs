@@ -32,6 +32,11 @@ namespace ProjectBank.Infrastructure;
                               .Where(f => f.Title == program.FacultyName)
                               .Select(f => f)
                               .FirstOrDefaultAsync();
+                              
+            if(EntityFaculty == null)
+            {
+                return (Response.NotFound, new TeachingProgramDTO(-1, program.Title, program.Description, program.FacultyName, program.Code, program.CourseCodes));
+            }
 
             var entity = new TeachingProgram
             {
@@ -39,7 +44,7 @@ namespace ProjectBank.Infrastructure;
                 Description = program.Description,
                 Faculty = EntityFaculty, 
                 Code = program.Code,
-                Courses = await GetCoursesAsync(program.CourseCodes).ToListAsync()
+                Courses = await GetCoursesAsync(program.CourseCodes, EntityFaculty.Institution.Title).ToListAsync()
             };
 
             _dbcontext.Programs.Add(entity);
@@ -48,10 +53,10 @@ namespace ProjectBank.Infrastructure;
 
             return (Response.Created, new TeachingProgramDTO(entity.Id, entity.Title,entity.Description,entity.Faculty.Title,entity.Code,program.CourseCodes));
         }
-        public async Task<TeachingProgramDTO> ReadProgramByIDAsync(int TeachingProgramID)
+        public async Task<TeachingProgramDTO> ReadProgramByIDAsync(int ProgramID)
         {
             var programs = from p in _dbcontext.Programs
-                           where p.Id == TeachingProgramID
+                           where p.Id == ProgramID
                            select new TeachingProgramDTO(p.Id, p.Title, p.Description, p.Faculty.Title, p.Code, p.Courses.Select(p=> p.Code).ToList());
 
             return await programs.FirstOrDefaultAsync();
@@ -64,9 +69,10 @@ namespace ProjectBank.Infrastructure;
                            .AsReadOnly();
 
         //used to get existing courses based on Title and FacultyName given in DTO
-        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<string> inCourses) 
+        private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<string> inCourses, string InstitutionName) 
         {
             var existing = await _dbcontext.Courses
+                            .Where(c => c.Faculty.Institution.Title == InstitutionName)
                             .Where(c => inCourses
                                         .Any(inC => inC == c.Code))
                             .Select(c => c)
