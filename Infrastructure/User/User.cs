@@ -10,7 +10,7 @@ public abstract class User
     [Required]
     [EmailAddress]
     [StringLength(100)]
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
 
     [Required]
@@ -24,4 +24,7 @@ public abstract class User
     [Required]
     [StringLength(50)]
     public string? LastName { get; set; }
+
+    [Required]
+    public ICollection<Project> Projects {get; set;} = null!;
 }

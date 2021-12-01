@@ -42,7 +42,7 @@ public class CourseRepositoryTest : IDisposable
     }
 
     [Fact]
-    public async void CreateAsync_creates_new_institution_with_generated_id() 
+    public async void CreateAsync_creates_new_course_with_generated_id() 
     {
         //Arrange
         var courseDTO = new CourseCreateDTO
@@ -75,6 +75,28 @@ public class CourseRepositoryTest : IDisposable
         Assert.Equal("DISYS2021", c.Code);
         Assert.Equal(new List<string>() {"SWU2021"}, c.ProgramCodes);
     }
+    
+    [Fact]
+    public async void ReadAllAsync_returns_all_courses()
+    {
+        var courses = await _repository.ReadAllAsync();
+        
+    }
+
+    [Theory]
+
+    public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
+    {
+        
+    }
+
+    [Fact]
+    public async void ReadAsync_provided_ID_exists_returns_Course()
+    {
+        
+    }
+
+
 
     protected virtual void Dispose(bool disposing)
     {
