@@ -20,6 +20,9 @@ public class UserRepositoryTest : IDisposable
         var context = new ProjectBankContext(builder.Options);
         context.Database.EnsureCreated();
 
+        var P1 = new List<int>();
+        var P2 = new List<int>();
+
         Institution I1 = new Institution{Id = 3, Title = "IT-Universitetet", Description = "Informations Teknologiens Universitet"};
 
         context.Institutions.AddRange(
@@ -27,8 +30,8 @@ public class UserRepositoryTest : IDisposable
         );  
 
         context.Users.AddRange(
-            new Student{Id = 1, Email = "bob@email.com", Institution = I1, FirstName = "Bob", LastName = "Smith", Projects = null, ProgramId = 1},
-            new Supervisor{Id = 2, Email = "alice@email.com", Institution = I1, FirstName = "Alice", LastName = "Williams", Projects = null, FacultyId = 1}
+            new Student{Id = 1, Email = "bob@email.com", Institution = I1, FirstName = "Bob", LastName = "Smith", Projects = null, Program = null},
+            new Supervisor{Id = 2, Email = "alice@email.com", Institution = I1, FirstName = "Alice", LastName = "Williams", Projects = null, Faculty = null}
         );
 
         context.SaveChanges();
@@ -46,7 +49,7 @@ public class UserRepositoryTest : IDisposable
             Email = "john@email.com",
             FirstName = "John",
             LastName = "Johnson",
-            ProgramId = 1
+            ProgramCode = "SWU"
         };
 
 
@@ -66,19 +69,20 @@ public class UserRepositoryTest : IDisposable
         Assert.Equal("john@email.com", i.Email);
         Assert.Equal("John", i.FirstName);
         Assert.Equal("Johnson", i.LastName);
-        Assert.Equal(1, i.ProgramId);
+        Assert.Equal("SWU", i.ProgramCode);
     }
 
     [Fact]
     public async void CreateAsync_creates_new_supervisor_with_generated_id() 
     {
         //Arrange
+        var P1 = new List<int>();
         var supervisorDTO = new SupervisorCreateDTO
         {
             Email = "john@email.com",
             FirstName = "John",
             LastName = "Johnson",
-            FacultyId = 1
+            ProjectIDs = P1
         };
 
 
@@ -98,7 +102,7 @@ public class UserRepositoryTest : IDisposable
         Assert.Equal("james@email.com", i.Email);
         Assert.Equal("James", i.FirstName);
         Assert.Equal("Brown", i.LastName);
-        Assert.Equal(1, i.FacultyID);
+        Assert.Equal(null, i.ProjectIDs);
     }
 
     [Fact]
@@ -138,6 +142,47 @@ public class UserRepositoryTest : IDisposable
         Assert.Equal("Bob", user.FirstName);
         Assert.Equal("Smith", user.LastName);
     }
+
+    [Fact]
+    public async void ReadAllAsync_returns_all_users()
+    {
+        var P1 = new List<int>();
+        var P2 = new List<int>();
+
+        var users = await _repository.ReadAllAsync();
+
+        Assert.Collection(users,
+            user => Assert.Equal(new UserDTO(1, "bob@email.com", "Bob", "Smith", P1), user),
+            user => Assert.Equal(new UserDTO(2, "alice@email.com", "Alice", "Williams", P2), user)
+        );
+    }
+
+    [Fact]
+    public async void ReadAllStudentsAsync_returns_all_students()
+    {
+        var P1 = new List<int>();
+
+        var users = await _repository.ReadAllAsync();
+
+        Assert.Collection(users,
+            user => Assert.Equal(new UserDTO(1, "bob@email.com", "Bob", "Smith", P1), user)
+        );
+    }
+
+    [Fact]
+    public async void ReadAllSupervisorsAsync_returns_all_supervisors()
+    {
+        var P1 = new List<int>();
+
+        var users = await _repository.ReadAllAsync();
+
+        Assert.Collection(users,
+            user => Assert.Equal(new UserDTO(2, "alice@email.com", "Alice", "Williams", P1), user)
+        );
+    }
+
+    //Add tests regarding updating student/supervisor. Requires implementation of UpdateDTO's.
+    //Add tests regarding a user's projects. Requires basic implementation of Project.
 
     protected virtual void Dispose(bool disposing)
     {
