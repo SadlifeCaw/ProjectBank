@@ -22,6 +22,9 @@ public class Project : ITagable
     [Required]
     public ProjectStatus Status { get; set; }
 
+    [Required]
+    public Category? Category {get; set; }
+
     public IReadOnlyCollection<Tag> Tags
     {
         get{return tags;}
