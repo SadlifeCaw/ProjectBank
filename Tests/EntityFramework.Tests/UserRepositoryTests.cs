@@ -1,5 +1,6 @@
 using Xunit;
 
+/*
 namespace EntityFramework.Tests;
 
 public class UserRepositoryTest : IDisposable
@@ -159,3 +160,4 @@ public class UserRepositoryTest : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+*/
