@@ -83,7 +83,7 @@ public class CourseRepositoryTest : IDisposable
         
     }
 
-    [Theory]
+    [Fact]
 
     public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
     {
