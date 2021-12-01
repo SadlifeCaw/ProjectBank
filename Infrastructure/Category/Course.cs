@@ -3,12 +3,12 @@ namespace ProjectBank.Infrastructure;
 public class Course : CodedCategory 
 {
     [Required]
-    public IEnumerable<Program> Programs {get; set;}
+    public IEnumerable<TeachingProgram> Programs {get; set;}
 
     [Required]
     public IEnumerable<Student> Students {get; set;}
 
-    public Course(string Title, string? Description, Faculty Faculty, string Code, IEnumerable<Program> Programs, IEnumerable<Student> Students) 
+    public Course(string Title, string? Description, Faculty Faculty, string Code, IEnumerable<TeachingProgram> Programs, IEnumerable<Student> Students) 
     : base(Title, Description, Faculty, Code)
     {
         this.Programs = Programs;

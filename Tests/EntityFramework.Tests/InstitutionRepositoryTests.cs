@@ -2,7 +2,6 @@ namespace EntityFramework.Tests;
 
 public class InstitutionRepositoryTest : IDisposable
 {
-    
     private readonly ProjectBankContext _context;
     private readonly InstitutionRepository _repository;
     private bool disposed;
@@ -58,23 +57,54 @@ public class InstitutionRepositoryTest : IDisposable
         Assert.Equal("Danmarks Tekniske Universitet",i.Description);
     }
 
+    [Fact]
+    public async void ReadAllAsync_returns_all_institutions()
+    {
+        var institutions = await _repository.ReadAllAsync();
+
+        Assert.Collection(institutions,
+            institution => Assert.Equal(new InstitutionDTO(1, "ITU", "Best university"), institution),
+            institution => Assert.Equal(new InstitutionDTO(2, "KU", "West university"), institution)
+        );
+    }
+
+    [Fact]
+    public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
+    {
+        var nonExisting = await _repository.ReadByIDAsync(42);
+
+        Assert.Equal(null, nonExisting);
+    }
+
+    [Fact]
+    public async void ReadAsync_provided_ID_exists_returns_Institution()
+    {
+        var institution = await _repository.ReadByIDAsync(2);
+
+        Assert.Equal(2, institution.Id);
+        Assert.Equal("KU", institution.Title);
+        Assert.Equal("West university", institution.Description);
+    }
+
+    
+
     protected virtual void Dispose(bool disposing)
+    {
+        if (!disposed)
         {
-            if (!disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _context.Dispose();
-                }
-
-                disposed = true;
+                _context.Dispose();
             }
-        }
 
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            disposed = true;
         }
+    }
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }

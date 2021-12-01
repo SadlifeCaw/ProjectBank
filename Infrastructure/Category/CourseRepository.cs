@@ -74,7 +74,7 @@ namespace ProjectBank.Infrastructure;
                            .AsReadOnly();
 
         //used to get existing Programs based on prgoram codes and FacultyName given in DTO
-        private async IAsyncEnumerable<Program> GetProgramsAsync(ICollection<string> inPrograms, string FacultyName) 
+        private async IAsyncEnumerable<TeachingProgram> GetProgramsAsync(ICollection<string> inPrograms, string FacultyName) 
         {
             //code is unique for each institution
             var existing = await _dbcontext.Programs
