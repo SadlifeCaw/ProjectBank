@@ -24,7 +24,7 @@ public class TeachingProgramRepositoryTest : IDisposable
         Faculty faculty = new Faculty("Comp Sci","comp",institution) {Id = 2};
        
 
-      TeachingProgram software =  new TeachingProgram("SWU","Softwareudvikling",faculty,"SWU",new List<Course>()) {Id = 3};
+      TeachingProgram software =  new TeachingProgram("SWU","Softwareudvikling",faculty,"SWU2021",new List<Course>()) {Id = 3};
 
        Course bdsa = new Course{Id = 4, Title = "BDSA", Description = "Software Design and Architecture", Faculty = faculty, Code ="BDSA2021", Programs = new[] {software}};
        Course idbs = new Course{Id = 5, Title = "IDBS", Description = "Databases", Faculty = faculty, Code ="IDBS2021", Programs = new[] {software}};
@@ -77,7 +77,35 @@ public class TeachingProgramRepositoryTest : IDisposable
         Assert.Equal("DDIT2021",p.Code);
     }
 
-    
+    [Fact]
+    public async void ReadAllAsync_returns_all_programs()
+    {
+        var programs = await _repository.ReadAllAsync();
+        Assert.Collection(programs,
+            program => Assert.Equal(new TeachingProgramDTO(3, "SWU", "Softwareudvikling","Comp Sci","SWU2021",new List<string>{"BDSA2021, IDBS2021"}), program)
+        );
+    }
+
+    public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
+    {
+        var nonExisting = await _repository.ReadProgramByIDAsync(34);
+
+        Assert.Null(nonExisting);
+    }
+
+    [Fact]
+    public async void ReadAsync_provided_ID_exists_returns_Program()
+    {
+        var program = await _repository.ReadProgramByIDAsync(3);
+        Assert.Equal(3, program.Id);
+        Assert.Equal("SWU", program.Title);
+        Assert.Equal("Softwareudvikling", program.Description);
+        Assert.Equal("Comp Sci",program.FacultyName);
+        Assert.Equal("SWU2021",program.Code);
+        Assert.Equal(program.CourseCodes.Count(),2);
+    }
+
+
 
      protected virtual void Dispose(bool disposing)
     {
