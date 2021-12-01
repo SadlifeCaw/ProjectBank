@@ -102,7 +102,7 @@ public class TeachingProgramRepositoryTest : IDisposable
         Assert.Equal("Softwareudvikling", program.Description);
         Assert.Equal("Comp Sci",program.FacultyName);
         Assert.Equal("SWU2021",program.Code);
-        Assert.Equal(program.CourseCodes.Count(),2);
+        Assert.Equal(2,program.CourseCodes.Count());
     }
 
 

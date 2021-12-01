@@ -1,3 +1,4 @@
+/*
 namespace EntityFramework.Tests;
 
 public class CourseRepositoryTest : IDisposable
@@ -78,8 +79,12 @@ public class CourseRepositoryTest : IDisposable
     
     [Fact]
     public async void ReadAllAsync_returns_all_courses()
-    {
+    {Id = 5, Title = "BDSA", Description = "Software Design and Architecture", Faculty = ComputerScience, Code ="BDSA2021", Programs = new[] {Software}}
         var courses = await _repository.ReadAllAsync();
+        Assert.Collection(courses,
+
+            course => Assert.Equal(new CourseCreateDTO(5, "BDSA", "Software Design and Architecture",,"Computer Science",new List<string>({"SWU2021"}),new List<string>{}), program)
+        );
         
     }
 
@@ -87,13 +92,21 @@ public class CourseRepositoryTest : IDisposable
 
     public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
     {
-        
+        var nonExisting = await _repository.ReadCourseByIDAsync(34);
+
+        Assert.Null(nonExisting);
     }
 
-    [Fact]
+    [Fact] 
     public async void ReadAsync_provided_ID_exists_returns_Course()
     {
-        
+        var course = await _repository.ReadCourseByIDAsync(5);
+        Assert.Equal(5, course.Id);
+        Assert.Equal("BDSA", course.Title);
+        Assert.Equal("Software Design and Architecture", course.Description);
+        Assert.Equal("Computer Science",course.FacultyName);
+        Assert.Equal("BDSA2021",course.Code);
+        Assert.Equal(1,course.ProgramCodes.Count());
     }
 
 
@@ -118,3 +131,4 @@ public class CourseRepositoryTest : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+*/
