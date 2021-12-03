@@ -21,9 +21,6 @@
             "type": "process",
             "args": [
                 "publish",
-    
-
-=======
                 "${workspaceFolder}/Server/ProjectBank.Server.csproj",
 
                 "/property:GenerateFullPaths=true",
@@ -38,8 +35,6 @@
             "args": [
                 "watch",
                 "run",
-
-=======
                 "${workspaceFolder}/Server/ProjectBank.Server.csproj",
 
                

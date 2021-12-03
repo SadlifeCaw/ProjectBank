@@ -1,33 +1,57 @@
-
+using ProjectBank.Infrastructure.Entities;
 namespace ProjectBank.Infrastructure;
 
 [Index(nameof(Title), IsUnique = true)]
 
-public class Project
+public class Project : IProject
 {
 
     public int Id { get; set; }
 
     [Required]
-    public Supervisor? Author {get;}
+    public Supervisor? Author { get; init;}
 
     [Required]
     [StringLength(50)]
-    public string? Title {get; set;}
+    public string? Title { get; set; }
 
     [Required]
     [StringLength(1000)]
-    public string? Description {get; set;}
+    public string? Description { get; set; }
 
     [Required]
-    public ProjectStatus Status {get; set;}
+    public ProjectStatus Status { get; set; }
 
     [Required]
-    public ICollection<Tag> Tags {get; set;}  = null!;
+    public Category? Category {get; set; }
+
+    public IReadOnlyCollection<Tag> Tags
+    {
+        get{return tags;}
+
+        set
+        {
+            tags = value;
+            signature = new Signature(Tags);
+
+        }
+
+      
+    }
 
     [Required]
-    public ICollection<Student> Students {get; set;}  = null!;
+    private IReadOnlyCollection<Tag> tags = null!;
 
     [Required]
-    public ICollection<Supervisor> Collaborators {get; set;}  = null!;
+    private Signature signature = null!;
+    public Signature Signature
+    {
+        get { return signature;}
+    }
+
+    [Required]
+    public ICollection<Student> Students { get; set; } = null!;
+
+    [Required]
+    public ICollection<Supervisor> Collaborators { get; set; } = null!;
 }
