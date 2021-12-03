@@ -88,6 +88,7 @@ namespace ProjectBank.Infrastructure;
             {
                 yield return program;
             }
+            yield break;
         }
 
          private async IAsyncEnumerable<Student> GetStudentsAsync(ICollection<string> inStudents) 
@@ -102,5 +103,6 @@ namespace ProjectBank.Infrastructure;
             {
                 yield return student;
             }
+            yield break;
         }
 }

@@ -3,7 +3,7 @@ namespace ProjectBank.Infrastructure;
 
 [Index(nameof(Title), IsUnique = true)]
 
-public class Project : IProject
+public class Project : ITagable, IProject
 {
 
     public int Id { get; set; }
@@ -23,7 +23,7 @@ public class Project : IProject
     public ProjectStatus Status { get; set; }
 
     [Required]
-    public Category? Category {get; set; }
+    public Category Category {get; set; }
 
     public IReadOnlyCollection<Tag> Tags
     {

@@ -5,9 +5,6 @@ public class Course : CodedCategory
     [Required]
     public IEnumerable<Program> Programs {get; set;}
 
-    [Required]
-    public ICollection<Student>? Students {get; set;}
-
     public override IReadOnlyCollection<IHierarchy> GetAllRelated()
     {
         var related = new List<IHierarchy>();

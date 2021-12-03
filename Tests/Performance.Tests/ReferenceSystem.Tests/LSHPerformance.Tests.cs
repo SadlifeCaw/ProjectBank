@@ -94,7 +94,7 @@ namespace Performance.Tests
                     }
                 }
 
-                yield return new Tag() { Id = id, Name = name };
+                yield return new Tag(name);
             }
             yield break;
         }

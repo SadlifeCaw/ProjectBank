@@ -6,8 +6,6 @@ public interface IProject : ITagable
 {
     int Id { get; set; }
 
-    Category? Category {get; set; }
+    Category Category {get;}
 
-    IReadOnlyCollection<Tag> Tags {get; set;}
-    Signature Signature{get;}
 }
