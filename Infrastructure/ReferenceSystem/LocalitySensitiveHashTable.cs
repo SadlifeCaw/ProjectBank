@@ -4,7 +4,8 @@ using ProjectBank.Infrastructure.Entities;
 
 namespace ProjectBank.Infrastructure.ReferenceSystem
 {
-    public class LocalitySensitiveHashTable
+    public class LocalitySensitiveHashTable<Tagable> 
+    where Tagable : ITagable
     {
         private int groupSize = 2;
         private int k = 6;
@@ -22,7 +23,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             Map[bucketString] = new Bucket();
         }
 
-        public void Insert(ITagable tagable)
+        public void Insert(Tagable tagable)
         {
             if (tagable.Tags.Count() == 0) { throw new ArgumentException("Cannot insert project without tags"); }
             var bucketStrings = HashesToBucketString(tagable.Signature);
@@ -33,14 +34,14 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             }
         }
 
-        public void Update(ITagable tagable)
+        public void Update(Tagable tagable)
         {
             Delete(tagable);
             //tagable.Tags = tags;
             Insert(tagable);
         }
 
-        public void Delete(ITagable tagable)
+        public void Delete(Tagable tagable)
         {
             //if()
             var bucketStrings = HashesToBucketString(tagable.Signature);
@@ -51,13 +52,13 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         }
 
 
-        public IEnumerable<ITagable> Get(ITagable tagable)
+        public IEnumerable<Tagable> Get(Tagable tagable)
         {
-            HashSet<ITagable> set = new HashSet<ITagable>();
+            HashSet<Tagable> set = new HashSet<Tagable>();
             var bucketStrings = HashesToBucketString(tagable.Signature);
             foreach (string bucketString in bucketStrings)
             {
-                foreach (ITagable relatedTagable in Map[bucketString].Projects)
+                foreach (Tagable relatedTagable in Map[bucketString].Projects)
                 {
                     if (!relatedTagable.Equals(tagable))
                     {
@@ -68,13 +69,13 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             return set.AsEnumerable();
         }
 
-        public IReadOnlyCollection<ITagable> GetSorted(ITagable tagable)
+        public IReadOnlyCollection<Tagable> GetSorted(Tagable tagable)
         {
             var NotSortedTagables = Get(tagable);
 
-            List<(float, ITagable)> jaccardList = new List<(float, ITagable)>();
+            List<(float, Tagable)> jaccardList = new List<(float, Tagable)>();
 
-            foreach (ITagable project in NotSortedTagables)
+            foreach (Tagable project in NotSortedTagables)
             {
                 var tags = new HashSet<Tag>(project.Tags);
                 int inCommon = 0;
@@ -93,8 +94,8 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
                 jaccardList.Add((jaccardindex, project));
             }
             jaccardList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
-            List<ITagable> SortedTagables = new List<ITagable>();
-            foreach ((float, ITagable) tagger in jaccardList)
+            List<Tagable> SortedTagables = new List<Tagable>();
+            foreach ((float, Tagable) tagger in jaccardList)
             {
                 SortedTagables.Add(tagger.Item2);
             }
@@ -119,95 +120,22 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             return bucketStrings;
         }
 
-        //FIND SOLUTION FOR CATEGORIZABLE
-        public IReadOnlyCollection<Project> GetSortedInCategory(ITagable tagable, Category category)
+        //FIND SOLUTION FOR CATEGORIZABLE and without casting
+        /*public IReadOnlyCollection<Project> GetSortedInCategory(Project tagable)
         {
+            var casted = tagable;
+            if(casted.Category == null) throw new ArgumentException("The object provided does not have a category");
+            var category = casted.Category;
             var allCategories = GetSorted(tagable);
-            var categories = new List<Project>();
+            var sorted = new List<Project>();
 
             foreach (var tag in allCategories)
             {
                 var project = (Project)tag;
-                if (Match(project, category))
-                {
-                    categories.Add(project);
-                }
+                if(project.Category.IsRelated(category)) sorted.Add(project);
             }
-            return categories.AsReadOnly();
-        }
-
-        private bool Match(Project project, Category category)
-        {
-            var match = false;
-            if (project.Category.GetType() == typeof(Institution))
-            {
-                match = MatchParentInstitution((Institution)project.Category, category);
-            }
-            else if (project.Category.GetType() == typeof(Faculty))
-            {
-                match = MatchParentFaculty((Faculty)project.Category, category);
-            }
-            else if (project.Category.GetType() == typeof(Program))
-            {
-                match = MatchParentProgram((Program)project.Category, category);
-            }
-            else if (project.Category.GetType() == typeof(Course))
-            {
-                match = MatchParentCourse((Course)project.Category, category);
-            }
-            return match;
-        }
-
-
-        private bool MatchParentInstitution(Institution course, Category category)
-        {
-            var match = false;
-            if (course == category)
-            {
-                match = true;
-            }
-            return match;
-        }
-        private bool MatchParentFaculty(Faculty course, Category category)
-        {
-
-            var match = false;
-            if (course == category || course.Institution == category)
-            {
-                match = true;
-            }
-            return match;
-        }
-        private bool MatchParentProgram(Program course, Category category)
-        {
-            var match = false;
-            if (course == category || course.Faculty == category || course.Faculty.Institution == category)
-            {
-                match = true;
-            }
-            return match;
-        }
-
-        private bool MatchParentCourse(Course course, Category category)
-        {
-            var match = false;
-            if (course == category)
-            {
-                match = true;
-            }
-            else
-            {
-                var programs = course.Programs;
-                foreach (var program in programs)
-                {
-                    if (program == category || program.Faculty == category || program.Faculty.Institution == category)
-                    {
-                        match = true;
-                    }
-                }
-            }
-            return match;
-        }
+            return sorted.AsReadOnly();
+        }*/
     }
 }
 

@@ -1,6 +1,6 @@
 namespace ProjectBank.Infrastructure;
 
-public class CodedCategory : Category
+public abstract class CodedCategory : Category
 {
     
     [Required]
@@ -8,4 +8,5 @@ public class CodedCategory : Category
 
     [Required]
     public string? Code {get; set;}
+
 }

@@ -11,7 +11,7 @@ using ProjectBank.Infrastructure.ReferenceSystem;
 
 namespace ReferenceSystem.Tests
 {
-    public class LocalitySensitiveHashTableTests
+    public class ProjectLSHTests
     {
         //Tests:
         //
@@ -29,18 +29,18 @@ namespace ReferenceSystem.Tests
         Tag Food = new Tag { Name = "Food" };
         Tag Farming = new Tag { Name = "Farming" };
 
-        ITagable AgricultureFood;
-        ITagable ComputerScienceSimulationAlgorithmsAgriculture;
-        ITagable ComputerScienceAlgorithmsSecurity;
-        ITagable AgricultureFarming;
-        ITagable ComputerScienceAlgorithmsSimulationSecurity;
+        IProject AgricultureFood;
+        IProject ComputerScienceSimulationAlgorithmsAgriculture;
+        IProject ComputerScienceAlgorithmsSecurity;
+        IProject AgricultureFarming;
+        IProject ComputerScienceAlgorithmsSimulationSecurity;
 
-        LocalitySensitiveHashTable LSH;
-        LocalitySensitiveHashTable LargeLSH;
+        ProjectLSH LSH;
+        ProjectLSH LargeLSH;
 
-        IList<LocalitySensitiveHashTable> LSHList;
+        IList<ProjectLSH> LSHList;
 
-        public LocalitySensitiveHashTableTests()
+        public ProjectLSHTests()
         {
             //SMALL LSH:
             AgricultureFood = new Project {Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
@@ -49,7 +49,7 @@ namespace ReferenceSystem.Tests
             AgricultureFarming = new Project {Category = UIDesign, Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = null, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
             ComputerScienceAlgorithmsSimulationSecurity = new Project {Category = InteractiveDesign, Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = null, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
 
-            LSH = new LocalitySensitiveHashTable();
+            LSH = new ProjectLSH();
             LSH.Insert(AgricultureFarming);
             LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
             LSH.Insert(ComputerScienceAlgorithmsSecurity);
@@ -83,9 +83,9 @@ namespace ReferenceSystem.Tests
             MathAlgDisc = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics }, Id = 24, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = InteractiveDesign };
             MathAlgDiscCalc = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus }, Id = 25, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = IntroductoryProgramming};
             CalcStatProbScience2 = new Project { Tags = new List<Tag> { Calculus, Statistics, Probability, Science }, Id = 26, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = UIDesign}; 
-            //LargeLSH = new LocalitySensitiveHashTable();
+            //LargeLSH = new ProjectLSH();
 
-            LargeLSH = new LocalitySensitiveHashTable();
+            LargeLSH = new ProjectLSH();
             LargeLSH.Insert(AgricultureFarmingIdentical);
             LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgricultureIdentical);
             LargeLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
@@ -114,7 +114,7 @@ namespace ReferenceSystem.Tests
             LargeLSH.Insert(MathAlgDiscCalc);
             LargeLSH.Insert(CalcStatProbScience2);
 
-            LSHList = new List<LocalitySensitiveHashTable>();
+            LSHList = new List<ProjectLSH>();
             LSHList.Add(LSH); //Index 0
             LSHList.Add(LargeLSH); //Index 1
         }
@@ -146,7 +146,7 @@ namespace ReferenceSystem.Tests
             yield break;
         }
 
-        public IEnumerable<ITagable> Generate100000Projects(List<Tag> tags){
+        public IEnumerable<IProject> Generate100000Projects(List<Tag> tags){
             Random random = new Random();
             int tagsPerProject = 6;
             int id = 0;
@@ -184,7 +184,7 @@ namespace ReferenceSystem.Tests
 
             foreach (string buckestString in LSH.HashesToBucketString(tagable.Signature))
             {
-                foreach (ITagable tagableInBucket in LSH.Map[buckestString].Projects)
+                foreach (IProject tagableInBucket in LSH.Map[buckestString].Projects)
                 {
                     if (tagable == tagableInBucket)
                     {
@@ -227,7 +227,7 @@ namespace ReferenceSystem.Tests
             foreach (var str in buckets)
             {
                 var bucket = LSH.Map[str];
-                foreach (ITagable project in bucket.Projects)
+                foreach (IProject project in bucket.Projects)
                 {
                     int counter = 0;
                     var tags = project.Tags;
@@ -259,7 +259,7 @@ namespace ReferenceSystem.Tests
             foreach (var str in buckets)
             {
                 var bucket = LargeLSH.Map[str];
-                foreach (ITagable project in bucket.Projects)
+                foreach (IProject project in bucket.Projects)
                 {
                     int counter = 0;
                     var tags = project.Tags;
@@ -278,7 +278,7 @@ namespace ReferenceSystem.Tests
             string bucketString = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
             Bucket bucket = LargeLSH.Map[bucketString];
 
-            foreach (ITagable tagable in bucket.Projects)
+            foreach (IProject tagable in bucket.Projects)
             {
                 int CommonCounter = 0;
                 foreach (Tag tag in ComputerScienceAlgorithmsSecurity.Tags)
@@ -294,7 +294,7 @@ namespace ReferenceSystem.Tests
         public void Insert_Adds_BucketGroup_If_Non_Existant()
         {
             //Arrange 
-            var TestLSH = new LocalitySensitiveHashTable();
+            var TestLSH = new ProjectLSH();
             var AgriFarmSignature = new Signature(AgricultureFarming.Tags);
             var AgriFoodSignature = new Signature(AgricultureFood.Tags);
 
@@ -321,7 +321,7 @@ namespace ReferenceSystem.Tests
         public void SMALL_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
         {
             //Arrange
-            var expected = new List<ITagable> { ComputerScienceAlgorithmsSimulationSecurity, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
+            var expected = new List<IProject> { ComputerScienceAlgorithmsSimulationSecurity, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
 
             //Act
             var actual = LSH.GetSorted(ComputerScienceAlgorithmsSecurity).AsEnumerable();
@@ -334,7 +334,7 @@ namespace ReferenceSystem.Tests
         public void LARGE_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
         {
             //Arrange
-            var expected = new List<ITagable> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurity, LessManyTagsProject2, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
+            var expected = new List<IProject> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurity, LessManyTagsProject2, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
 
             //Act
             var actual = LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity).AsEnumerable();
@@ -377,7 +377,7 @@ namespace ReferenceSystem.Tests
         public void Update_Throws_Exception_If_Project_Not_Inserted_Given_Empty_LSH()
         {
             //Arrange
-            var TestLSH = new LocalitySensitiveHashTable();
+            var TestLSH = new ProjectLSH();
 
             //Act & Assert
             Assert.Throws<ArgumentException>(() => TestLSH.Update(ComputerScienceAlgorithmsSecurity));
@@ -393,7 +393,7 @@ namespace ReferenceSystem.Tests
         public void If_signature_group_exists_it_gets_added_to_existing_bucket()
         {
             //Arrange
-            var TestLSH = new LocalitySensitiveHashTable();
+            var TestLSH = new ProjectLSH();
             var Signature = ComputerScienceAlgorithmsSecurity.Signature;
             var expected = new List<int>();
             var actual = new List<int>();
@@ -431,7 +431,7 @@ namespace ReferenceSystem.Tests
         public void HashesToBucketString_Splits_Signature_To_NumberOfGroups()
         {
             //Arrange
-            var TestLSH = new LocalitySensitiveHashTable();
+            var TestLSH = new ProjectLSH();
             var Signature = AllUnrelatedTags.Signature;
             var expected = new string[TestLSH.NumberOfGroups];
 
@@ -461,10 +461,10 @@ namespace ReferenceSystem.Tests
         public void GetSortedByCategory_Is_Sorted_By_JaccardIndex()
         {
             //Arrange
-            var expected = new List<ITagable> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
+            var expected = new List<IProject> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
     
             //Act
-            var actual = LargeLSH.GetSortedInCategory(ComputerScienceAlgorithmsSecurity, ITU).AsEnumerable();
+            var actual = LargeLSH.GetSortedInCategory(ComputerScienceAlgorithmsSecurity).AsEnumerable();
 
             //Assert
             Assert.Equal(expected, actual);           
@@ -475,13 +475,31 @@ namespace ReferenceSystem.Tests
         [Fact]
         public void GetSortedByCategory_Only_Consists_Of_Projects_Within_Category()
         {
+            //Arrange
+            var list = LargeLSH.GetSortedInCategory(SecurityProject);
+            
+            //Act
+            var AllWithinCategory = true;
+            foreach(IProject tagable in list)
+            {
+                var project = (Project)tagable;
+                if(!project.Category.IsRelated(FacultyDesignDTU)) AllWithinCategory = false;
+            }
 
+            //Assert
+            Assert.True(AllWithinCategory);
         }
 
+        //FINISH THIS TEST WHEN YOU HAVE FIGURED OUT CATEGORIZABLE
         [Fact]
         public void GetSortedByCategory_Throws_Exception_If_No_Projects_Have_Category()
         {
+            //Arrange
+            Project test = new Project{ Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus, Statistics, Probability, Science }, Id = 19, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC};
 
+            //Act & Assert
+            //Assert.Equal(test.Category, null);
+            //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(test));
         }
 
         [Fact]
@@ -497,7 +515,7 @@ namespace ReferenceSystem.Tests
             ComputerScienceAlgorithmsSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = null, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
             AgricultureFarming = new Project { Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = null, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
             ComputerScienceAlgorithmsSimulationSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = null, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            LSH = new LocalitySensitiveHashTable();
+            LSH = new ProjectLSH();
             LSH.Insert(AgricultureFarming);
             LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
             LSH.Insert(ComputerScienceAlgorithmsSecurity);
@@ -505,31 +523,31 @@ namespace ReferenceSystem.Tests
             LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
         }
 
-        ITagable AgricultureFoodIdentical;
-        ITagable ComputerScienceSimulationAlgorithmsAgricultureIdentical;
-        ITagable ComputerScienceAlgorithmsSecurityIdentical;
-        ITagable AgricultureFarmingIdentical;
-        ITagable ComputerScienceAlgorithmsSimulationSecurityIdentical;
+        IProject AgricultureFoodIdentical;
+        IProject ComputerScienceSimulationAlgorithmsAgricultureIdentical;
+        IProject ComputerScienceAlgorithmsSecurityIdentical;
+        IProject AgricultureFarmingIdentical;
+        IProject ComputerScienceAlgorithmsSimulationSecurityIdentical;
 
-        ITagable FoodProject;
-        ITagable FoodAndAgricultureProject;
-        ITagable AgricultureSecurityProject;
-        ITagable SecurityFoodProject;
-        ITagable SecurityProject;
+        IProject FoodProject;
+        IProject FoodAndAgricultureProject;
+        IProject AgricultureSecurityProject;
+        IProject SecurityFoodProject;
+        IProject SecurityProject;
 
-        ITagable ManyTagsProject;
-        ITagable LessManyTagsProject;
-        ITagable LessManyTagsProject2;
-        ITagable LessManyTagsProject3;
+        IProject ManyTagsProject;
+        IProject LessManyTagsProject;
+        IProject LessManyTagsProject2;
+        IProject LessManyTagsProject3;
 
-        ITagable AllUnrelatedTags;
-        ITagable MathAlgebraDiscrete;
-        ITagable ProbabilityProject;
-        ITagable CalcStatProbScience;
-        ITagable AlgDiscCalcStat;
-        ITagable MathAlgDisc;
-        ITagable MathAlgDiscCalc;
-        ITagable CalcStatProbScience2;
+        IProject AllUnrelatedTags;
+        IProject MathAlgebraDiscrete;
+        IProject ProbabilityProject;
+        IProject CalcStatProbScience;
+        IProject AlgDiscCalcStat;
+        IProject MathAlgDisc;
+        IProject MathAlgDiscCalc;
+        IProject CalcStatProbScience2;
         Tag Mathematics = new Tag { Name = "Mathematics" };
         Tag Algebra = new Tag { Name = "Algebra" };
         Tag DiscreteMathematics = new Tag { Name = "Discrete Mathematics" };

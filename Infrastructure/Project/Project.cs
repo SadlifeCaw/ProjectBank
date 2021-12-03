@@ -3,7 +3,7 @@ namespace ProjectBank.Infrastructure;
 
 [Index(nameof(Title), IsUnique = true)]
 
-public class Project : ITagable
+public class Project : IProject
 {
 
     public int Id { get; set; }

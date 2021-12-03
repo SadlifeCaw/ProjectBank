@@ -16,7 +16,7 @@ namespace Performance.Tests
         static int NumOfTagsPerProject = 10;
         static List<Tag> AllTags = GenerateTags(NumOfTags).ToList();
         static List<ITagable> Projects = GenerateProjects(NumOfProjects, AllTags).ToList();
-        LocalitySensitiveHashTable LSH = GetInsertedLSH(Projects);
+        LocalitySensitiveHashTable<ITagable> LSH = GetInsertedLSH(Projects);
         public LSHPerformanceTests()
         {
 
@@ -26,7 +26,7 @@ namespace Performance.Tests
         [InlineData(2)]
         public void Insert_performance(float seconds)
         {
-            LocalitySensitiveHashTable LSHTest = new LocalitySensitiveHashTable();
+            LocalitySensitiveHashTable<ITagable> LSHTest = new LocalitySensitiveHashTable<ITagable>();
             var timer = Stopwatch.StartNew();
             foreach (ITagable tagable in Projects)
             {
@@ -62,8 +62,8 @@ namespace Performance.Tests
             Assert.True(TimeSpan.FromSeconds(seconds) >= timer.Elapsed, string.Format("Actual time was {0} milliseconds", timer.ElapsedMilliseconds));
         }
 
-        private static LocalitySensitiveHashTable GetInsertedLSH(List<ITagable> Projects){
-            LocalitySensitiveHashTable LSH = new LocalitySensitiveHashTable();
+        private static LocalitySensitiveHashTable<ITagable> GetInsertedLSH(List<ITagable> Projects){
+            LocalitySensitiveHashTable<ITagable> LSH = new LocalitySensitiveHashTable<ITagable>();
             foreach(ITagable tagable in Projects){
                 LSH.Insert(tagable);
             }
