@@ -25,25 +25,38 @@ public record ProjectDTO(
     ProjectStatus Status,
 
     [Required]
-    ICollection<int> TagIDs
+    ICollection<int> TagIDs,
+
+    [Required]
+    ICollection<int> StudentIDs,
+
+    [Required]
+    ICollection<int> CollaboratorIDs
+
 ) : ProjectKeyDTO;
 
 public record ProjectCreateDTO
 {
     [Required]
-    int AuthorID {get; init;}
+    public int AuthorID {get; init;}
 
     [Required, StringLength(50)]
-    string? Title {get; init;}
+    public string? Title {get; init;}
 
     [Required,StringLength(1000)]
-    string? Description {get; init;}
+    public string? Description {get; init;}
 
     [Required]
-    ProjectStatus Status {get; init;}
+    public ProjectStatus Status {get; init;}
     
     [Required]
-    ICollection<int>? TagIDs{get; init;}
+    public ICollection<int> TagIDs{get; init;}
+
+    [Required]
+    public ICollection<int> StudentIDs {get; init;}
+
+    [Required]
+    ICollection<int> CollaboratorIDs {get; init;}
 };
 
 public record ProjectUpdateDTO : ProjectCreateDTO
