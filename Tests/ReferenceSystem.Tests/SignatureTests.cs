@@ -58,7 +58,7 @@ namespace ReferenceSystem.Tests
         {
             //Arrange
             var expected = expectedAgriculture.AsReadOnly();
-            var tags = new List<Tag> { new Tag { Id = 1, Name = "agriculture" } }.AsReadOnly();
+            var tags = new List<Tag> { new Tag ("agriculture") }.AsReadOnly();
             //Act
             var actual = new Signature(tags);
 
@@ -71,7 +71,7 @@ namespace ReferenceSystem.Tests
         {
             //Arrange
             var expected = expectedAgricultureComputerScience.AsReadOnly();
-            var tags = new List<Tag> { new Tag { Id = 1, Name = "agriculture" }, new Tag { Id = 2, Name = "computer science" }, new Tag {Id = 3, Name = "algorithms"}, new Tag {Id = 4, Name = "databases"} }.AsReadOnly();
+            var tags = new List<Tag> { new Tag("agriculture"), new Tag("computer science"), new Tag("algorithms"), new Tag("databases")}.AsReadOnly();
             
             //Act
             var actual = new Signature(tags);

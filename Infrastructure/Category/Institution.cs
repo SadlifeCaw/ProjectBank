@@ -3,8 +3,8 @@ namespace ProjectBank.Infrastructure;
 
 public class Institution : Category {
 
-    [Required]
-    public ICollection<Faculty>? Faculties {get; set;}  = null!;
+    /*[Required]
+    public ICollection<Faculty>? Faculties {get; set;}  = null!;*/
 
     public override IReadOnlyCollection<IHierarchy> GetAllRelated()
     {

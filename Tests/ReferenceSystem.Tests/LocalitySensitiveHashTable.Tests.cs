@@ -21,13 +21,13 @@ namespace ReferenceSystem.Tests
         //Delete and update won't work, if project doesn't exist
         //Test insert into empty map
 
-        Tag Agriculture = new Tag { Name = "Agriculture" };
-        Tag ComputerScience = new Tag { Name = "Computer Science" };
-        Tag Security = new Tag { Name = "Security" };
-        Tag Algorithms = new Tag { Name = "Algorithms" };
-        Tag Simulation = new Tag { Name = "Simulation" };
-        Tag Food = new Tag { Name = "Food" };
-        Tag Farming = new Tag { Name = "Farming" };
+        Tag Agriculture = new Tag ("Agriculture");
+        Tag ComputerScience = new Tag ("Computer Science");
+        Tag Security = new Tag ("Security");
+        Tag Algorithms = new Tag ("Algorithms");
+        Tag Simulation = new Tag ("Simulation");
+        Tag Food = new Tag ("Food");
+        Tag Farming = new Tag ("Farming");
 
         IProject AgricultureFood;
         IProject ComputerScienceSimulationAlgorithmsAgriculture;
@@ -141,7 +141,7 @@ namespace ReferenceSystem.Tests
                     }
                 }
 
-                yield return new Tag() { Id = id, Name = name };
+                yield return new Tag(name);
             }
             yield break;
         }
@@ -548,13 +548,13 @@ namespace ReferenceSystem.Tests
         IProject MathAlgDisc;
         IProject MathAlgDiscCalc;
         IProject CalcStatProbScience2;
-        Tag Mathematics = new Tag { Name = "Mathematics" };
-        Tag Algebra = new Tag { Name = "Algebra" };
-        Tag DiscreteMathematics = new Tag { Name = "Discrete Mathematics" };
-        Tag Calculus = new Tag { Name = "Calculus" };
-        Tag Statistics = new Tag { Name = "Statistics" };
-        Tag Probability = new Tag { Name = "Probability" };
-        Tag Science = new Tag { Name = "Science" };
+        Tag Mathematics = new Tag("Mathematics");
+        Tag Algebra = new Tag ("Algebra");
+        Tag DiscreteMathematics = new Tag ("Discrete Mathematics");
+        Tag Calculus = new Tag ("Calculus");
+        Tag Statistics = new Tag ("Statistics");
+        Tag Probability = new Tag ("Probability");
+        Tag Science = new Tag ("Science");
 
         static Institution ITU = new Institution{Id = 1};
         static Institution DTU = new Institution{Id = 2};
