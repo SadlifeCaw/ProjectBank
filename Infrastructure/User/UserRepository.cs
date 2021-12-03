@@ -208,6 +208,8 @@ public class UserRepository : IUserRepository
 
         user.Projects.Add(project);
 
+        await _dbcontext.SaveChangesAsync();
+
         return Response.Updated;
     }
 
