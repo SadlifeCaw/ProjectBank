@@ -13,4 +13,12 @@ public class Program : CodedCategory
         related.Add(Faculty.Institution);
         return related.AsReadOnly();
     }
+    public Program(string Title, string? Description, Faculty Faculty, string Code, ICollection<Course> Courses) 
+    : base(Title, Description, Faculty, Code)
+    {
+        this.Courses = Courses;
+    }
+
+    // Empty constructor to please the EF Gods
+    public Program() {}
 }

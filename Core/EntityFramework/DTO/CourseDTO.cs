@@ -9,39 +9,38 @@ public record CourseDTO(
     string Description,
 
     [Required]
-    int FacultyID,
+    string FacultyName,
 
     [Required]
     string Code,
 
-    ICollection<ProgramDTO> Programs,
+    IEnumerable<string> ProgramCodes,
 
-    ICollection<StudentDTO> Students
+    IEnumerable<string> StudentEmails
 
-) : CodedCategoryDTO(Id, Title, Description, FacultyID, Code);
+) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
 public record CourseCreateDTO{
 
     [Required]
     [StringLength(100)]
-    public string? Title { get; init; }
+
+    public string Title { get; init; }
 
     [StringLength(1000)]
-    public string?  Description{get; init;}
+    public string  Description{get; init;}
 
     [Required]
-    int FacultyID {get; init;}
+    public string FacultyName {get; init;}
+
+    //normally this information is stored in thr faculty, but in the DTO faculty is just a string
+    [Required]
+    public string InstitutionName {get; init;}
 
     [Required]
-    string? Code {get; init;}
-    ICollection<ProgramDTO>? Programs {get; init;}
+    public string Code {get; init;}
+    public ICollection<string> ProgramCodes {get; init;}
 
-    ICollection<StudentDTO>? Students {get; init;}
-}
-
-
-
-
-
-
-
+    //string is student emails
+    public ICollection<string> StudentEmails {get; init;}
+} 

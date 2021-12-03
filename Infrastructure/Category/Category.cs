@@ -21,4 +21,13 @@ public abstract class Category : IHierarchy
         if(GetAllRelated().Except(that.GetAllRelated()).Count() != GetAllRelated().Count()) return true;
         else return false;
     }
+    //constructor to be inherited
+    protected Category(string Title, string? Description) 
+    {
+        this.Title = Title;
+        this.Description = Description;
+    }
+
+    // Empty constructor to please the EF Gods
+    protected Category() {}
 }
