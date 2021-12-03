@@ -105,49 +105,110 @@ public class UserRepository : IUserRepository
                                                     entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList()));
     }
 
-    public async Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID)
+    public async Task<UserDTO> ReadByID(int userID)
     {
-        throw new NotImplementedException();
-    }
+        var users = from u in _dbcontext.Users
+                           where u.Id == userID
+                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
 
-    public async Task<IReadOnlyCollection<ProjectDTO>> GetProjects(int userID)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IReadOnlyCollection<UserDTO>> ReadAllAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync()
-    {
-        throw new NotImplementedException();
+        return await users.FirstOrDefaultAsync(); 
     }
 
     public async Task<UserDTO> ReadByEmail(string Email)
     {
-        throw new NotImplementedException();
+        var users = from u in _dbcontext.Users
+                           where u.Email == Email
+                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
+
+        return await users.FirstOrDefaultAsync(); 
     }
 
-    public async Task<UserDTO> ReadByID(int userID)
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID)
     {
-        throw new NotImplementedException();
+        var user = await _dbcontext.Users
+                            .Where(u => u.Id == userID)
+                            .Select(u => u)
+                            .FirstOrDefaultAsync();
+
+        if(user == null || user is Student)
+        {
+            //dependecy on list type...
+            return new List<ProjectDTO>();
+        }
+
+        var projects = user.Projects.Where(p => p.Author == user)
+                                    .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.Tags.Select(t => t.Id).ToList()))
+                                    .ToList()
+                                    .AsReadOnly();
+
+        return projects;
     }
 
-    public async Task<Response> UpdateStudentAsync(StudentDTO student)
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetProjects(int userID)
     {
-        throw new NotImplementedException();
+        var user = await _dbcontext.Users
+                            .Where(u => u.Id == userID)
+                            .Select(u => u)
+                            .FirstOrDefaultAsync();
+
+        if(user == null || user is Student)
+        {
+            //dependecy on list type...
+            return new List<ProjectDTO>();
+        }
+
+        var projects = user.Projects.Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.Tags.Select(t => t.Id).ToList()))
+                                    .ToList()
+                                    .AsReadOnly();
+
+        return projects;
     }
 
-    public async Task<Response> UpdateSupervisorAsync(SupervisorDTO student)
+    public async Task<IReadOnlyCollection<UserDTO>> ReadAllAsync()
     {
-        throw new NotImplementedException();
+        return (await _dbcontext.Users
+                        .Select(u => new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+    }
+
+    public async Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync()
+    {
+        return (await _dbcontext.Users.OfType<Student>()
+                        .Select(u => new StudentDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Program.Code, u.Institution.Title, u.Projects.Select(p => p.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+    }
+
+    public async Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync()
+    {
+        return (await _dbcontext.Users.OfType<Supervisor>()
+                        .Select(u => new SupervisorDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Faculty.Title, u.Institution.Title, u.Projects.Select(p => p.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+    }
+
+    public async Task<Response> UpdateUserProjects(int userID, ProjectKeyDTO projectKey)
+    {
+        var user = await _dbcontext.Users
+                        .Where(u => u.Id == userID)
+                        .Select(u => u)
+                        .FirstOrDefaultAsync();
+
+        var project = await _dbcontext.Projects
+                        .Where(p => p.Author.Id == projectKey.AuthorID)
+                        .Where(p => p.Title == projectKey.Title)
+                        .Select(p => p)
+                        .FirstOrDefaultAsync();
+        
+        if(user == null || project == null)
+        {
+            return Response.NotFound;
+        }
+
+        user.Projects.Add(project);
+
+        return Response.Updated;
     }
 
     private async IAsyncEnumerable<Project> GetProjectsAsync(ICollection<int> inProjects) 

@@ -9,8 +9,7 @@ public interface IUserRepository
     Task<IReadOnlyCollection<UserDTO>> ReadAllAsync();
     Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync();
     Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync();
-    Task<Response> UpdateStudentAsync(StudentDTO student);
-    Task<Response> UpdateSupervisorAsync(SupervisorDTO student);
+    Task<Response> UpdateUserProjects(int userID, ProjectKeyDTO project);
     Task<IReadOnlyCollection<ProjectDTO>> GetProjects(int userID);
     Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID);
 }

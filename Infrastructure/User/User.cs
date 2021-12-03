@@ -27,7 +27,6 @@ public abstract class User
     [Required]
     public ICollection<Project> Projects {get; set;} = null!;
 
-
     protected User(string Email, Institution institution, string FirstName, string LastName, ICollection<Project> projects)
     {
         this.Email = Email;

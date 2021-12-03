@@ -9,7 +9,7 @@ public class Project
     public int Id { get; set; }
 
     [Required]
-    public Supervisor? Author {get;}
+    public Supervisor Author {get;}
 
     [Required]
     [StringLength(50)]
