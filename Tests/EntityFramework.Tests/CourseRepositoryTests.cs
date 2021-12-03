@@ -1,13 +1,16 @@
-/*
+
 namespace EntityFramework.Tests;
 
-public class CourseRepositoryTest : IDisposable
+
+
+public class CourseRepositoryTests : IDisposable
 {
+    
     private readonly ProjectBankContext _context;
     private readonly CourseRepository _repository;
     private bool disposed;
 
-    public CourseRepositoryTest()
+    public CourseRepositoryTests()
     {
         var connection = new SqliteConnection("Filename=:memory:");
         connection.Open();
@@ -19,25 +22,40 @@ public class CourseRepositoryTest : IDisposable
         var context = new ProjectBankContext(builder.Options);
         context.Database.EnsureCreated();
 
+        
+
         var ITU = new Institution("ITU", "IT-University of Copenhagen") {Id = 1};
         var ComputerScience = new Faculty("Computer Science", "Related to computers", ITU) {Id = 2};
 
         TeachingProgram Software = new TeachingProgram("Software Development", "The best line at ITU", ComputerScience, "SWU2021", new List<Course>()) {Id = 3};
-        TeachingProgram Data = new TeachingProgram("Data Science", "Something", ComputerScience, "DS2021", new List<Course>()) {Id = 4};
+
+
+        Student Anton = new Student("antbr@itu.dk",ITU,"Anton","Breinholt", new List<Project>(),Software) {Id = 4};
+        User Villum = new Student("vson@itu.dk",ITU,"Villum","Sonne", new List<Project>(),Software) {Id = 5};
+
+        Course Bdsa = new Course("BDSA", "Software Design and Architecture",ComputerScience, "BDSA2021", new List<TeachingProgram>{Software}, new List<Student>()) {Id = 6};
+        Course Idbs = new Course("IDBS","Databases",ComputerScience,"IDBS2021", new List<TeachingProgram>{Software}, new List<Student>()) {Id = 7};
+
         context.Institutions.Add(ITU);
         context.Faculties.Add(ComputerScience);
-
-        context.Programs.AddRange(
-            Software,
-            Data
-        );
+          
 
         context.Courses.AddRange(
-            new Course{Id = 5, Title = "BDSA", Description = "Software Design and Architecture", Faculty = ComputerScience, Code ="BDSA2021", Programs = new[] {Software}}
+            Bdsa,
+            Idbs
         );
 
-        context.SaveChanges();
+        context.Programs.AddRange(
+            Software
+        );
+            //Causes an exception
 
+       /* context.Users.AddRange(
+            Anton,
+            Villum
+        );*/
+
+        context.SaveChanges();
         _context = context;
         _repository = new CourseRepository(_context);
     }
@@ -69,22 +87,35 @@ public class CourseRepositoryTest : IDisposable
 
         //Assert
         Assert.Equal(Response.Created, created.Item1);
-        Assert.Equal(6, c.Id);
+        Assert.Equal(8, c.Id);
         Assert.Equal("DISYS", c.Title);
         Assert.Equal("Distributed Systems",c .Description);
-        //Assert.Equal("ITU", c.); //institution name not part of basic DTO
         Assert.Equal("DISYS2021", c.Code);
         Assert.Equal(new List<string>() {"SWU2021"}, c.ProgramCodes);
     }
     
     [Fact]
     public async void ReadAllAsync_returns_all_courses()
-    {Id = 5, Title = "BDSA", Description = "Software Design and Architecture", Faculty = ComputerScience, Code ="BDSA2021", Programs = new[] {Software}}
+    {
+        
         var courses = await _repository.ReadAllAsync();
-        Assert.Collection(courses,
 
-            course => Assert.Equal(new CourseCreateDTO(5, "BDSA", "Software Design and Architecture",,"Computer Science",new List<string>({"SWU2021"}),new List<string>{}), program)
+        var testProgramList = new List<string>() {"SWU2021"};
+
+        var testStudentList = new List<string>() {"antbr@itu.dk","vson@itu.dk"};
+
+        Assert.Collection(courses,
+        course => Assert.Equal(new CourseDTO(6, "BDSA", "Software Design and Architecture", "Computer Science","BDSA2021",course.ProgramCodes,course.StudentEmails),course),
+        course => Assert.Equal(new CourseDTO(7,"IDBS","Databases","Computer Science","IDBS2021",course.ProgramCodes,course.StudentEmails),course)
         );
+        
+        courses.ElementAt(0).ProgramCodes.SequenceEqual(testProgramList);
+        courses.ElementAt(1).ProgramCodes.SequenceEqual(testProgramList);
+        courses.ElementAt(0).StudentEmails.SequenceEqual(testStudentList);
+        courses.ElementAt(1).StudentEmails.SequenceEqual(testStudentList);
+        
+
+
         
     }
 
@@ -100,13 +131,12 @@ public class CourseRepositoryTest : IDisposable
     [Fact] 
     public async void ReadAsync_provided_ID_exists_returns_Course()
     {
-        var course = await _repository.ReadCourseByIDAsync(5);
-        Assert.Equal(5, course.Id);
+        var course = await _repository.ReadCourseByIDAsync(6);
+        Assert.Equal(6, course.Id);
         Assert.Equal("BDSA", course.Title);
         Assert.Equal("Software Design and Architecture", course.Description);
         Assert.Equal("Computer Science",course.FacultyName);
         Assert.Equal("BDSA2021",course.Code);
-        Assert.Equal(1,course.ProgramCodes.Count());
     }
 
 
@@ -131,4 +161,4 @@ public class CourseRepositoryTest : IDisposable
         GC.SuppressFinalize(this);
     }
 }
-*/
+

@@ -42,5 +42,8 @@ public class ProjectBankContext : DbContext
             .Property(e => e.Status)
             .HasMaxLength(50)
             .HasConversion(new EnumToStringConverter<ProjectStatus>());
+
+        modelBuilder.Entity<Project>().HasOne(p => p.Author).WithMany(u => u.Projects);
+        modelBuilder.Entity<Project>().HasMany(p => p.Students).WithMany(u => u.Projects);
     }
 }

@@ -1,4 +1,4 @@
-namespace ProjectBank.Infrastructure;
+/*namespace ProjectBank.Infrastructure;
 
 public class UserRepository : IUserRepository
 {
@@ -227,3 +227,4 @@ public class UserRepository : IUserRepository
         }
     }
 }
+*/
