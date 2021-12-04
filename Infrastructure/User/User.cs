@@ -15,7 +15,7 @@ public abstract class User
 
     [Required]
     [StringLength(1000)]
-    public Institution? Institution { get; set; }
+    public Institution Institution { get; set; }
 
     [Required]
     [StringLength(50)]
@@ -27,7 +27,7 @@ public abstract class User
     [Required]
     public ICollection<Project> Projects {get; set;} = null!;
 
-    protected User(string Email, Institution institution, string FirstName, string LastName, ICollection<Project> projects)
+    protected User(string Email, Institution institution, string FirstName, string LastName, ICollection<Project> Projects)
     {
         this.Email = Email;
         this.Institution = Institution;

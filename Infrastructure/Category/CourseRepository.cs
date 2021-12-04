@@ -92,7 +92,7 @@ public class CourseRepository : ICourseRepository
 
         private async IAsyncEnumerable<Student> GetStudentsAsync(ICollection<string> inStudents) 
     {
-        var existing = await _dbcontext.Students
+        var existing = await _dbcontext.Users.OfType<Student>()
                         .Where(s => inStudents
                                     .Any(inS => inS == s.Email))
                         .Select(s => s)

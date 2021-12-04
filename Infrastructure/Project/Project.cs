@@ -9,9 +9,6 @@ public class Project
     public int Id { get; set; }
 
     [Required]
-    public Supervisor Author {get;}
-
-    [Required]
     [StringLength(50)]
     public string? Title {get; set;}
 
@@ -26,8 +23,23 @@ public class Project
     public ICollection<Tag> Tags {get; set;}  = null!;
 
     [Required]
-    public ICollection<Student> Students {get; set;}  = null!;
+    public ICollection<User> Users {get; set;}  = null!;
 
     [Required]
-    public ICollection<Supervisor> Collaborators {get; set;}  = null!;
+    public Supervisor Author {get; set;}
+
+    [Required]
+    public int MaxStudents {get; set;}
+
+    public Project(Supervisor Author, string Title, string Description, ProjectStatus Status, ICollection<Tag> Tags, ICollection<User> Users)
+    {
+        this.Author = Author;
+        this.Title = Title;
+        this.Description = Description;
+        this.Status = Status;
+        this.Tags = Tags;
+        this.Users = Users;
+    }
+
+    public Project() {}
 }
