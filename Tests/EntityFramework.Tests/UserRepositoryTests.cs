@@ -25,14 +25,19 @@ public class UserRepositoryTest : IDisposable
         var P2 = new List<int>();
 
         Institution I1 = new Institution{Id = 3, Title = "IT-Universitetet", Description = "Informations Teknologiens Universitet"};
+        Faculty F = new Faculty("Computer Science", "Science with computers", I1) {Id = 4};
+        TeachingProgram TP = new TeachingProgram("SWU", "Software Development", F, "SWU2020", new List<Course>()) {Id = 5};
 
         context.Institutions.AddRange(
             I1
         );  
 
+        context.Faculties.Add(F);
+        context.Programs.Add(TP);
+
         context.Users.AddRange(
-            new Student{Id = 1, Email = "bob@email.com", Institution = I1, FirstName = "Bob", LastName = "Smith", Projects = null, Program = null},
-            new Supervisor{Id = 2, Email = "alice@email.com", Institution = I1, FirstName = "Alice", LastName = "Williams", Projects = null, Faculty = null}
+            new Student{Id = 1, Email = "bob@email.com", Institution = I1, FirstName = "Bob", LastName = "Smith", Projects = new List<Project>(), Program = TP},
+            new Supervisor{Id = 2, Email = "alice@email.com", Institution = I1, FirstName = "Alice", LastName = "Williams", Projects = new List<Project>(), Faculty = F, AuthoredProjects = new List<Project>()}
         );
 
         context.SaveChanges();
@@ -50,7 +55,9 @@ public class UserRepositoryTest : IDisposable
             Email = "john@email.com",
             FirstName = "John",
             LastName = "Johnson",
-            ProgramCode = "SWU"
+            ProgramCode = "SWU2020",
+            InstitutionName = "IT-Universitetet",
+            ProjectIDs = new List<int> {},
         };
 
 
@@ -70,7 +77,9 @@ public class UserRepositoryTest : IDisposable
         Assert.Equal("john@email.com", i.Email);
         Assert.Equal("John", i.FirstName);
         Assert.Equal("Johnson", i.LastName);
-        Assert.Equal("SWU", i.ProgramCode);
+        Assert.Equal("SWU2020", i.ProgramCode);
+        Assert.Equal("IT-Universitetet", i.InstitutionName);
+        Assert.Equal(new List<int>(), i.ProjectIDs);
     }
 
     [Fact]
@@ -83,6 +92,9 @@ public class UserRepositoryTest : IDisposable
             Email = "john@email.com",
             FirstName = "John",
             LastName = "Johnson",
+            FacultyName = "Computer Science",
+            InstitutionName = "IT-Universitetet",
+            AuthoredProjectIDs = new List<int>(),
             ProjectIDs = P1
         };
 
@@ -100,10 +112,13 @@ public class UserRepositoryTest : IDisposable
         //Assert
         Assert.Equal(Response.Created, created.Item1);
         Assert.Equal(3, i.Id);
-        Assert.Equal("james@email.com", i.Email);
-        Assert.Equal("James", i.FirstName);
-        Assert.Equal("Brown", i.LastName);
-        Assert.Equal(null, i.ProjectIDs);
+        Assert.Equal("john@email.com", i.Email);
+        Assert.Equal("John", i.FirstName);
+        Assert.Equal("Johnson", i.LastName);
+        Assert.Equal("Computer Science", i.FacultyName);
+        Assert.Equal("IT-Universitetet", i.InstitutionName);
+        Assert.Equal(new List<int>(), i.ProjectIDs);
+        Assert.Equal(new List<int>(), i.AuthoredProjectsIDs);
     }
 
     [Fact]
@@ -163,10 +178,10 @@ public class UserRepositoryTest : IDisposable
     {
         var P1 = new List<int>();
 
-        var users = await _repository.ReadAllAsync();
+        var users = await _repository.ReadAllStudentsAsync();
 
         Assert.Collection(users,
-            user => Assert.Equal(new UserDTO(1, "bob@email.com", "Bob", "Smith", P1), user)
+            user => Assert.Equal(new StudentDTO(1, "bob@email.com", "Bob", "Smith", "SWU2020", "IT-Universitetet", P1), user)
         );
     }
 
@@ -175,10 +190,10 @@ public class UserRepositoryTest : IDisposable
     {
         var P1 = new List<int>();
 
-        var users = await _repository.ReadAllAsync();
+        var users = await _repository.ReadAllSupervisorsAsync();
 
         Assert.Collection(users,
-            user => Assert.Equal(new UserDTO(2, "alice@email.com", "Alice", "Williams", P1), user)
+            user => Assert.Equal(new SupervisorDTO(2, "alice@email.com", "Alice", "Williams", "Computer Science", "IT-Universitetet", new List<int>(), new List<int>()), user)
         );
     }
 

@@ -19,7 +19,10 @@ public record SupervisorDTO(
     string InstitutionName,
 
     [Required]
-    ICollection<int> ProjectIDs
+    ICollection<int> ProjectIDs,
+
+    [Required]
+    ICollection<int> AuthoredProjectsIDs
 
 ) : UserDTO(Id, Email, FirstName, LastName, ProjectIDs);
 
@@ -44,4 +47,6 @@ public record SupervisorCreateDTO
     public string InstitutionName {get; init;}
 
     public ICollection<int> ProjectIDs {get; init;}
+
+    public ICollection<int> AuthoredProjectIDs {get; init;}
 }

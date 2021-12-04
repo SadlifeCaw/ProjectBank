@@ -1,4 +1,4 @@
-/*namespace ProjectBank.Infrastructure;
+namespace ProjectBank.Infrastructure;
 
 public class UserRepository : IUserRepository
 {
@@ -62,7 +62,7 @@ public class UserRepository : IUserRepository
         var conflict = await _dbcontext.Users.OfType<Supervisor>()
                         .Where(u => u.Email == user.Email)
                         .Select(u => new SupervisorDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Faculty.Title, u.Institution.Title, 
-                                                       u.Projects.Select(p => p.Id).ToList()))
+                                                       u.Projects.Select(p => p.Id).ToList(), u.AuthoredProjects.Select(p => p.Id).ToList()))
                         .FirstOrDefaultAsync();
 
         if (conflict != null)
@@ -84,7 +84,7 @@ public class UserRepository : IUserRepository
         //institution or faculty doesn't exists
         if(institution == null || faculty == null)
         {
-            return (Response.NotFound, new SupervisorDTO(-1, user.Email, user.FirstName, user.LastName, user.FacultyName, user.InstitutionName, user.ProjectIDs));
+            return (Response.NotFound, new SupervisorDTO(-1, user.Email, user.FirstName, user.LastName, user.FacultyName, user.InstitutionName, user.ProjectIDs, user.AuthoredProjectIDs));
         }
 
         var entity = new Supervisor
@@ -94,6 +94,7 @@ public class UserRepository : IUserRepository
             FirstName = user.FirstName,
             LastName = user.LastName,
             Projects = await GetProjectsAsync(user.ProjectIDs).ToListAsync(),
+            AuthoredProjects = await GetProjectsAsync(user.AuthoredProjectIDs).ToListAsync(),
             Faculty = faculty
         };
 
@@ -102,7 +103,7 @@ public class UserRepository : IUserRepository
         await _dbcontext.SaveChangesAsync();
 
         return (Response.Created, new SupervisorDTO(entity.Id, entity.Email, entity.FirstName, entity.LastName, entity.Faculty.Title, 
-                                                    entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList()));
+                                                    entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList(), entity.AuthoredProjects.Select(p => p.Id).ToList()));
     }
 
     public async Task<UserDTO> ReadByID(int userID)
@@ -142,7 +143,8 @@ public class UserRepository : IUserRepository
     public async Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync()
     {
         return (await _dbcontext.Users.OfType<Supervisor>()
-                        .Select(u => new SupervisorDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Faculty.Title, u.Institution.Title, u.Projects.Select(p => p.Id).ToList()))
+                        .Select(u => new SupervisorDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Faculty.Title, u.Institution.Title, 
+                                                       u.Projects.Select(p => p.Id).ToList(), u.AuthoredProjects.Select(p => p.Id).ToList()))
                         .ToListAsync())
                         .AsReadOnly();
     }
@@ -186,4 +188,3 @@ public class UserRepository : IUserRepository
         }
     }
 }
-*/
