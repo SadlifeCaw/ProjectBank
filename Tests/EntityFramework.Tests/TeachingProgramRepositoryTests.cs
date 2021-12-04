@@ -2,13 +2,13 @@
 
 namespace EntityFramework.Tests;
 
-public class TeachingProgramRepositoryTest : IDisposable
+public class TeachingProgramRepositoryTests : IDisposable
 {
     private readonly ProjectBankContext _context;
     private readonly TeachingProgramRepository _repository;
     private bool disposed;
 
-    public TeachingProgramRepositoryTest()
+    public TeachingProgramRepositoryTests()
     {
         var connection = new SqliteConnection("Filename=:memory:");
         connection.Open();
@@ -24,9 +24,17 @@ public class TeachingProgramRepositoryTest : IDisposable
         Faculty faculty = new Faculty("Comp Sci","comp",institution) {Id = 2};
 
         TeachingProgram software =  new TeachingProgram("SWU","Softwareudvikling",faculty,"SWU2021",new List<Course>()) {Id = 3};
+        TeachingProgram data =  new TeachingProgram("DDS","Data Design",faculty,"DDS2021",new List<Course>()) {Id = 4};
 
-        Course bdsa = new Course{Id = 4, Title = "BDSA", Description = "Software Design and Architecture", Faculty = faculty, Code ="BDSA2021", Programs = new[] {software}};
-        Course idbs = new Course{Id = 5, Title = "IDBS", Description = "Databases", Faculty = faculty, Code ="IDBS2021", Programs = new[] {software}};
+
+        Course bdsa = new Course{Id = 5, Title = "BDSA", Description = "Software Design and Architecture", Faculty = faculty, Code ="BDSA2021", Programs = new List<TeachingProgram> {software}};
+        Course idbs = new Course{Id = 6, Title = "IDBS", Description = "Databases", Faculty = faculty, Code ="IDBS2021", Programs = new List<TeachingProgram> {software}};
+
+     
+        context.Institutions.Add(institution);
+        context.Faculties.Add(faculty);
+
+        
 
         context.Courses.AddRange(
             bdsa,
@@ -34,12 +42,11 @@ public class TeachingProgramRepositoryTest : IDisposable
         );
 
         context.Programs.AddRange(
-           software
+           software,
+           data
         );
 
         context.SaveChanges();
-
-        
         _context = context;
         _repository = new TeachingProgramRepository(_context);
     }
@@ -69,23 +76,28 @@ public class TeachingProgramRepositoryTest : IDisposable
 
         //Assert
         Assert.Equal(Response.Created, created.Item1);
-        Assert.Equal(6, p.Id);
+        Assert.Equal(7, p.Id);
         Assert.Equal("DDIT",p.Title);
         Assert.Equal("Det der IT",p.Description);
         Assert.Equal("Comp Sci",p.FacultyName);
         Assert.Equal("DDIT2021",p.Code);
     }
 
-    //doesn't work currently - test or repo wrong?
     [Fact]
-    /* public async void ReadAllAsync_returns_all_programs()
+    public async void ReadAllAsync_returns_all_programs()
     {
         var programs = await _repository.ReadAllAsync();
 
+        var testList = new List<string>() {"BDSA2021", "IDBS2021"};
+
         Assert.Collection(programs,
-            program => Assert.Equal(new TeachingProgramDTO(3, "SWU", "Softwareudvikling", "Comp Sci","SWU2021", new List<string>() {"BDSA2021", "IDBS2021"}), program)
+        program => Assert.Equal(new TeachingProgramDTO(3, "SWU", "Softwareudvikling", "Comp Sci","SWU2021",program.CourseCodes),program),
+        program => Assert.Equal(new TeachingProgramDTO(4,"DDS","Data Design","Comp Sci","DDS2021",program.CourseCodes),program)
         );
-    } */
+
+        programs.ElementAt(0).CourseCodes.SequenceEqual(testList);
+        programs.ElementAt(1).CourseCodes.SequenceEqual(testList);
+    } 
 
     public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
     {
