@@ -123,47 +123,6 @@ public class UserRepository : IUserRepository
         return await users.FirstOrDefaultAsync(); 
     }
 
-    public async Task<IReadOnlyCollection<ProjectDTO>> GetAuthoredProjects(int userID)
-    {
-        var user = await _dbcontext.Users
-                            .Where(u => u.Id == userID)
-                            .Select(u => u)
-                            .FirstOrDefaultAsync();
-
-        if(user == null || user is Student)
-        {
-            //dependecy on list type...
-            return new List<ProjectDTO>();
-        }
-
-        var projects = user.Projects.Where(p => p.Author == user)
-                                    .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.Tags.Select(t => t.Id).ToList()))
-                                    .ToList()
-                                    .AsReadOnly();
-
-        return projects;
-    }
-
-    public async Task<IReadOnlyCollection<ProjectDTO>> GetProjects(int userID)
-    {
-        var user = await _dbcontext.Users
-                            .Where(u => u.Id == userID)
-                            .Select(u => u)
-                            .FirstOrDefaultAsync();
-
-        if(user == null || user is Student)
-        {
-            //dependecy on list type...
-            return new List<ProjectDTO>();
-        }
-
-        var projects = user.Projects.Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.Tags.Select(t => t.Id).ToList()))
-                                    .ToList()
-                                    .AsReadOnly();
-
-        return projects;
-    }
-
     public async Task<IReadOnlyCollection<UserDTO>> ReadAllAsync()
     {
         return (await _dbcontext.Users

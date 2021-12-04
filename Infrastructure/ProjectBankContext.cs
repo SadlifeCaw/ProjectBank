@@ -5,8 +5,8 @@ public class ProjectBankContext : DbContext
     //User directory
 
     public DbSet<User> Users => Set<User>();
-    public DbSet<Supervisor> Supervisors => Set<Supervisor>();
     public DbSet<Student> Students => Set<Student>();
+    public DbSet<Supervisor> Supervisors => Set<Supervisor>();
 
     //Category diretory
     public DbSet<Category> Categories => Set<Category>();
@@ -42,5 +42,27 @@ public class ProjectBankContext : DbContext
             .Property(e => e.Status)
             .HasMaxLength(50)
             .HasConversion(new EnumToStringConverter<ProjectStatus>());
+
+        //manually determine Project-User relationship, including unique for Supervisor
+        modelBuilder.Entity<Project>().HasOne(p => p.Author).WithMany(u => u.AuthoredProjects);
+        modelBuilder.Entity<Project>().HasMany(p => p.Users).WithMany(u => u.Projects);
+
+        //do not delete project when author is deleted
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Institution)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        //do not delete author supervisor when project is deleted
+        modelBuilder.Entity<Project>()
+            .HasOne(p => p.Author)
+            .WithMany(a => a.AuthoredProjects)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        //does not compile for some reason. hopefully works without. tests
+        /*modelBuilder.Entity<User>()
+            .HasMany(u => u.Projects)
+            .WithMany(p => p.Users)
+            .OnDelete(DeleteBehavior.NoAction);*/        
     }
 }

@@ -28,10 +28,7 @@ public record ProjectDTO(
     ICollection<int> TagIDs,
 
     [Required]
-    ICollection<int> StudentIDs,
-
-    [Required]
-    ICollection<int> CollaboratorIDs
+    ICollection<int> UserIDs
 
 ) : ProjectKeyDTO;
 
@@ -53,10 +50,7 @@ public record ProjectCreateDTO
     public ICollection<int> TagIDs{get; init;}
 
     [Required]
-    public ICollection<int> StudentIDs {get; init;}
-
-    [Required]
-    ICollection<int> CollaboratorIDs {get; init;}
+    public ICollection<int> UserIDs {get; init;}
 };
 
 public record ProjectUpdateDTO : ProjectCreateDTO
