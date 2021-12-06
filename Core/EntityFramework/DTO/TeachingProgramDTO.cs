@@ -1,5 +1,5 @@
 namespace ProjectBank.Core.EF.DTO;
-public record ProgramDTO(
+public record TeachingProgramDTO(
     int Id,
 
     [Required, StringLength(100)]
@@ -14,11 +14,11 @@ public record ProgramDTO(
     [Required]
     string Code,
 
-    ICollection<string> Courses
+    ICollection<string> CourseCodes
 
 ) : CodedCategoryDTO(Id, Title, Description, FacultyName, Code);
 
-public record ProgramCreateDTO 
+public record TeachingProgramCreateDTO 
 {
  
     [Required, StringLength(100)]
@@ -32,5 +32,5 @@ public record ProgramCreateDTO
 
     [Required]
     public string Code {get; init;}
-    public ICollection<string> Courses {get; init;}
+    public ICollection<string> CourseCodes {get; init;}
 }

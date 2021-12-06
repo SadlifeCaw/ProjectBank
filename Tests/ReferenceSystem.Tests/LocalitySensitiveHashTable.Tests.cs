@@ -560,10 +560,10 @@ namespace ReferenceSystem.Tests
         static Institution DTU = new Institution{Id = 2};
         static Faculty FacultyComputerScienceITU = new Faculty{Id = 3, Institution = ITU};
         static Faculty FacultyDesignDTU = new Faculty{Id = 4, Institution = DTU};
-        static Program DataScience = new Program{Id = 5, Faculty = FacultyComputerScienceITU};
-        static Program InteractiveDesign = new Program{Id = 6, Faculty = FacultyDesignDTU};
-        static Course IntroductoryProgramming = new Course{Id = 7, Programs = new List<Program>{DataScience}};
-        static Course UIDesign = new Course{Id = 8, Programs = new List<Program>{InteractiveDesign}};
+        static TeachingProgram DataScience = new TeachingProgram{Id = 5, Faculty = FacultyComputerScienceITU};
+        static TeachingProgram InteractiveDesign = new TeachingProgram{Id = 6, Faculty = FacultyDesignDTU};
+        static Course IntroductoryProgramming = new Course{Id = 7, Programs = new List<TeachingProgram>{DataScience}};
+        static Course UIDesign = new Course{Id = 8, Programs = new List<TeachingProgram>{InteractiveDesign}};
 
         //FacultyComputerScienceITU.Institution = ITU;
 
