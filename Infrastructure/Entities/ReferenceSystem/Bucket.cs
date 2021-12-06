@@ -7,7 +7,9 @@ namespace ProjectBank.Infrastructure.Entities
         public int Id {get; set;}
         public ISet<Tagable> Projects = new HashSet<Tagable>();
 
+
         public Bucket() {}
+
     }
 
     public class ProjectBucket : Bucket<Project>
@@ -17,11 +19,11 @@ namespace ProjectBank.Infrastructure.Entities
         [Required]
         public string Key {get; set;}
 
-         public ProjectBucket(ISet<Project> Projects, string Key)
-         {
-                this.Projects = Projects;
-                this.Key = Key;
-         }
+        public ProjectBucket(ISet<Project> Projects, string Key)
+        {
+               this.Projects = Projects;
+               this.Key = Key;
+        }
 
          public ProjectBucket() {}
     }
