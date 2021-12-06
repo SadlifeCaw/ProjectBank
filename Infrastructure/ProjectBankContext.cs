@@ -20,6 +20,8 @@ public class ProjectBankContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Tag> Tags => Set<Tag>();
 
+    public DbSet<Signature> Signatures => Set<Signature>();
+
 
     public ProjectBankContext(DbContextOptions<ProjectBankContext> options) : base(options) { }
 
