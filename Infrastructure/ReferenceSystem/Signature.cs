@@ -7,6 +7,8 @@ namespace ProjectBank.Infrastructure
     public class Signature
     {
         public int Id {get; set;}
+
+        [Required]
         public IReadOnlyCollection<string> Hashes;
 
         public Signature(IReadOnlyCollection<Tag> tags)
@@ -14,7 +16,6 @@ namespace ProjectBank.Infrastructure
             if(tags.Count() == 0) {throw new ArgumentException("Cannot initialize a signature with an empty list of Tag.");}
             Hashes = GetHashedTags(tags);
         }
-
         public Signature() {}
 
         private IReadOnlyCollection<string> GetHashedTags(IReadOnlyCollection<Tag> tags)
