@@ -1,47 +1,47 @@
-namespace ProjectBank.Infrastructure;
+namespace ProjectBank.Infrastructure.Entities;
 
- public class TagRepository : ITagRepository
+public class TagRepository : ITagRepository
+{
+    private readonly ProjectBankContext _dbcontext;
+
+    public TagRepository(ProjectBankContext context)
     {
-        private readonly ProjectBankContext _dbcontext;
+        _dbcontext = context;
+    }
 
-        public TagRepository(ProjectBankContext context)
+    public async Task<(Response, TagDTO)> CreateAsync(TagCreateDTO tag)
+    {
+        var conflict =
+            await _dbcontext.Tags
+                            .Where(t => t.Name == tag.Name)
+                            .Select(t => new TagDTO(t.Id, t.Name))
+                            .FirstOrDefaultAsync();
+
+        if (conflict != null)
         {
-            _dbcontext = context;
+            return (Response.Conflict, conflict);
         }
 
-        public async Task<(Response, TagDTO)> CreateAsync(TagCreateDTO tag)
-        {
-            var conflict =
-                await _dbcontext.Tags
-                              .Where(t => t.Name == tag.Name)
-                              .Select(t => new TagDTO(t.Id, t.Name))
-                              .FirstOrDefaultAsync();
+        var entity = new Tag(tag.Name);
 
-            if (conflict != null)
-            {
-                return (Response.Conflict, conflict);
-            }
+        _dbcontext.Tags.Add(entity);
 
-            var entity = new Tag(tag.Name);
+        await _dbcontext.SaveChangesAsync();
 
-            _dbcontext.Tags.Add(entity);
+        return (Response.Created, new TagDTO(entity.Id, entity.Name));
+    }
+    public async Task<TagDTO> ReadTagByIDAsync(int TagID)
+    {
+        var tags = from t in _dbcontext.Tags
+                        where t.Id == TagID
+                        select new TagDTO(t.Id, t.Name);
 
-            await _dbcontext.SaveChangesAsync();
+        return await tags.FirstOrDefaultAsync();
+    }
 
-            return (Response.Created, new TagDTO(entity.Id, entity.Name));
-        }
-        public async Task<TagDTO> ReadTagByIDAsync(int TagID)
-        {
-            var tags = from t in _dbcontext.Tags
-                         where t.Id == TagID
-                         select new TagDTO(t.Id, t.Name);
-
-            return await tags.FirstOrDefaultAsync();
-        }
-
-        public async Task<IReadOnlyCollection<TagDTO>> ReadAllAsync() =>
-            (await _dbcontext.Tags
-                           .Select(t => new TagDTO(t.Id, t.Name))
-                           .ToListAsync())
-                           .AsReadOnly();
+    public async Task<IReadOnlyCollection<TagDTO>> ReadAllAsync() =>
+        (await _dbcontext.Tags
+                        .Select(t => new TagDTO(t.Id, t.Name))
+                        .ToListAsync())
+                        .AsReadOnly();
 }
