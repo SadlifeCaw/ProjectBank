@@ -1,35 +1,61 @@
 @page "/projects"
-@using ProjectBank.Infrastructure.Generator;
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <PageTitle>Projects</PageTitle>
 
-<h1>My Projects</h1>
+<h1>Projects</h1>
 
-Insert text here:
-<div class = "tags">    
-    <button class="btn btn-primary" >Generate</button>
-    <br/>
-    <br/>
-    @foreach (String item in getTags(s))
-    {
-        <input type="checkbox"/>
-        <span>@item</span>
-        <br/>
-    }
-</div>
+<p>
+    <button class="btn btn-primary" @onclick="Create">New</button>
+</p>
 
-@code{
-
-    public string text {get; set;}
-    public List<String> list {get; set;}
-    String s = "Hej dette er min text som jeg prøver at skrive";
-    public IEnumerable<String> getTags(String text){
-        TagGenerator tagGenerator = new TagGenerator();
-        List<String> tags = new List<string>{"hej", "at", "Skriver", "det", "er"};
-        tagGenerator.Add(tags);
-        tagGenerator.Build();
-        return tagGenerator.Find(text);
-    }
+@if (projects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in projects)
+            {
+                <tr>
+                    <td>@project.Title</td>
+                    <td>@project.Description</td>
+                    <td><button class="btn btn-info" @onclick="@(() => View(project))">View</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
-TODO: Implement
+@code {
+    private ProjectDTO[]? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await Http.GetFromJsonAsync<ProjectDTO[]>("api/projects");
+    }
+
+    private void View(ProjectDTO project)
+    {
+        var uri = $"{NavigationManager.BaseUri}projects/{project.Id}";
+
+        NavigationManager.NavigateTo(uri);
+    }
+
+    private void Create()
+    {
+        var uri = $"{NavigationManager.BaseUri}projects/create";
+
+        NavigationManager.NavigateTo(uri);
+    }
+}
