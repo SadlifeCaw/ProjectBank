@@ -47,9 +47,18 @@ public class ProjectBankContext : DbContext
         modelBuilder.Entity<Project>().HasOne(p => p.Author).WithMany(u => u.AuthoredProjects);
         modelBuilder.Entity<Project>().HasMany(p => p.Users).WithMany(u => u.Projects);
 
+        //manually determine Student-Course relationship
+        modelBuilder.Entity<Course>().HasMany(c => c.Students).WithMany(s => s.Courses);
+
         //do not delete project when author is deleted
         modelBuilder.Entity<User>()
             .HasOne(u => u.Institution)
+            .WithMany()
+            .OnDelete(DeleteBehavior.Restrict);
+
+        //do not delete student when student is deleted
+        modelBuilder.Entity<Student>()
+            .HasOne(u => u.Program)
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict);
 

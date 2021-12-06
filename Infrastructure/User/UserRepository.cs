@@ -13,8 +13,8 @@ public class UserRepository : IUserRepository
     {
         var conflict = await _dbcontext.Users.OfType<Student>()
                         .Where(u => u.Email == user.Email)
-                        .Select(u => new StudentDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Program.Code, 
-                                                    u.Program.Faculty.Institution.Title, u.Projects.Select(p => p.Id).ToList()))
+                        .Select(u => new StudentDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Program.Code, u.Program.Faculty.Institution.Title, 
+                                                    u.Projects.Select(p => p.Id).ToList(), u.Courses.Select(c => c.Id).ToList()))
                         .FirstOrDefaultAsync();
 
         if (conflict != null)
@@ -36,7 +36,7 @@ public class UserRepository : IUserRepository
         //institution or program doesn't exists
         if(institution == null || program == null)
         {
-            return (Response.NotFound, new StudentDTO(-1, user.Email, user.FirstName, user.LastName, user.ProgramCode, user.InstitutionName, user.ProjectIDs));
+            return (Response.NotFound, new StudentDTO(-1, user.Email, user.FirstName, user.LastName, user.ProgramCode, user.InstitutionName, user.ProjectIDs, user.CourseIDs));
         }
 
         var entity = new Student
@@ -46,6 +46,7 @@ public class UserRepository : IUserRepository
             FirstName = user.FirstName,
             LastName = user.LastName,
             Projects = await GetProjectsAsync(user.ProjectIDs).ToListAsync(),
+            Courses = await GetCoursesAsync(user.CourseIDs).ToListAsync(),
             Program = program
         };
 
@@ -54,7 +55,7 @@ public class UserRepository : IUserRepository
         await _dbcontext.SaveChangesAsync();
 
         return (Response.Created, new StudentDTO(entity.Id, entity.Email, entity.FirstName, entity.LastName, entity.Program.Code, 
-                                                 entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList()));
+                                                 entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList(), entity.Courses.Select(c => c.Id).ToList()));
     }
 
     public async Task<(Response, SupervisorDTO)> CreateAsync(SupervisorCreateDTO user)
@@ -135,7 +136,7 @@ public class UserRepository : IUserRepository
     public async Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync()
     {
         return (await _dbcontext.Users.OfType<Student>()
-                        .Select(u => new StudentDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Program.Code, u.Institution.Title, u.Projects.Select(p => p.Id).ToList()))
+                        .Select(u => new StudentDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Program.Code, u.Institution.Title, u.Projects.Select(p => p.Id).ToList(), u.Courses.Select(c => c.Id).ToList()))
                         .ToListAsync())
                         .AsReadOnly();
     }
@@ -185,6 +186,20 @@ public class UserRepository : IUserRepository
         foreach (var project in existing)
         {
             yield return project;
+        }
+    }
+
+    private async IAsyncEnumerable<Course> GetCoursesAsync(ICollection<int> inCourses) 
+    {
+        var existing = await _dbcontext.Courses
+                        .Where(c => inCourses
+                                    .Any(inC => inC == c.Id))
+                        .Select(c => c)
+                        .ToListAsync();
+
+        foreach (var course in existing)
+        {
+            yield return course;
         }
     }
 }

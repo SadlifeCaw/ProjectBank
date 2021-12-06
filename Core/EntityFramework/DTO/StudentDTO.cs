@@ -18,7 +18,11 @@ public record StudentDTO(
     [Required]
     string InstitutionName,
 
-    ICollection<int> ProjectIDs
+    [Required]
+    ICollection<int> ProjectIDs,
+
+    [Required]
+    ICollection<int> CourseIDs
 
 ) : UserDTO(Id, Email, FirstName, LastName, ProjectIDs);
 
@@ -41,4 +45,6 @@ public record StudentCreateDTO
     public string ProgramCode {get; init; }
     public string InstitutionName {get; init; }
     public ICollection<int> ProjectIDs {get; init;}
+
+    public ICollection<int> CourseIDs {get; init;}
 }

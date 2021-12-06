@@ -29,31 +29,28 @@ public class CourseRepositoryTests : IDisposable
 
         TeachingProgram Software = new TeachingProgram("Software Development", "The best line at ITU", ComputerScience, "SWU2021", new List<Course>()) {Id = 3};
 
+        Student Anton = new Student("antbr@itu.dk", ITU, "Anton", "Breinholt", new List<Project>(), Software, new List<Course>()) {Id = 4};
+        Student Villum = new Student("vson@itu.dk", ITU, "Villum", "Sonne", new List<Project>(), Software, new List<Course>()) {Id = 5};
 
-        Student Anton = new Student("antbr@itu.dk",ITU,"Anton","Breinholt", new List<Project>(),Software) {Id = 4};
-        User Villum = new Student("vson@itu.dk",ITU,"Villum","Sonne", new List<Project>(),Software) {Id = 5};
-
-        Course Bdsa = new Course("BDSA", "Software Design and Architecture",ComputerScience, "BDSA2021", new List<TeachingProgram>{Software}, new List<Student>()) {Id = 6};
-        Course Idbs = new Course("IDBS","Databases",ComputerScience,"IDBS2021", new List<TeachingProgram>{Software}, new List<Student>()) {Id = 7};
+        Course Bdsa = new Course("BDSA", "Software Design and Architecture", ComputerScience, "BDSA2021", new List<TeachingProgram>{Software}, new List<Student>() {Anton} ) {Id = 6};
+        Course Idbs = new Course("IDBS","Databases", ComputerScience, "IDBS2021", new List<TeachingProgram>{Software}, new List<Student>() {Anton, Villum}) {Id = 7};
 
         context.Institutions.Add(ITU);
         context.Faculties.Add(ComputerScience);
           
+        context.Programs.AddRange(
+            Software
+        );
 
         context.Courses.AddRange(
             Bdsa,
             Idbs
         );
 
-        context.Programs.AddRange(
-            Software
-        );
-            //Causes an exception
-
-       /* context.Users.AddRange(
+        context.Users.AddRange(
             Anton,
             Villum
-        );*/
+        );
 
         context.SaveChanges();
         _context = context;
@@ -100,27 +97,36 @@ public class CourseRepositoryTests : IDisposable
         
         var courses = await _repository.ReadAllAsync();
 
-        var testProgramList = new List<string>() {"SWU2021"};
+        var TeachingProgramList = new List<string>() {"SWU2021"};
 
-        var testStudentList = new List<string>() {"antbr@itu.dk","vson@itu.dk"};
+        var StudentList_BDSA = new List<string>() {"antbr@itu.dk"};
+        var StudentList_IDBS = new List<string>() {"antbr@itu.dk", "vson@itu.dk"};
 
         Assert.Collection(courses,
-        course => Assert.Equal(new CourseDTO(6, "BDSA", "Software Design and Architecture", "Computer Science","BDSA2021",course.ProgramCodes,course.StudentEmails),course),
-        course => Assert.Equal(new CourseDTO(7,"IDBS","Databases","Computer Science","IDBS2021",course.ProgramCodes,course.StudentEmails),course)
+            course => 
+            {
+                Assert.Equal(6, course.Id);
+                Assert.Equal("BDSA", course.Title);
+                Assert.Equal("Software Design and Architecture", course.Description);
+                Assert.Equal("Computer Science", course.FacultyName);
+                Assert.Equal("BDSA2021", course.Code);
+                Assert.Equal(TeachingProgramList, course.ProgramCodes);
+                Assert.Equal(StudentList_BDSA, course.StudentEmails);
+            },
+            course =>
+            {
+                Assert.Equal(7, course.Id);
+                Assert.Equal("IDBS", course.Title);
+                Assert.Equal("Databases", course.Description);
+                Assert.Equal("Computer Science", course.FacultyName);
+                Assert.Equal("IDBS2021", course.Code);
+                Assert.Equal(TeachingProgramList, course.ProgramCodes);
+                Assert.Equal(StudentList_IDBS, course.StudentEmails);
+            }
         );
-        
-        courses.ElementAt(0).ProgramCodes.SequenceEqual(testProgramList);
-        courses.ElementAt(1).ProgramCodes.SequenceEqual(testProgramList);
-        courses.ElementAt(0).StudentEmails.SequenceEqual(testStudentList);
-        courses.ElementAt(1).StudentEmails.SequenceEqual(testStudentList);
-        
-
-
-        
     }
 
     [Fact]
-
     public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
     {
         var nonExisting = await _repository.ReadCourseByIDAsync(34);

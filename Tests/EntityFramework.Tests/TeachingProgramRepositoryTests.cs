@@ -91,8 +91,8 @@ public class TeachingProgramRepositoryTests : IDisposable
         var testList = new List<string>() {"BDSA2021", "IDBS2021"};
 
         Assert.Collection(programs,
-        program => Assert.Equal(new TeachingProgramDTO(3, "SWU", "Softwareudvikling", "Comp Sci","SWU2021",program.CourseCodes),program),
-        program => Assert.Equal(new TeachingProgramDTO(4,"DDS","Data Design","Comp Sci","DDS2021",program.CourseCodes),program)
+            program => Assert.Equal(new TeachingProgramDTO(3, "SWU", "Softwareudvikling", "Comp Sci","SWU2021",program.CourseCodes),program),
+            program => Assert.Equal(new TeachingProgramDTO(4,"DDS","Data Design","Comp Sci","DDS2021",program.CourseCodes),program)
         );
 
         programs.ElementAt(0).CourseCodes.SequenceEqual(testList);

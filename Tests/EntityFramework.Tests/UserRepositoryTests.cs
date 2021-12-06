@@ -36,7 +36,7 @@ public class UserRepositoryTest : IDisposable
         context.Programs.Add(TP);
 
         context.Users.AddRange(
-            new Student{Id = 1, Email = "bob@email.com", Institution = I1, FirstName = "Bob", LastName = "Smith", Projects = new List<Project>(), Program = TP},
+            new Student{Id = 1, Email = "bob@email.com", Institution = I1, FirstName = "Bob", LastName = "Smith", Projects = new List<Project>(), Courses = new List<Course>(), Program = TP},
             new Supervisor{Id = 2, Email = "alice@email.com", Institution = I1, FirstName = "Alice", LastName = "Williams", Projects = new List<Project>(), Faculty = F, AuthoredProjects = new List<Project>()}
         );
 
@@ -58,6 +58,7 @@ public class UserRepositoryTest : IDisposable
             ProgramCode = "SWU2020",
             InstitutionName = "IT-Universitetet",
             ProjectIDs = new List<int> {},
+            CourseIDs = new List<int> {},
         };
 
 
@@ -80,6 +81,7 @@ public class UserRepositoryTest : IDisposable
         Assert.Equal("SWU2020", i.ProgramCode);
         Assert.Equal("IT-Universitetet", i.InstitutionName);
         Assert.Equal(new List<int>(), i.ProjectIDs);
+        Assert.Equal(new List<int>(), i.CourseIDs);
     }
 
     [Fact]
@@ -208,6 +210,7 @@ public class UserRepositoryTest : IDisposable
                 Assert.Equal("SWU2020", student.ProgramCode);
                 Assert.Equal("IT-Universitetet", student.InstitutionName);
                 Assert.Equal(P1, student.ProjectIDs);
+                Assert.Equal(P1, student.CourseIDs);
             }
         );
     }
