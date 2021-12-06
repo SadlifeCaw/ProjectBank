@@ -163,13 +163,31 @@ public class UserRepositoryTest : IDisposable
     public async void ReadAllAsync_returns_all_users()
     {
         var P1 = new List<int>();
-        var P2 = new List<int>();
 
         var users = await _repository.ReadAllAsync();
 
-        Assert.Collection(users,
+        /* Assert.Collection(users,
             user => Assert.Equal(new UserDTO(1, "bob@email.com", "Bob", "Smith", P1), user),
-            user => Assert.Equal(new UserDTO(2, "alice@email.com", "Alice", "Williams", P2), user)
+            user => Assert.Equal(new UserDTO(2, "alice@email.com", "Alice", "Williams", P1), user)
+        ); */
+
+        Assert.Collection(users,
+            user =>
+            {
+                Assert.Equal(1, user.Id);
+                Assert.Equal("bob@email.com", user.Email);
+                Assert.Equal("Bob", user.FirstName);
+                Assert.Equal("Smith", user.LastName);
+                Assert.Equal(P1, user.ProjectIDs);
+            },
+            user =>
+            {
+                Assert.Equal(2, user.Id);
+                Assert.Equal("alice@email.com", user.Email);
+                Assert.Equal("Alice", user.FirstName);
+                Assert.Equal("Williams", user.LastName);
+                Assert.Equal(P1, user.ProjectIDs);
+            }
         );
     }
 
@@ -178,10 +196,19 @@ public class UserRepositoryTest : IDisposable
     {
         var P1 = new List<int>();
 
-        var users = await _repository.ReadAllStudentsAsync();
+        var students = await _repository.ReadAllStudentsAsync();
 
-        Assert.Collection(users,
-            user => Assert.Equal(new StudentDTO(1, "bob@email.com", "Bob", "Smith", "SWU2020", "IT-Universitetet", P1), user)
+        Assert.Collection(students,
+            student =>
+            {
+                Assert.Equal(1, student.Id);
+                Assert.Equal("bob@email.com", student.Email);
+                Assert.Equal("Bob", student.FirstName);
+                Assert.Equal("Smith", student.LastName);
+                Assert.Equal("SWU2020", student.ProgramCode);
+                Assert.Equal("IT-Universitetet", student.InstitutionName);
+                Assert.Equal(P1, student.ProjectIDs);
+            }
         );
     }
 
@@ -190,10 +217,20 @@ public class UserRepositoryTest : IDisposable
     {
         var P1 = new List<int>();
 
-        var users = await _repository.ReadAllSupervisorsAsync();
+        var supervisors = await _repository.ReadAllSupervisorsAsync();
 
-        Assert.Collection(users,
-            user => Assert.Equal(new SupervisorDTO(2, "alice@email.com", "Alice", "Williams", "Computer Science", "IT-Universitetet", new List<int>(), new List<int>()), user)
+        Assert.Collection(supervisors,
+            supervisor =>
+            {
+                Assert.Equal(2, supervisor.Id);
+                Assert.Equal("alice@email.com", supervisor.Email);
+                Assert.Equal("Alice", supervisor.FirstName);
+                Assert.Equal("Williams", supervisor.LastName);
+                Assert.Equal("Computer Science", supervisor.FacultyName);
+                Assert.Equal("IT-Universitetet", supervisor.InstitutionName);
+                Assert.Equal(P1, supervisor.ProjectIDs);
+                Assert.Equal(P1, supervisor.AuthoredProjectsIDs);
+            }
         );
     }
 
