@@ -276,7 +276,7 @@ namespace ReferenceSystem.Tests
         public void Projects_Within_Bucket_Has_One_Or_More_Common_Tags()
         {
             string bucketString = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
-            Bucket bucket = LargeLSH.Map[bucketString];
+            Bucket<IProject> bucket = LargeLSH.Map[bucketString];
 
             foreach (IProject tagable in bucket.Projects)
             {
@@ -348,14 +348,14 @@ namespace ReferenceSystem.Tests
         {
             //Arrange
             int expected = 0 - LargeLSH.NumberOfGroups;
-            foreach (KeyValuePair<string, Bucket> entry in LargeLSH.Map)
+            foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
             {
                 expected += entry.Value.Projects.Count();
             }
             //Act
             LargeLSH.Delete(AgricultureFarming);
             int actual = 0;
-            foreach (KeyValuePair<string, Bucket> entry in LargeLSH.Map)
+            foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
             {
                 actual += entry.Value.Projects.Count();
             }

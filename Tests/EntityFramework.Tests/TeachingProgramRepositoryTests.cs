@@ -84,19 +84,31 @@ public class TeachingProgramRepositoryTests : IDisposable
     }
 
     [Fact]
-    public async void ReadAllAsync_returns_all_programs()
+     public async void ReadAllAsync_returns_all_programs()
     {
         var programs = await _repository.ReadAllAsync();
 
-        var testList = new List<string>() {"BDSA2021", "IDBS2021"};
-
-        Assert.Collection(programs,
-            program => Assert.Equal(new TeachingProgramDTO(3, "SWU", "Softwareudvikling", "Comp Sci","SWU2021",program.CourseCodes),program),
-            program => Assert.Equal(new TeachingProgramDTO(4,"DDS","Data Design","Comp Sci","DDS2021",program.CourseCodes),program)
-        );
-
-        programs.ElementAt(0).CourseCodes.SequenceEqual(testList);
-        programs.ElementAt(1).CourseCodes.SequenceEqual(testList);
+        var testList = new List<string>() {"BDSA2021","IDBS2021"};
+         
+         // Then
+            Assert.Collection(programs,
+                program =>
+                 {
+                     Assert.Equal(program.Title, "SWU");
+                     Assert.Equal(program.Description, "Softwareudvikling");
+                     Assert.Equal(program.FacultyName, "Comp Sci");
+                     Assert.Equal(program.Code, "SWU2021");
+                     Assert.Equal(testList,program.CourseCodes);
+                 },
+                program =>
+                {
+                        Assert.Equal(program.Title, "DDS");
+                        Assert.Equal(program.Description, "Data Design");
+                        Assert.Equal(program.FacultyName, "Comp Sci");
+                        Assert.Equal(program.Code, "DDS2021");
+                        Assert.Empty(program.CourseCodes);
+                }
+            );
     } 
 
     public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()

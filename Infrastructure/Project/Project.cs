@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using ProjectBank.Infrastructure.Entities;
 namespace ProjectBank.Infrastructure;
 
@@ -36,11 +37,13 @@ public class Project : ITagable, IProject
     [Required]
     private IReadOnlyCollection<Tag> tags = null!;
 
-    [Required]
+    //do not map to avoid functional dependency. Can be derived from tags
+    [NotMapped]
     public Signature Signature {get; set;}
 
-    [Required]
     public ICollection<User> Users {get; set;}  = null!;
+
+    public ICollection<ProjectBucket> Buckets {get; set;}  = null!;
 
     [Required]
     public Supervisor Author {get; set;}
@@ -48,14 +51,14 @@ public class Project : ITagable, IProject
     [Required]
     public int MaxStudents {get; set;}
 
-    public Project(Supervisor Author, string Title, string Description, ProjectStatus Status, Category Category, Signature Signature, IReadOnlyCollection<Tag> Tags, ICollection<User> Users, int MaxStudents)
+    //ignore warning, since Signature is automatically set when Tags is set
+    public Project(Supervisor Author, string Title, string Description, ProjectStatus Status, Category Category, IReadOnlyCollection<Tag> Tags, ICollection<User> Users, int MaxStudents)
     {
         this.Author = Author;
         this.Title = Title;
         this.Description = Description;
         this.Status = Status;
         this.Category = Category;
-        this.Signature = Signature;
         this.Tags = Tags;
         this.Users = Users;
         this.MaxStudents = MaxStudents;
