@@ -1,0 +1,78 @@
+@page "/dashboard"
+@using ProjectBank.Infrastructure
+@using ProjectBank.Core
+
+<PageTitle>@title</PageTitle>
+
+<head>
+    <link rel="stylesheet" href="Dashboard.razor.css">
+</head>
+
+<h1>@title</h1>
+
+<div>
+    <h2>Description</h2>
+    <textarea>Description here...</textarea>
+</div>
+
+<div>
+    <h2>Info</h2>
+    <div>
+        <h3>Target group</h3>
+        <textarea>Target group here..</textarea>
+    </div>
+    <div>
+        <h3>Status</h3>
+        <textarea>Status here...</textarea>
+    </div>
+    <div>
+        <h3>Tags</h3>
+        <textarea>Tags...</textarea>
+    </div>
+</div>
+
+<div>
+    <h2>Participants</h2>
+    <div>
+        <h3>Supervisors</h3>
+        <h5>Supervisor</h5>
+        <textarea>Supervisors...</textarea>
+        <div class="row">
+            <div class="column">
+                <label for="inputEmail" class="form-label">Invite a supervisor</label>
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            </div>
+            <div class="column">
+                <button>Invite</button>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3>Students</h3>
+        <textarea>Students</textarea>
+    </div>
+</div>
+
+<div>
+    <h2>Related projects</h2>
+    <button>Tap to see within target group</button>
+</div>
+
+@code {
+    string title = "your mom";
+    string empty = string.Empty;
+    
+    private IProject[]? projects;
+
+     protected override async Task OnInitializedAsync()
+     {
+        /*try
+        {
+        }
+        catch (Exception exception)
+        {
+            exception.Redirect();
+        }*/
+     }
+
+}
