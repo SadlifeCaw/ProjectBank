@@ -7,9 +7,9 @@ public abstract class CodedCategory : Category
     public Faculty Faculty {get; set;}
 
     [Required]
-    public string? Code {get; set;}
+    public string Code {get; set;}
 
-    protected CodedCategory(string Title, string? Description, Faculty Faculty, string Code) 
+    protected CodedCategory(string Title, string Description, Faculty Faculty, string Code) 
     : base(Title, Description) 
     {
         this.Faculty = Faculty;

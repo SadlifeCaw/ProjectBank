@@ -8,10 +8,10 @@ public abstract class Category : IHierarchy
 
     [Required]
     [StringLength(100)]
-    public string? Title {get; set;}
+    public string Title {get; set;}
 
     [StringLength(1000)]
-    public string? Description {get; set;}
+    public string Description {get; set;}
 
     public abstract IReadOnlyCollection<IHierarchy> GetAllRelated();
 
@@ -22,7 +22,7 @@ public abstract class Category : IHierarchy
         else return false;
     }
     //constructor to be inherited
-    protected Category(string Title, string? Description) 
+    protected Category(string Title, string Description) 
     {
         this.Title = Title;
         this.Description = Description;

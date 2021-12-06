@@ -15,7 +15,7 @@ public class InstitutionRepository : IInstitutionRepository
         var conflict =
             await _dbcontext.Institutions
                             .Where(i => i.Title == institution.Title)
-                            .Select(i => new InstitutionDTO(i.Id, i.Title, i.Description, institution.Faculties))
+                            .Select(i => new InstitutionDTO(i.Id, i.Title, i.Description))
                             .FirstOrDefaultAsync();
 
         if (conflict != null)
@@ -26,44 +26,27 @@ public class InstitutionRepository : IInstitutionRepository
         var entity = new Institution
         (
             institution.Title,
-            institution.Description,
-            await GetFacultiesAsync(institution.Faculties, institution.Title).ToListAsync()
+            institution.Description
         );
 
         _dbcontext.Institutions.Add(entity);
 
         await _dbcontext.SaveChangesAsync();
 
-        return (Response.Created, new InstitutionDTO(entity.Id, entity.Title, entity.Description, institution.Faculties));
+        return (Response.Created, new InstitutionDTO(entity.Id, entity.Title, entity.Description));
     }
     public async Task<InstitutionDTO> ReadByIDAsync(int insitutionID)
     {
         var institutions = from i in _dbcontext.Institutions
                            where i.Id == insitutionID
-                           select new InstitutionDTO(i.Id, i.Title, i.Description, i.Faculties.Select(f => f.Title).ToList());
+                           select new InstitutionDTO(i.Id, i.Title, i.Description);
 
         return await institutions.FirstOrDefaultAsync();
     }
 
     public async Task<IReadOnlyCollection<InstitutionDTO>> ReadAllAsync() =>
         (await _dbcontext.Institutions
-                        .Select(i => new InstitutionDTO(i.Id, i.Title, i.Description, i.Faculties.Select(f => f.Title).ToList()))
+                        .Select(i => new InstitutionDTO(i.Id, i.Title, i.Description))
                         .ToListAsync())
                         .AsReadOnly();
-
-
-    private async IAsyncEnumerable<Faculty> GetFacultiesAsync(ICollection<string> inFaculties, string InstitutionName) 
-    {
-        var existing = await _dbcontext.Faculties
-                        .Where(f => f.Title == InstitutionName)
-                        .Where(f => inFaculties
-                                    .Any(inF => inF == f.Title))
-                        .Select(c => c)
-                        .ToListAsync();
-
-        foreach (var faculty in existing)
-        {
-            yield return faculty;
-        }
-    }
 }
