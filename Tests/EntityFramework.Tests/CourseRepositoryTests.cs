@@ -1,8 +1,6 @@
 
 namespace EntityFramework.Tests;
 
-
-
 public class CourseRepositoryTests : IDisposable
 {
     

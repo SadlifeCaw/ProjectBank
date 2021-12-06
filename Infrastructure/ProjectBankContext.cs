@@ -31,7 +31,7 @@ public class ProjectBankContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
     
-        // Create Table-Per-Type
+        // Create Table-Per-Type for the Category hierarchy
         // This is slower than Table-Per-Hierarchy, but it makes database updates work
 
         modelBuilder.Entity<Category>().ToTable("Categories");

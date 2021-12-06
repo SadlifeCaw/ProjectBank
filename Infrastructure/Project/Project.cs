@@ -51,8 +51,8 @@ public class Project : ITagable, IProject
     [Required]
     public int MaxStudents {get; set;}
 
-    //ignore warning, since Signature is automatically set when Tags is set
-    public Project(Supervisor Author, string Title, string Description, ProjectStatus Status, Category Category, IReadOnlyCollection<Tag> Tags, ICollection<User> Users, int MaxStudents)
+    //ignore 'Signature' warning, since Signature is automatically set when Tags is set
+    public Project(Supervisor Author, string Title, string Description, ProjectStatus Status, Category Category, IReadOnlyCollection<Tag> Tags, ICollection<User> Users, ICollection<ProjectBucket> Buckets, int MaxStudents)
     {
         this.Author = Author;
         this.Title = Title;
@@ -61,6 +61,7 @@ public class Project : ITagable, IProject
         this.Category = Category;
         this.Tags = Tags;
         this.Users = Users;
+        this.Buckets = Buckets;
         this.MaxStudents = MaxStudents;
     }
 
