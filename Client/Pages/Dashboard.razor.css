@@ -17,3 +17,7 @@ p{
     font-size: 20px;
     font-family: 'Calibri';
 }
+
+#collapseExample{
+    overflow-y: hidden;
+}

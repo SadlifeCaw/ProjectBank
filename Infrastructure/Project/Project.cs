@@ -23,7 +23,7 @@ public class Project : ITagable, IProject
     public ProjectStatus Status { get; set; }
 
     [Required]
-    public Category Category {get; set; }
+    public Category Category { get; set; }
 
     public IReadOnlyCollection<Tag> Tags
     {
@@ -35,8 +35,6 @@ public class Project : ITagable, IProject
             signature = new Signature(Tags);
 
         }
-
-      
     }
 
     [Required]

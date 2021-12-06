@@ -1,6 +1,13 @@
 @page "/dashboard"
 @using ProjectBank.Infrastructure
 @using ProjectBank.Core
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+@inject HttpClient Http
+
+
+
 
 <PageTitle>@title</PageTitle>
 
@@ -12,8 +19,7 @@
 
 <div>
     <h2>Description</h2>
-    <textarea>Description here...</textarea>
-</div>
+</div
 
 <div>
     <h2>Info</h2>
@@ -49,30 +55,55 @@
     </div>
     <div>
         <h3>Students</h3>
-        <textarea>Students</textarea>
+        <textarea>@ProjectId</textarea>
     </div>
 </div>
 
 <div>
     <h2>Related projects</h2>
     <button>Tap to see within target group</button>
+    @if (project == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>    
+                <tr>
+                    <td>@project[0].Name</td>
+                </tr>
+           
+        </tbody>
+    </table>
+}
 </div>
 
 @code {
     string title = "your mom";
-    string empty = string.Empty;
+    string description = "";
     
-    private IProject[]? projects;
+    [Parameter]
+    public int? ProjectId {get; set;}
+
+    Tag[] project;
 
      protected override async Task OnInitializedAsync()
      {
-        /*try
+        try
         {
+            ProjectId = 1;
+            project = await Http.GetFromJsonAsync<Tag[]>("Project");
         }
         catch (Exception exception)
         {
-            exception.Redirect();
-        }*/
+            Console.WriteLine(":((({0}",exception.Message);
+            //exception.Redirect();
+        }
      }
-
 }
