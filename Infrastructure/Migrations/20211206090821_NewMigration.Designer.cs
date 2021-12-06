@@ -12,8 +12,8 @@ using ProjectBank.Infrastructure;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectBankContext))]
-    [Migration("20211126102208_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20211206090821_NewMigration")]
+    partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("CourseProgram", b =>
+            modelBuilder.Entity("CourseTeachingProgram", b =>
                 {
                     b.Property<int>("CoursesId")
                         .HasColumnType("int");
@@ -36,22 +36,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProgramsId");
 
-                    b.ToTable("CourseProgram");
-                });
-
-            modelBuilder.Entity("CourseStudent", b =>
-                {
-                    b.Property<int>("CoursesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CoursesId", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("CourseStudent");
+                    b.ToTable("CourseTeachingProgram");
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Category", b =>
@@ -63,6 +48,7 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -84,10 +70,16 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("MaxStudents")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -100,6 +92,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("Title")
                         .IsUnique();
@@ -175,6 +169,21 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
                 });
 
+            modelBuilder.Entity("ProjectUser", b =>
+                {
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ProjectUser");
+                });
+
             modelBuilder.Entity("ProjectBank.Infrastructure.CodedCategory", b =>
                 {
                     b.HasBaseType("ProjectBank.Infrastructure.Category");
@@ -214,14 +223,15 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("ProjectBank.Infrastructure.User");
 
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProgramId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int")
-                        .HasColumnName("Student_ProjectId");
+                    b.HasIndex("CourseId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProgramId");
 
                     b.HasDiscriminator().HasValue("Student");
                 });
@@ -233,10 +243,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("FacultyId");
 
                     b.HasDiscriminator().HasValue("Supervisor");
                 });
@@ -248,14 +255,14 @@ namespace Infrastructure.Migrations
                     b.ToTable("Courses", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectBank.Infrastructure.Program", b =>
+            modelBuilder.Entity("ProjectBank.Infrastructure.TeachingProgram", b =>
                 {
                     b.HasBaseType("ProjectBank.Infrastructure.CodedCategory");
 
                     b.ToTable("Programs", (string)null);
                 });
 
-            modelBuilder.Entity("CourseProgram", b =>
+            modelBuilder.Entity("CourseTeachingProgram", b =>
                 {
                     b.HasOne("ProjectBank.Infrastructure.Course", null)
                         .WithMany()
@@ -263,26 +270,22 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProjectBank.Infrastructure.Program", null)
+                    b.HasOne("ProjectBank.Infrastructure.TeachingProgram", null)
                         .WithMany()
                         .HasForeignKey("ProgramsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CourseStudent", b =>
+            modelBuilder.Entity("ProjectBank.Infrastructure.Project", b =>
                 {
-                    b.HasOne("ProjectBank.Infrastructure.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("ProjectBank.Infrastructure.Supervisor", "Author")
+                        .WithMany("AuthoredProjects")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectBank.Infrastructure.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Tag", b =>
@@ -297,10 +300,25 @@ namespace Infrastructure.Migrations
                     b.HasOne("ProjectBank.Infrastructure.Institution", "Institution")
                         .WithMany()
                         .HasForeignKey("InstitutionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Institution");
+                });
+
+            modelBuilder.Entity("ProjectUser", b =>
+                {
+                    b.HasOne("ProjectBank.Infrastructure.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectBank.Infrastructure.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.CodedCategory", b =>
@@ -329,7 +347,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("ProjectBank.Infrastructure.Institution", "Institution")
-                        .WithMany("Faculties")
+                        .WithMany()
                         .HasForeignKey("InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -348,16 +366,28 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Student", b =>
                 {
-                    b.HasOne("ProjectBank.Infrastructure.Project", null)
+                    b.HasOne("ProjectBank.Infrastructure.Course", null)
                         .WithMany("Students")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("ProjectBank.Infrastructure.TeachingProgram", "Program")
+                        .WithMany()
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Program");
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Supervisor", b =>
                 {
-                    b.HasOne("ProjectBank.Infrastructure.Project", null)
-                        .WithMany("Collaborators")
-                        .HasForeignKey("ProjectId");
+                    b.HasOne("ProjectBank.Infrastructure.Faculty", "Faculty")
+                        .WithMany()
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Course", b =>
@@ -369,27 +399,28 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProjectBank.Infrastructure.Program", b =>
+            modelBuilder.Entity("ProjectBank.Infrastructure.TeachingProgram", b =>
                 {
                     b.HasOne("ProjectBank.Infrastructure.CodedCategory", null)
                         .WithOne()
-                        .HasForeignKey("ProjectBank.Infrastructure.Program", "Id")
+                        .HasForeignKey("ProjectBank.Infrastructure.TeachingProgram", "Id")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Project", b =>
                 {
-                    b.Navigation("Collaborators");
-
-                    b.Navigation("Students");
-
                     b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("ProjectBank.Infrastructure.Institution", b =>
+            modelBuilder.Entity("ProjectBank.Infrastructure.Supervisor", b =>
                 {
-                    b.Navigation("Faculties");
+                    b.Navigation("AuthoredProjects");
+                });
+
+            modelBuilder.Entity("ProjectBank.Infrastructure.Course", b =>
+                {
+                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }

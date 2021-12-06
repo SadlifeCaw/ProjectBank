@@ -21,10 +21,6 @@
         <InputTextArea id="Description" @bind-Value="project.Description" class="form-control" rows="7"/>
     </div>
     <div class="form-group">
-        <label for="Powers">Tags</label>
-        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
-    </div>
-    <div class="form-group">
         <div>Project visibility</div>
         <InputRadioGroup @bind-Value="project.Status">
             <InputRadio id="Public" Value="@PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
@@ -47,11 +43,18 @@
 @code{
     private ProjectCreateDTO project = new();
 
+    /*
+    THIS NEEDS TO BE IMPLEMENTED:
     private string Tags
     {
-        get => string.Join(Environment.NewLine, project.Tags);
-        set => project.Tags = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p)).ToHashSet();
-    }
+        get => string.Join(Environment.NewLine, project.TagIDs);
+        set => project.TagIDs = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p));
+        
+        <div class="form-group">
+        <label for="Powers">Tags</label>
+        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
+        </div>
+    } */
     private async Task HandleValidSubmit()
     {   
 
@@ -82,5 +85,9 @@
         tagGenerator.Add(tags);
         tagGenerator.Build();
         return tagGenerator.Find(text);
+    }
+
+    public ICollection<int>? ConvertToTagIDs(IEnumerable<string> TagNames){
+        return new List<int>();
     }
 }

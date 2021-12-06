@@ -27,7 +27,7 @@ namespace ProjectBank.Infrastructure;
             //get related institution by name
             var institution =
                 await _dbcontext.Institutions
-                              .Where(i => i.Title == faculty.Title)
+                              .Where(i => i.Title == faculty.InstitutionName)
                               .Select(i => i)
                               .FirstOrDefaultAsync();
 

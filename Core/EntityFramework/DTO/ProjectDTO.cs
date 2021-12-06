@@ -24,14 +24,9 @@ public record ProjectDTO(
     [Required]
     ProjectStatus Status,
 
-    [Required]
     ICollection<int> TagIDs,
 
-    //[Required]
-    ICollection<int> StudentIDs,
-
-    //[Required]
-    ICollection<int> CollaboratorIDs
+    ICollection<int> UserIDs
 
 ) : ProjectKeyDTO;
 
@@ -48,18 +43,15 @@ public record ProjectCreateDTO
 
     [Required]
     public ProjectStatus Status {get; set;}
+    
+    public ICollection<int> TagIDs {get; set;}
 
-    [Required]
-    public ISet<String> Tags{get; set;} = new HashSet<String>();
-
-    //[Required]
-    public ICollection<int> StudentIDs {get; set;}
-
-    //[Required]
-    public ICollection<int> CollaboratorIDs {get; set;}
+    public ICollection<int> UserIDs {get; set;}
 };
 
 public record ProjectUpdateDTO : ProjectCreateDTO
 {
      public int Id { get; init; }
 }
+
+

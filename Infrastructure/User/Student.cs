@@ -3,7 +3,18 @@ namespace ProjectBank.Infrastructure;
 public class Student : User 
 {
     [Required]
-    public int ProgramId {get; set;}
+    public TeachingProgram Program {get; set;}
 
-    public ICollection<Course> Courses {get; set;} = null!;
+    [Required]
+    public ICollection<Course> Courses {get; set;}
+
+    public Student(string Email, Institution Institution, string FirstName, string LastName, ICollection<Project> Projects, TeachingProgram Program, ICollection<Course> Courses)
+    : base(Email, Institution, FirstName, LastName, Projects)
+    {
+        this.Program = Program;
+        this.Courses = Courses;
+    }
+
+    public Student() {}
+
 }

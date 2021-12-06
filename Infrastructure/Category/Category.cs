@@ -1,19 +1,28 @@
 
+using System.Linq;
 namespace ProjectBank.Infrastructure;
-public abstract class Category 
+public abstract class Category : IHierarchy
 
 {
     public int Id { get; set; }
 
     [Required]
     [StringLength(100)]
-    public string? Title {get; set;}
+    public string Title {get; set;}
 
     [StringLength(1000)]
-    public string? Description {get; set;}
+    public string Description {get; set;}
 
+    public abstract IReadOnlyCollection<IHierarchy> GetAllRelated();
+
+    public bool IsRelated(IHierarchy that)
+    {
+        if(that == null) throw new ArgumentException("Parameter cannot be null");
+        if(GetAllRelated().Except(that.GetAllRelated()).Count() != GetAllRelated().Count()) return true;
+        else return false;
+    }
     //constructor to be inherited
-    protected Category(string Title, string? Description) 
+    protected Category(string Title, string Description) 
     {
         this.Title = Title;
         this.Description = Description;
