@@ -100,6 +100,19 @@ public class ProjectRepository : IProjectRepository
         return await users.FirstOrDefaultAsync(); 
     }
 
+    public async Task<IReadOnlyCollection<ProjectDTO>> ReadCollectionAsync(ICollection<int> projectIDs)
+    {
+        var projects = (await _dbcontext.Projects
+                        .Where(p => projectIDs
+                                    .Any(inP => inP == p.Id))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+        
+        return projects;
+    }
+
     public async Task<Response> AddUserAsync(ProjectKeyDTO projectKey, int userID)
     {
         var user = await GetUserAsync(userID);
