@@ -1,0 +1,114 @@
+@page "/dashboard"
+@using ProjectBank.Infrastructure
+@using ProjectBank.Core
+@using ProjectBank.Core.EF.DTO
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+@inject HttpClient Http
+
+<PageTitle>@title</PageTitle>
+
+<head>
+    <link rel="stylesheet" href="Dashboard.razor.css">
+</head>
+
+<h1>@title</h1>
+
+<div>
+    <h2>Description</h2>
+    <textarea>Description here...</textarea>
+</div>
+
+<div>
+    <h2>Info</h2>
+    <div>
+        <h3>Target group</h3>
+        <textarea>Target group here..</textarea>
+    </div>
+    <div>
+        <h3>Status</h3>
+        <textarea>Status here...</textarea>
+    </div>
+    <div>
+        <h3>Tags</h3>
+        <textarea>Tags...</textarea>
+    </div>
+</div>
+
+<div>
+    <h2>Participants</h2>
+    <div>
+        <h3>Supervisors</h3>
+        <h5>Supervisor</h5>
+        <textarea>Supervisors...</textarea>
+        <div class="row">
+            <div class="column">
+                <label for="inputEmail" class="form-label">Invite a supervisor</label>
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            </div>
+            <div class="column">
+                <button>Invite</button>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3>Students</h3>
+        <textarea>Students</textarea>
+        <textarea>@ProjectId</textarea>
+    </div>
+</div>
+
+<div>
+    <h2>Related projects</h2>
+    <button>Tap to see within target group</button>
+    @if (project == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>    
+                <tr>
+                    <td>@project[0].Id</td>
+                </tr>
+           
+        </tbody>
+    </table>
+}
+</div>
+
+@code {
+    string title = "your mom";
+    string empty = string.Empty;
+    
+    private IProject[]? projects;
+
+    string description = "";
+    
+    [Parameter]
+    public int? ProjectId {get; set;}
+
+    ProjectDTO[] project;
+
+    protected override async Task OnInitializedAsync()
+     {
+        try
+        {
+            string Projectstr = "Hah work";
+            //ProjectId = 1;
+            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{Projectstr}");
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(":((( {0}",exception.Message);
+            //exception.Redirect();
+        }
+     }
+}

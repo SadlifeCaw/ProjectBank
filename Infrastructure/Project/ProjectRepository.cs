@@ -1,3 +1,5 @@
+using ProjectBank.Infrastructure.Entities;
+
 namespace ProjectBank.Infrastructure;
 
 public class ProjectRepository : IProjectRepository
@@ -14,8 +16,8 @@ public class ProjectRepository : IProjectRepository
         var conflict = await _dbcontext.Projects
                         .Where(p => p.Author.Id == project.AuthorID)
                         .Where(p => p.Title == project.Title)
-                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status,
-                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList()))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
                         .FirstOrDefaultAsync();
 
         if (conflict != null)
@@ -25,28 +27,37 @@ public class ProjectRepository : IProjectRepository
 
         var author = await GetSupervisorAsync(project.AuthorID);
 
-        var entity = new Project
+        var category = await GetCategoryAsync(project.CategoryID);
+
+        var entity = new Project(author, project.Title, project.Description, project.Status, category, await GetTagsAsync(project.TagIDs).ToListAsync(),
+            await GetUsersAsync(project.UserIDs).ToListAsync(),
+            await GetBucketsAsync(project.BucketIDs).ToListAsync(), project.MaxStudents);
+        /*
         {
             Author = author,
             Title = project.Title,
             Description = project.Description,
             Status = project.Status,
+            MaxStudents = project.MaxStudents,
+            Category = category,
             Tags = await GetTagsAsync(project.TagIDs).ToListAsync(),
-            Users = await GetUsersAsync(project.UserIDs).ToListAsync()
+            Users = await GetUsersAsync(project.UserIDs).ToListAsync(),
+            Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync(),
         };
+        */
 
         _dbcontext.Projects.Add(entity);
 
         await _dbcontext.SaveChangesAsync();
 
-        return (Response.Created, new ProjectDTO(entity.Id, entity.Author.Id, entity.Title, entity.Description, entity.Status,
-                                                 entity.Tags.Select(t => t.Id).ToList(), entity.Users.Select(u => u.Id).ToList()));
+        return (Response.Created, new ProjectDTO(entity.Id, entity.Author.Id, entity.Title, entity.Description, entity.Status, entity.MaxStudents, entity.Category.Id,
+                                                 entity.Tags.Select(t => t.Id).ToList(), entity.Users.Select(u => u.Id).ToList(), entity.Buckets.Select(b => b.Id).ToList()));
     }
     public async Task<IReadOnlyCollection<ProjectDTO>> ReadAllAsync()
     {
         return (await _dbcontext.Projects
-                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status,
-                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList()))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
                         .ToListAsync())
                         .AsReadOnly();
     }
@@ -55,8 +66,8 @@ public class ProjectRepository : IProjectRepository
     {
         return (await _dbcontext.Projects
                         .Where(p => p.Author.Id == authorID)
-                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status,
-                                          p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList()))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
                         .ToListAsync())
                         .AsReadOnly();
     }
@@ -66,8 +77,8 @@ public class ProjectRepository : IProjectRepository
         return (await _dbcontext.Projects
                         .Where(p => p.Tags
                                     .Any(t => t.Id == tagID))
-                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status,
-                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList()))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
                         .ToListAsync())
                         .AsReadOnly();
     }
@@ -76,8 +87,8 @@ public class ProjectRepository : IProjectRepository
     {
         var users = from p in _dbcontext.Projects
                     where p.Id == projectID
-                    select new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status,
-                                          p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList());
+                    select new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList());
 
         return await users.FirstOrDefaultAsync(); 
     }
@@ -87,10 +98,23 @@ public class ProjectRepository : IProjectRepository
         var users = from p in _dbcontext.Projects
                     where p.Author.Id == authorID
                     where p.Title == ProjectTitle
-                    select new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status,
-                                          p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList());
+                    select new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                          p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList());
 
         return await users.FirstOrDefaultAsync(); 
+    }
+
+    public async Task<IReadOnlyCollection<ProjectDTO>> ReadCollectionAsync(ICollection<int> projectIDs)
+    {
+        var projects = (await _dbcontext.Projects
+                        .Where(p => projectIDs
+                                    .Any(inP => inP == p.Id))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+        
+        return projects;
     }
 
     public async Task<Response> AddUserAsync(ProjectKeyDTO projectKey, int userID)
@@ -143,7 +167,43 @@ public class ProjectRepository : IProjectRepository
 
     public async Task<Response> UpdateAsync(ProjectUpdateDTO project)
     {
-        throw new NotImplementedException();
+        var projectEntity = await _dbcontext.Projects
+                            .Where(p => p.Author.Id == project.AuthorID)
+                            .Where(p => p.Title == project.Title)
+                            .Select(p => p)
+                            .FirstOrDefaultAsync();
+        
+        if(project == null)
+        {
+            return Response.NotFound;
+        }
+
+        //only change category if it is not the same, cut down unnecesarry queries
+        if(project.CategoryID != projectEntity.Category.Id)
+        {
+            var category = await _dbcontext.Categories
+                            .Where(c => c.Id == project.CategoryID)
+                            .Select(c => c)
+                            .FirstOrDefaultAsync();
+
+            if(category == null)
+            {
+                return Response.NotFound;
+            }
+
+            projectEntity.Category = category;
+        }
+
+        projectEntity.Title = project.Title;
+        projectEntity.Description = project.Description;
+        projectEntity.MaxStudents = project.MaxStudents;
+        projectEntity.Status = project.Status;
+        projectEntity.Tags = await GetTagsAsync(project.TagIDs).ToListAsync();
+        projectEntity.Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync();
+        projectEntity.Users = await GetUsersAsync(project.UserIDs).ToListAsync();
+
+        await _dbcontext.SaveChangesAsync();
+        return Response.Updated;
     }
 
     private async Task<Supervisor> GetSupervisorAsync(int authorID)
@@ -203,5 +263,27 @@ public class ProjectRepository : IProjectRepository
         {
             yield return user;
         }
+    }
+
+    private async IAsyncEnumerable<ProjectBucket> GetBucketsAsync(ICollection<int> inBuckets)
+    {
+        var existing = await _dbcontext.Buckets
+                        .Where(b => inBuckets
+                                    .Any(inB => inB == b.Id))
+                        .Select(b => b)
+                        .ToListAsync();
+                           
+        foreach (var bucket in existing)
+        {
+            yield return bucket;
+        }
+    }
+
+    private async Task<Category> GetCategoryAsync(int categoryID)
+    {
+        return await _dbcontext.Categories
+                        .Where(c => c.Id == categoryID)
+                        .Select(c => c)
+                        .FirstOrDefaultAsync();
     }
 }

@@ -1,3 +1,5 @@
+using ProjectBank.Infrastructure.Entities;
+
 namespace ProjectBank.Infrastructure;
 
 public class ProjectBankContext : DbContext
@@ -21,6 +23,7 @@ public class ProjectBankContext : DbContext
     public DbSet<Tag> Tags => Set<Tag>();
 
     public DbSet<Signature> Signatures => Set<Signature>();
+    public DbSet<ProjectBucket> Buckets => Set<ProjectBucket>();
 
 
     public ProjectBankContext(DbContextOptions<ProjectBankContext> options) : base(options) { }
@@ -28,7 +31,7 @@ public class ProjectBankContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
     
-        // Create Table-Per-Type
+        // Create Table-Per-Type for the Category hierarchy
         // This is slower than Table-Per-Hierarchy, but it makes database updates work
 
         modelBuilder.Entity<Category>().ToTable("Categories");
@@ -51,6 +54,9 @@ public class ProjectBankContext : DbContext
 
         //manually determine Student-Course relationship
         modelBuilder.Entity<Course>().HasMany(c => c.Students).WithMany(s => s.Courses);
+
+        //manually determine Bucket-Project relationship
+        modelBuilder.Entity<ProjectBucket>().HasMany(b => b.Projects).WithMany(p => p.Buckets);
 
         //do not delete project when author is deleted
         modelBuilder.Entity<User>()
