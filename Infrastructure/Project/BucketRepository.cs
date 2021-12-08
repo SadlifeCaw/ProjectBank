@@ -57,6 +57,114 @@ namespace ProjectBank.Infrastructure.Entities;
                         .ToListAsync())
                         .AsReadOnly();
 
+
+     public async Task<Response> AddProjectAsync(int bucketID, int projectID)
+    {
+        var bucket = await (_dbcontext.Buckets
+                        .Where(b => b.Id == bucketID)
+                        .Select(b => b))
+                        .FirstOrDefaultAsync();
+
+        var project = await (_dbcontext.Projects
+                        .Where(p => p.Id == projectID)
+                        .Select(p => p))
+                        .FirstOrDefaultAsync();
+
+        if(bucket == null || project == null)
+        {
+            return Response.NotFound;
+        }
+
+        bucket.Projects.Add(project);
+
+        return Response.Updated;
+    }
+
+    public async Task<Response> RemoveProjectAsync(int bucketID, int projectID)
+    {
+        var bucket = await (_dbcontext.Buckets
+                        .Where(b => b.Id == bucketID)
+                        .Select(b => b))
+                        .FirstOrDefaultAsync();
+
+        if(bucket == null)
+        {
+            return Response.NotFound;
+        }
+
+        //find project in bucket - if it actually holds it
+        var project = (bucket.Projects
+                        .Where(p => p.Id == projectID)
+                        .Select(p => p))
+                        .FirstOrDefault();
+        
+        if(project == null)
+        {
+            return Response.NotFound;
+        }
+
+        var removed = bucket.Projects.Remove(project);
+
+        if(removed) 
+        {
+            await _dbcontext.SaveChangesAsync();
+            return Response.Updated;
+        } 
+
+        return Response.BadRequest;
+    }
+
+    //changes a bucket's projects to another set of projects.
+    //If none of the project ID exists in the database, then refuse. 
+    //To clear the bucket use ClearBucketAsync
+    public async Task<Response> UpdateAllProjectAsync(int bucketID, ICollection<int> projectIDs)
+    {
+        var bucket = await (_dbcontext.Buckets
+                        .Where(b => b.Id == bucketID)
+                        .Select(b => b))
+                        .FirstOrDefaultAsync();
+
+        if(bucket == null)
+        {
+            return Response.NotFound;
+        }
+
+        var projects = await GetProjectsAsync(projectIDs).ToHashSetAsync();
+
+        if(projects.Count() == 0)
+        {
+           return Response.BadRequest; 
+        }
+
+        bucket.Projects.Clear();
+        
+        foreach (var project in projects)
+        {
+            bucket.Projects.Add(project);
+        }
+
+        await _dbcontext.SaveChangesAsync();
+        return Response.Updated;
+    }
+
+    public async Task<Response> ClearBucketAsync(int bucketID)
+    {
+        var bucket = await (_dbcontext.Buckets
+                        .Where(b => b.Id == bucketID)
+                        .Select(b => b))
+                        .FirstOrDefaultAsync();
+
+        if(bucket == null)
+        {
+            return Response.NotFound;
+        }
+
+        bucket.Projects.Clear();
+
+        await _dbcontext.SaveChangesAsync();
+        return Response.Updated;
+    }
+
     private async IAsyncEnumerable<Project> GetProjectsAsync(ICollection<int> inProjects)
     {
         var existing = await _dbcontext.Projects
@@ -71,18 +179,12 @@ namespace ProjectBank.Infrastructure.Entities;
         }
     }
 
-    public async Task<Response> AddProjectAsync(int projectID)
+    private async Task<Project> GetProjectAsync(int projectID)
     {
-        throw new NotImplementedException();
-    }
+        return await _dbcontext.Projects
+                    .Where(p => p.Id == projectID)
+                    .Select(p => p)
+                    .FirstOrDefaultAsync();
 
-    public async Task<Response> RemoveProjectAsync(int projectID)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<Response> UpdateAllProjectAsync(ICollection<int> projectIDs)
-    {
-        throw new NotImplementedException();
     }
 }

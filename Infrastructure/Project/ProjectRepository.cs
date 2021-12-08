@@ -100,6 +100,19 @@ public class ProjectRepository : IProjectRepository
         return await users.FirstOrDefaultAsync(); 
     }
 
+    public async Task<IReadOnlyCollection<ProjectDTO>> ReadCollectionAsync(ICollection<int> projectIDs)
+    {
+        var projects = (await _dbcontext.Projects
+                        .Where(p => projectIDs
+                                    .Any(inP => inP == p.Id))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+        
+        return projects;
+    }
+
     public async Task<Response> AddUserAsync(ProjectKeyDTO projectKey, int userID)
     {
         var user = await GetUserAsync(userID);
@@ -148,9 +161,45 @@ public class ProjectRepository : IProjectRepository
         return Response.NotFound;
     }
 
-    public async Task<Response> UpdateAsync(ProjectUpdateDTO project)
+    public async Task<Response> UpdateAsync(ProjectDTO project)
     {
-        throw new NotImplementedException();
+        var projectEntity = await _dbcontext.Projects
+                            .Where(p => p.Author.Id == project.AuthorID)
+                            .Where(p => p.Title == project.Title)
+                            .Select(p => p)
+                            .FirstOrDefaultAsync();
+        
+        if(project == null)
+        {
+            return Response.NotFound;
+        }
+
+        //only change category if it is not the same, cut down unnecesarry queries
+        if(project.CategoryID != projectEntity.Category.Id)
+        {
+            var category = await _dbcontext.Categories
+                            .Where(c => c.Id == project.CategoryID)
+                            .Select(c => c)
+                            .FirstOrDefaultAsync();
+
+            if(category == null)
+            {
+                return Response.NotFound;
+            }
+
+            projectEntity.Category = category;
+        }
+
+        projectEntity.Title = project.Title;
+        projectEntity.Description = project.Description;
+        projectEntity.MaxStudents = project.MaxStudents;
+        projectEntity.Status = project.Status;
+        projectEntity.Tags = await GetTagsAsync(project.TagIDs).ToListAsync();
+        projectEntity.Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync();
+        projectEntity.Users = await GetUsersAsync(project.UserIDs).ToListAsync();
+
+        await _dbcontext.SaveChangesAsync();
+        return Response.Updated;
     }
 
     private async Task<Supervisor> GetSupervisorAsync(int authorID)
