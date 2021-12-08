@@ -1,13 +1,11 @@
 @page "/dashboard"
 @using ProjectBank.Infrastructure
 @using ProjectBank.Core
+@using ProjectBank.Core.EF.DTO
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @attribute [Authorize]
 @inject HttpClient Http
-
-
-
 
 <PageTitle>@title</PageTitle>
 
@@ -76,7 +74,7 @@ else
         </thead>
         <tbody>    
                 <tr>
-                    <td>@project[0].Name</td>
+                    <td>@project[0].Id</td>
                 </tr>
            
         </tbody>
@@ -91,18 +89,19 @@ else
     [Parameter]
     public int? ProjectId {get; set;}
 
-    Tag[] project;
+    ProjectDTO[] project;
 
      protected override async Task OnInitializedAsync()
      {
         try
         {
+            //string str = "Whah work";
             ProjectId = 1;
-            project = await Http.GetFromJsonAsync<Tag[]>("Project");
+            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{ProjectId}");
         }
         catch (Exception exception)
         {
-            Console.WriteLine(":((({0}",exception.Message);
+            Console.WriteLine(":((( {0}",exception.Message);
             //exception.Redirect();
         }
      }

@@ -6,43 +6,55 @@ using ProjectBank.Core;
 using ProjectBank.Infrastructure.ReferenceSystem;
 using ProjectBank.Infrastructure.Entities;
 using ProjectBank.Infrastructure;
+using ProjectBank.Core.EF.DTO;
 
 namespace ProjectBank.Server.Controllers;
 [Authorize]
-    [ApiController]
+[ApiController]
 [Route("[controller]")]
-    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 
-    
-    public class ProjectController : ControllerBase
+
+public class ProjectController : ControllerBase
+{
+    private readonly ILogger<ProjectController> _logger;
+    //private readonly IProjectRepository _ProjectRepository;
+
+    /*
+    public ProjectController(ILogger<ProjectController> logger, IProjectRepository ProjectRepository)
     {
-        private readonly ILogger<ProjectController> _logger;
+        _logger = logger;
+        _ProjectRepository = ProjectRepository;
+    }
+    */
 
-        public ProjectController(ILogger<ProjectController> logger)
-        {
-            _logger = logger;
-        }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public IEnumerable<Tag> Get()
-        {
-            Institution ITU = new Institution{Id = 1};
-            Tag Agriculture = new Tag ("Agriculture");
-            Tag Food = new Tag ("Food");
-        /*Tag ComputerScience = new Tag ("Computer Science");
-        Tag Security = new Tag ("Security");
-        Tag Algorithms = new Tag ("Algorithms");
-        Tag Simulation = new Tag ("Simulation");
-        Tag Farming = new Tag ("Farming");*/
-            //var LSH = new ProjectLSH();
-            var AgricultureFood = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 6, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            //LSH.Insert(AgricultureFood);
-            var projects = new Project[1];
-            projects[0] = AgricultureFood;
+    [AllowAnonymous]
+    [HttpGet("GetTag/{TagId}")]
+    public IEnumerable<ProjectDTO> Get(int ProjectId)
+    {
+        //Hent project fra databasen
+        var projectDTO = new ProjectDTO(0,"","",ProjectStatus.PUBLIC, new List<int>());//await _ProjectRepository.ReadProjectByIDAsync(ProjectId);
+        
+        var TagIds = projectDTO.TagIDs;
+        var Tags = new List<TagDTO>();
+        //TagIds.ForEach(async tagid => Tags.Add(await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/GetTag/{tagid}")));
+        
+        var LSH = new ProjectLSH();
+        //var AgricultureFood = new Project {Category = null, Tags = null, Id = 6, Author = new Supervisor(), Title = "AgricultureFood", Description = "AgricultureFood" };
+        //LSH.Insert(AgricultureFood);
+        var projects = new Project[1];
+        //projects[0] = AgricultureFood;
+        //Console.WriteLine(hey);
+        
+        var dto = new ProjectDTO(6, "Hey there", "Hey yo", ProjectStatus.PUBLIC, new List<int>{1, 2, 3});
 
-            return Enumerable.Range(1, 5).Select(index => new Tag("Hey"))
-        .ToArray();
-        }
+        return Enumerable.Range(1, 5).Select(index => dto).ToArray();
+        
+    }
     
+
+    
+
+
 }

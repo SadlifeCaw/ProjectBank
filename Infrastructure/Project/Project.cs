@@ -53,3 +53,9 @@ public class Project : ITagable, IProject
     [Required]
     public ICollection<Supervisor> Collaborators { get; set; } = null!;
 }
+
+/*public record ProjectDTO
+    {
+        public int Id {get; set;}
+        public string Title {get; set;}
+    }*/
