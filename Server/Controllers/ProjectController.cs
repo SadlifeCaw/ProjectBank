@@ -35,6 +35,14 @@ public class ProjectController : ControllerBase
     {
         //Hent project fra databasen
         //var projectDTO = new ProjectDTO(0,"","",ProjectStatus.PUBLIC, new List<int>());
+        //var projectDTO = await _ProjectRepository.ReadProjectByIDAsync(ProjectId);
+        /*
+        var TagIds = projectDTO.TagIDs;
+        var Tags = new List<TagDTO>();
+        TagIds.ForEach(async tagid => Tags.Add(await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/GetTag/{tagid}")));
+        */
+        
+        //var LSH = new ProjectLSH();
 
         //return await _ProjectRepository.ReadByIDAsync(ProjectId);
 
@@ -45,10 +53,9 @@ public class ProjectController : ControllerBase
         //TagIds.ForEach(async tagid => Tags.Add(await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/GetTag/{tagid}")));
         //var AgricultureFood = new Project {Category = null, Tags = null, Id = 6, Author = new Supervisor(), Title = "AgricultureFood", Description = "AgricultureFood" };
         
-        var dto = new ProjectDTO(2 ,7 , Projectstr, "Hey yo", ProjectStatus.PUBLIC, 3, 19, new List<int>{1, 2, 3}, new List<int>{1,2,3}, new List<int>{1, 2, 3});
-        //var tag = new Tag(ProjectId);
+        var dto = new ProjectDTO(6,7, "Hey there", "Hey yo", ProjectStatus.PUBLIC, 3, 19, new List<int>{1, 2, 3}, new List<int>{1,2,3}, new List<int>{1, 2, 3});
+
         return Enumerable.Range(1, 5).Select(index => dto).ToArray();
-        //return ;
     }
 }
 }
