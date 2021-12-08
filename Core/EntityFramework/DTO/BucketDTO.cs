@@ -1,5 +1,6 @@
  public class BucketDTO
     {
+        public int Id{get; init;}
         public ISet<int> ProjectIds {get; set;}
 
         [Required]
@@ -11,6 +12,7 @@
         }
     }
 public record BucketCreateDTO() {
+
     public ISet<int> ProjectIds {get; init;}
     
     [Required]
