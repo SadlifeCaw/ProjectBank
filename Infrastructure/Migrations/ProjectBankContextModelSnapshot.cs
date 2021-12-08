@@ -301,7 +301,12 @@ namespace Infrastructure.Migrations
                     b.Property<int>("FacultyId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasIndex("FacultyId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasDiscriminator().HasValue("Supervisor");
                 });
@@ -479,6 +484,10 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProjectBank.Infrastructure.Project", null)
+                        .WithMany("Collaborators")
+                        .HasForeignKey("ProjectId");
+
                     b.Navigation("Faculty");
                 });
 
@@ -502,6 +511,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Project", b =>
                 {
+                    b.Navigation("Collaborators");
+
                     b.Navigation("Tags");
                 });
 

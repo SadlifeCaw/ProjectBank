@@ -1,0 +1,96 @@
+@page "/projects/create"
+@using ProjectBank.Infrastructure.Generator;
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create Project</PageTitle>
+
+<h1>Create Project</h1>
+
+<hr />
+
+<EditForm Model="@project" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <InputText id="Title" @bind-Value="project.Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <InputTextArea id="Description" @bind-Value="project.Description" class="form-control" rows="7"/>
+    </div>
+    <div class="form-group">
+        <div>Project visibility</div>
+        <InputRadioGroup @bind-Value="project.Status">
+            <InputRadio id="Public" Value="@PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
+            <InputRadio id="Private" Value="@PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
+        </InputRadioGroup>
+    </div>
+    <div class="form-group">
+        <p>If you choose to create a private project, it will not be visible to other users on their dashboard, unless you invite them as a student or collaborator.</p>
+    </div>
+    <div class="form-group">
+        <br />
+        <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
+        <button type="save" class="btn btn-secondary">Save</button>
+        <button type="submit" class="btn btn-success btn-block">Post</button>
+    </div>
+</EditForm>
+
+
+
+@code{
+    private ProjectCreateDTO project = new();
+
+    private async Task HandleValidSubmit()
+    {   
+
+        var response = await Http.PostAsJsonAsync("Projects/Post", project);
+
+        if (response.IsSuccessStatusCode)
+        {   
+            
+            
+            var created = await response.Content.ReadFromJsonAsync<ProjectDTO>();
+
+            var uri = $"{NavigationManager.BaseUri}projects/{created?.Id}";
+
+            NavigationManager.NavigateTo(uri);
+        }
+    }
+
+    private void Cancel()
+    {
+        var uri = $"{NavigationManager.BaseUri}projects";
+
+        NavigationManager.NavigateTo(uri);
+    }
+
+    public IEnumerable<String> getTags(){
+        var text = "Hej med dig det er mig";
+        TagGenerator tagGenerator = new TagGenerator();
+        List<String> tags = new List<string>{"hej", "at", "Skriver", "det", "er"};
+        tagGenerator.Add(tags);
+        tagGenerator.Build();
+        return tagGenerator.Find(text);
+    }
+
+    public ICollection<int>? ConvertToTagIDs(IEnumerable<string> TagNames){
+        return new List<int>();
+    }
+    
+    /*
+    THIS NEEDS TO BE IMPLEMENTED:
+    private string Tags
+    {
+        get => string.Join(Environment.NewLine, project.TagIDs);
+        set => project.TagIDs = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p));
+        
+        <div class="form-group">
+        <label for="Powers">Tags</label>
+        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
+        </div>
+    } 
+    */
+}

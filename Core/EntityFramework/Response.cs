@@ -1,6 +1,5 @@
-namespace ProjectBank.Core
-{
-    public enum Response
+namespace ProjectBank.Core;
+public enum Response
     {
         Created,
         Updated,
@@ -9,4 +8,3 @@ namespace ProjectBank.Core
         BadRequest,
         Conflict
     }
-}

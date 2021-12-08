@@ -6,6 +6,7 @@ using ProjectBank.Core;
 using ProjectBank.Infrastructure.ReferenceSystem;
 using ProjectBank.Infrastructure.Entities;
 using ProjectBank.Infrastructure;
+using ProjectBank.Core.EF.DTO;
 
 namespace ProjectBank.Server.Controllers
 {
@@ -23,10 +24,9 @@ namespace ProjectBank.Server.Controllers
             _logger = logger;
         }
 
-        /*
-
-        [HttpGet]
-        public IEnumerable<IProject> Get(IProject tagable)
+/*
+        [HttpGet("Get/{ProjectId}")]
+        public async Task<IEnumerable<ProjectDTO>> Get(int ProjectId)
         {
             
             Institution ITU = new Institution{Id = 1};
@@ -48,10 +48,21 @@ namespace ProjectBank.Server.Controllers
             LSH.Insert(ComputerScienceAlgorithmsSecurity);
             LSH.Insert(AgricultureFood);
             LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
+
+            var projects = LSH.Get(AgricultureFood).ToArray();
+            //TagIds.ForEach(async tagid => Tags.Add(await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/GetTag/{tagid}")));
             
-            return LSH.Get(tagable).ToArray();
+            var dtos = new List<ProjectDTO>();
+            foreach(var x in projects)
+            {
+                dtos.Add(new ProjectDTO(x.Id,7, "Hey there", "Hey yo", ProjectStatus.PUBLIC, 3, 19, new List<int>{1, 2, 3}, new List<int>{1,2,3}, new List<int>{1, 2, 3});
+            }
+            //var dto = new ProjectDTO(6,7, "Hey there", "Hey yo", ProjectStatus.PUBLIC, 3, 19, new List<int>{1, 2, 3}, new List<int>{1,2,3}, new List<int>{1, 2, 3});
+
             
-            return 
-        }*/
+            return dtos.ToArray();
+             
+        }
+        */
     }
 }
