@@ -3,7 +3,6 @@ using ProjectBank.Infrastructure.Entities;
 namespace ProjectBank.Infrastructure;
 
 [Index(nameof(Title), IsUnique = true)]
-
 public class Project : ITagable, IProject
 {
 
@@ -50,13 +49,7 @@ public class Project : ITagable, IProject
 
     [Required]
     public ICollection<Supervisor> Collaborators { get; set; } = null!;
-}
 
-/*public record ProjectDTO
-    {
-        public int Id {get; set;}
-        public string Title {get; set;}
-    }*/
     public int MaxStudents {get; set;}
 
     //ignore 'Signature' warning, since Signature is automatically set when Tags is set
@@ -72,6 +65,6 @@ public class Project : ITagable, IProject
         this.Buckets = Buckets;
         this.MaxStudents = MaxStudents;
     }
-
-    public Project() {}
 }
+
+

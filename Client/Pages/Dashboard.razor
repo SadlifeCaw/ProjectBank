@@ -17,7 +17,8 @@
 
 <div>
     <h2>Description</h2>
-</div
+    <textarea>Description here...</textarea>
+</div>
 
 <div>
     <h2>Info</h2>
@@ -53,6 +54,7 @@
     </div>
     <div>
         <h3>Students</h3>
+        <textarea>Students</textarea>
         <textarea>@ProjectId</textarea>
     </div>
 </div>
@@ -84,6 +86,10 @@ else
 
 @code {
     string title = "your mom";
+    string empty = string.Empty;
+    
+    private IProject[]? projects;
+
     string description = "";
     
     [Parameter]
@@ -91,13 +97,13 @@ else
 
     ProjectDTO[] project;
 
-     protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
      {
         try
         {
-            //string str = "Whah work";
-            ProjectId = 1;
-            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{ProjectId}");
+            string Projectstr = "Hah work";
+            //ProjectId = 1;
+            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{Projectstr}");
         }
         catch (Exception exception)
         {

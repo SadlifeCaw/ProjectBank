@@ -13,6 +13,7 @@ namespace ProjectBank.Server.Controllers
     [ApiController]
     [Route("[controller]")]
     [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+    
     public class ProjectReferenceController : ControllerBase
     {
         private readonly ILogger<ProjectReferenceController> _logger;
@@ -22,10 +23,12 @@ namespace ProjectBank.Server.Controllers
             _logger = logger;
         }
 
+        /*
 
         [HttpGet]
         public IEnumerable<IProject> Get(IProject tagable)
         {
+            
             Institution ITU = new Institution{Id = 1};
             Tag Agriculture = new Tag ("Agriculture");
             Tag ComputerScience = new Tag ("Computer Science");
@@ -47,7 +50,8 @@ namespace ProjectBank.Server.Controllers
             LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
             
             return LSH.Get(tagable).ToArray();
-        }
+            
+            return 
+        }*/
     }
 }
-

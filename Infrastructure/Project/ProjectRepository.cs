@@ -29,7 +29,10 @@ public class ProjectRepository : IProjectRepository
 
         var category = await GetCategoryAsync(project.CategoryID);
 
-        var entity = new Project
+        var entity = new Project(author, project.Title, project.Description, project.Status, category, await GetTagsAsync(project.TagIDs).ToListAsync(),
+            await GetUsersAsync(project.UserIDs).ToListAsync(),
+            await GetBucketsAsync(project.BucketIDs).ToListAsync(), project.MaxStudents);
+        /*
         {
             Author = author,
             Title = project.Title,
@@ -41,6 +44,7 @@ public class ProjectRepository : IProjectRepository
             Users = await GetUsersAsync(project.UserIDs).ToListAsync(),
             Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync(),
         };
+        */
 
         _dbcontext.Projects.Add(entity);
 
