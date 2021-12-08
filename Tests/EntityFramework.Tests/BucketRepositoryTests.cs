@@ -1,6 +1,6 @@
 namespace EntityFramework.Tests;
 
-public class BucketRepositoryTests : IDisposable
+/* public class BucketRepositoryTests : IDisposable
 {
     private readonly ProjectBankContext _context;
     private readonly BucketRepository _repository;
@@ -112,4 +112,4 @@ public class BucketRepositoryTests : IDisposable
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
-}
+} */

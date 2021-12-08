@@ -83,7 +83,7 @@ public class ProjectRepository : IProjectRepository
                         .AsReadOnly();
     }
 
-    public async Task<ProjectDTO> ReadByIDAsync(int projectID)
+    public async Task<Option<ProjectDTO>> ReadByIDAsync(int projectID)
     {
         var users = from p in _dbcontext.Projects
                     where p.Id == projectID
@@ -165,7 +165,7 @@ public class ProjectRepository : IProjectRepository
         return Response.NotFound;
     }
 
-    public async Task<Response> UpdateAsync(ProjectDTO project)
+    public async Task<Response> UpdateAsync(ProjectUpdateDTO project)
     {
         var projectEntity = await _dbcontext.Projects
                             .Where(p => p.Author.Id == project.AuthorID)
