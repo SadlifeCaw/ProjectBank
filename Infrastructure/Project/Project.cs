@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using ProjectBank.Infrastructure.Entities;
 namespace ProjectBank.Infrastructure;
 
@@ -7,9 +8,6 @@ public class Project : ITagable, IProject
 {
 
     public int Id { get; set; }
-
-    [Required]
-    public Supervisor? Author { get; init;}
 
     [Required]
     [StringLength(50)]
@@ -32,23 +30,23 @@ public class Project : ITagable, IProject
         set
         {
             tags = value;
-            signature = new Signature(Tags);
-
+            Signature = new Signature(Tags);
         }
     }
 
     [Required]
     private IReadOnlyCollection<Tag> tags = null!;
 
-    [Required]
-    private Signature signature = null!;
-    public Signature Signature
-    {
-        get { return signature;}
-    }
+    //do not map to avoid functional dependency. Can be derived from tags
+    [NotMapped]
+    public Signature Signature {get; set;}
+
+    public ICollection<User> Users {get; set;}  = null!;
+
+    public ICollection<ProjectBucket> Buckets {get; set;}  = null!;
 
     [Required]
-    public ICollection<Student> Students { get; set; } = null!;
+    public Supervisor Author {get; set;}
 
     [Required]
     public ICollection<Supervisor> Collaborators { get; set; } = null!;
@@ -59,3 +57,21 @@ public class Project : ITagable, IProject
         public int Id {get; set;}
         public string Title {get; set;}
     }*/
+    public int MaxStudents {get; set;}
+
+    //ignore 'Signature' warning, since Signature is automatically set when Tags is set
+    public Project(Supervisor Author, string Title, string Description, ProjectStatus Status, Category Category, IReadOnlyCollection<Tag> Tags, ICollection<User> Users, ICollection<ProjectBucket> Buckets, int MaxStudents)
+    {
+        this.Author = Author;
+        this.Title = Title;
+        this.Description = Description;
+        this.Status = Status;
+        this.Category = Category;
+        this.Tags = Tags;
+        this.Users = Users;
+        this.Buckets = Buckets;
+        this.MaxStudents = MaxStudents;
+    }
+
+    public Project() {}
+}

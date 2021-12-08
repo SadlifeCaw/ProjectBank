@@ -276,7 +276,7 @@ namespace ReferenceSystem.Tests
         public void Projects_Within_Bucket_Has_One_Or_More_Common_Tags()
         {
             string bucketString = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
-            Bucket bucket = LargeLSH.Map[bucketString];
+            Bucket<IProject> bucket = LargeLSH.Map[bucketString];
 
             foreach (IProject tagable in bucket.Projects)
             {
@@ -348,14 +348,14 @@ namespace ReferenceSystem.Tests
         {
             //Arrange
             int expected = 0 - LargeLSH.NumberOfGroups;
-            foreach (KeyValuePair<string, Bucket> entry in LargeLSH.Map)
+            foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
             {
                 expected += entry.Value.Projects.Count();
             }
             //Act
             LargeLSH.Delete(AgricultureFarming);
             int actual = 0;
-            foreach (KeyValuePair<string, Bucket> entry in LargeLSH.Map)
+            foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
             {
                 actual += entry.Value.Projects.Count();
             }
@@ -560,10 +560,10 @@ namespace ReferenceSystem.Tests
         static Institution DTU = new Institution{Id = 2};
         static Faculty FacultyComputerScienceITU = new Faculty{Id = 3, Institution = ITU};
         static Faculty FacultyDesignDTU = new Faculty{Id = 4, Institution = DTU};
-        static Program DataScience = new Program{Id = 5, Faculty = FacultyComputerScienceITU};
-        static Program InteractiveDesign = new Program{Id = 6, Faculty = FacultyDesignDTU};
-        static Course IntroductoryProgramming = new Course{Id = 7, Programs = new List<Program>{DataScience}};
-        static Course UIDesign = new Course{Id = 8, Programs = new List<Program>{InteractiveDesign}};
+        static TeachingProgram DataScience = new TeachingProgram{Id = 5, Faculty = FacultyComputerScienceITU};
+        static TeachingProgram InteractiveDesign = new TeachingProgram{Id = 6, Faculty = FacultyDesignDTU};
+        static Course IntroductoryProgramming = new Course{Id = 7, Programs = new List<TeachingProgram>{DataScience}};
+        static Course UIDesign = new Course{Id = 8, Programs = new List<TeachingProgram>{InteractiveDesign}};
 
         //FacultyComputerScienceITU.Institution = ITU;
 

@@ -13,9 +13,18 @@ public record SupervisorDTO(
     string LastName,
 
     [Required]
-    int FacultyID
+    string FacultyName,
 
-) : UserDTO(Id, Email, FirstName, LastName);
+    [Required]
+    string InstitutionName,
+
+    [Required]
+    ICollection<int> ProjectIDs,
+
+    [Required]
+    ICollection<int> AuthoredProjectsIDs
+
+) : UserDTO(Id, Email, FirstName, LastName, ProjectIDs);
 
 public record SupervisorCreateDTO
 {
@@ -23,15 +32,21 @@ public record SupervisorCreateDTO
     [EmailAddress]
     [Required]
     [StringLength(50)]
-    public string? Email { get; init; }
+    public string Email { get; init; }
 
     [Required]
     [StringLength(50)]
-    public string? FirstName { get; init; }
+    public string FirstName { get; init; }
 
     [Required]
     [StringLength(50)]
-    public string? LastName { get; init; }
+    public string LastName { get; init; }
 
-    public int? FacultyId{get; init;}
+    public string FacultyName {get; init;}
+
+    public string InstitutionName {get; init;}
+
+    public ICollection<int> ProjectIDs {get; init;}
+
+    public ICollection<int> AuthoredProjectIDs {get; init;}
 }

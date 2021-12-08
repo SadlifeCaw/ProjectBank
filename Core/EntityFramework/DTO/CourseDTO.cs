@@ -40,7 +40,5 @@ public record CourseCreateDTO{
     [Required]
     public string Code {get; init;}
     public ICollection<string> ProgramCodes {get; init;}
-
-    //string is student emails
     public ICollection<string> StudentEmails {get; init;}
 } 

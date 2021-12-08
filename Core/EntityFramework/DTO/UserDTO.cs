@@ -9,6 +9,9 @@ public record UserDTO(
     string FirstName,
 
     [Required, StringLength(50)]
-    string LastName
+    string LastName,
+
+    [Required]
+    ICollection<int> ProjectIDs
 );
 
