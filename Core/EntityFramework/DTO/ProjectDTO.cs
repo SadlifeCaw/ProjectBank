@@ -1,11 +1,13 @@
 namespace ProjectBank.Core.EF.DTO;
 
-public record ProjectKeyDTO 
-(
-    int Id,
-    int AuthorID,
-    String Title
-);
+public record ProjectKeyDTO
+{
+    [Required]
+    public int AuthorID {get; init;}
+
+    [Required, StringLength(50)]
+    public string Title{get; init;}
+}
 
 public record ProjectDTO(
     int Id,
@@ -26,7 +28,7 @@ public record ProjectDTO(
 
     ICollection<int> UserIDs
 
-) : ProjectKeyDTO(Id, AuthorID, Title);
+) : ProjectKeyDTO;
 
 public record ProjectCreateDTO
 {
