@@ -57,6 +57,7 @@ namespace ProjectBank.Infrastructure.Entities;
                         .ToListAsync())
                         .AsReadOnly();
 
+
      public async Task<Response> AddProjectAsync(int bucketID, int projectID)
     {
         var bucket = await (_dbcontext.Buckets
@@ -110,7 +111,7 @@ namespace ProjectBank.Infrastructure.Entities;
             return Response.Updated;
         } 
 
-        return Response.NotFound;
+        return Response.BadRequest;
     }
 
     //changes a bucket's projects to another set of projects.
@@ -142,6 +143,7 @@ namespace ProjectBank.Infrastructure.Entities;
             bucket.Projects.Add(project);
         }
 
+        await _dbcontext.SaveChangesAsync();
         return Response.Updated;
     }
 
@@ -159,6 +161,7 @@ namespace ProjectBank.Infrastructure.Entities;
 
         bucket.Projects.Clear();
 
+        await _dbcontext.SaveChangesAsync();
         return Response.Updated;
     }
 
@@ -182,5 +185,6 @@ namespace ProjectBank.Infrastructure.Entities;
                     .Where(p => p.Id == projectID)
                     .Select(p => p)
                     .FirstOrDefaultAsync();
+
     }
 }
