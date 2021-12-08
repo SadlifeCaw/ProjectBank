@@ -52,8 +52,7 @@ app.MapFallbackToFile("index.html");
 //connect to database
 /* var configuration = LoadConfiguration();
 var connectionString = configuration.GetConnectionString("ProjectBank");
-var optionsBuilder = new DbContextOptionsBuilder<ProjectBankContext>().UseNpgsql(connectionString);
- */
+var optionsBuilder = new DbContextOptionsBuilder<ProjectBankContext>().UseNpgsql(connectionString); */
 app.Run();
 
 
