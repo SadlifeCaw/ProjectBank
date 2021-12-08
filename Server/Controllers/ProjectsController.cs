@@ -2,7 +2,7 @@ namespace ProjectBank.Server.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class ProjectsController : ControllerBase
 {
@@ -28,7 +28,7 @@ public class ProjectsController : ControllerBase
         => (await _repository.ReadByIDAsync(id)).ToActionResult();
 
     [Authorize]
-    [HttpPost]
+    [HttpPost("Post")]
     [ProducesResponseType(typeof(ProjectDTO), 201)]
     public async Task<IActionResult> Post(ProjectCreateDTO project)
     {

@@ -43,25 +43,14 @@
 @code{
     private ProjectCreateDTO project = new();
 
-    /*
-    THIS NEEDS TO BE IMPLEMENTED:
-    private string Tags
-    {
-        get => string.Join(Environment.NewLine, project.TagIDs);
-        set => project.TagIDs = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p));
-        
-        <div class="form-group">
-        <label for="Powers">Tags</label>
-        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
-        </div>
-    } */
     private async Task HandleValidSubmit()
     {   
 
-        var response = await Http.PostAsJsonAsync("api/projects", project);
+        var response = await Http.PostAsJsonAsync("Projects/Post", project);
 
         if (response.IsSuccessStatusCode)
-        {
+        {   
+            
             
             var created = await response.Content.ReadFromJsonAsync<ProjectDTO>();
 
@@ -90,4 +79,18 @@
     public ICollection<int>? ConvertToTagIDs(IEnumerable<string> TagNames){
         return new List<int>();
     }
+    
+    /*
+    THIS NEEDS TO BE IMPLEMENTED:
+    private string Tags
+    {
+        get => string.Join(Environment.NewLine, project.TagIDs);
+        set => project.TagIDs = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p));
+        
+        <div class="form-group">
+        <label for="Powers">Tags</label>
+        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
+        </div>
+    } 
+    */
 }
