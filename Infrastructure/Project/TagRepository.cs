@@ -39,6 +39,16 @@ public class TagRepository : ITagRepository
         return await tags.FirstOrDefaultAsync();
     }
 
+     public async Task<TagDTO> ReadTagByNameAsync(string TagName)
+    {
+        var tags = from t in _dbcontext.Tags
+                        where t.Name == TagName
+                        select new TagDTO(t.Id, t.Name);
+
+        return await tags.FirstOrDefaultAsync();
+    }
+
+
     public async Task<IReadOnlyCollection<TagDTO>> ReadAllAsync() =>
         (await _dbcontext.Tags
                         .Select(t => new TagDTO(t.Id, t.Name))
