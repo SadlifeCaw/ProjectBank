@@ -72,7 +72,7 @@ public class ProjectRepository : IProjectRepository
                         .AsReadOnly();
     }
 
-    public async Task<ProjectDTO> ReadByIDAsync(int projectID)
+    public async Task<Option<ProjectDTO>> ReadByIDAsync(int projectID)
     {
         var users = from p in _dbcontext.Projects
                     where p.Id == projectID
