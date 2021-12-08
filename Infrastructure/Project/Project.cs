@@ -45,7 +45,7 @@ public class Project : ITagable, IProject
     public ICollection<ProjectBucket> Buckets {get; set;}  = null!;
 
     [Required]
-    public Supervisor Author {get; set;}
+    public Supervisor? Author {get; set;}
 
     [Required]
     public ICollection<Supervisor> Collaborators { get; set; } = null!;
@@ -65,6 +65,8 @@ public class Project : ITagable, IProject
         this.Buckets = Buckets;
         this.MaxStudents = MaxStudents;
     }
+
+    public Project(){}
 }
 
 

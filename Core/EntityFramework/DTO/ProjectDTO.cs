@@ -1,12 +1,12 @@
 namespace ProjectBank.Core.EF.DTO;
 
-public record ProjectKeyDTO 
+public record ProjectKeyDTO
 {
     [Required]
     public int AuthorID {get; init;}
 
     [Required, StringLength(50)]
-    public string Title {get; init;}
+    public string Title{get; init;}
 }
 
 public record ProjectDTO(
@@ -24,19 +24,19 @@ public record ProjectDTO(
     [Required]
     ProjectStatus Status,
 
-    [Required]
+    //[Required]
     int MaxStudents,
 
-    [Required]
+    //[Required]
     int CategoryID,
 
-    [Required]
+    //[Required]
     ICollection<int> TagIDs,
 
     //not required to allow value binding in razor
     ICollection<int> UserIDs,
 
-    [Required]
+    //[Required]
     ICollection<int> BucketIDs
 
 ) : ProjectKeyDTO;
@@ -47,28 +47,27 @@ public record ProjectCreateDTO
     public int AuthorID {get; init;}
 
     [Required, StringLength(50)]
-    public string? Title {get; init;}
+    public string? Title {get; set;}
 
     [Required,StringLength(1000)]
-    public string? Description {get; init;}
+    public string? Description {get; set;}
 
     [Required]
-    public ProjectStatus Status {get; init;}
+    public ProjectStatus Status {get; set;}
 
-    [Required]
-    public int MaxStudents {get; init;}
+    //[Required]
+    public int MaxStudents {get; set;}
 
-    [Required]
-    public int CategoryID {get; init;}
+    //[Required]
+    public int CategoryID {get; set;}
     
-    [Required]
-    public ICollection<int> TagIDs{get; init;}
+    public ICollection<int> TagIDs {get; set;}
 
-    [Required]
-    public ICollection<int> UserIDs {get; init;}
+    //[Required]
+    public ICollection<int> UserIDs {get; set;}
 
-    [Required]
-    public ICollection<int> BucketIDs {get; init;}
+    //[Required]
+    public ICollection<int> BucketIDs {get; set;}
 };
 
 public record ProjectUpdateDTO : ProjectCreateDTO

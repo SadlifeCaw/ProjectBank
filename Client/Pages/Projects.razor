@@ -1,0 +1,62 @@
+@page "/projects"
+@attribute [Authorize]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>Projects</PageTitle>
+
+<h1>Projects</h1>
+
+<p>
+    <button class="btn btn-primary" @onclick="Create">New</button>
+</p>
+
+@if (projects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in projects)
+            {
+                <tr>
+                    <td>@project.Title</td>
+                    <td>@project.Description</td>
+                    <td><button class="btn btn-info" @onclick="@(() => View(project))">View</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ProjectDTO[]? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await Http.GetFromJsonAsync<ProjectDTO[]>("api/projects");
+    }
+
+    private void View(ProjectDTO project)
+    {
+        var uri = $"{NavigationManager.BaseUri}projects/{project.Id}";
+
+        NavigationManager.NavigateTo(uri);
+    }
+
+    private void Create()
+    {
+        var uri = $"{NavigationManager.BaseUri}projects/create";
+
+        NavigationManager.NavigateTo(uri);
+    }
+}
