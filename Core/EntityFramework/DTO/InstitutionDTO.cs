@@ -8,10 +8,10 @@ public record InstitutionDTO(
     string Title,
 
     [StringLength(1000)]
-    string Description,
+    string Description
 
-   [Required]
-   ICollection<string> Faculties
+   /* [Required]
+   ICollection<string> Faculties */
 
 
 ) : CategoryDTO(Id, Title, Description);
@@ -23,8 +23,8 @@ public record InstitutionCreateDTO
 
     [StringLength(1000)]
     public string Description {get; init;}
-
+/* 
     [Required]
-    public ICollection<string>? Faculties {get; init;}
+    public ICollection<string> Faculties {get; init;} */
 
 }

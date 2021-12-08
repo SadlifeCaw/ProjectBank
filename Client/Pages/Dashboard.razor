@@ -1,6 +1,11 @@
 @page "/dashboard"
 @using ProjectBank.Infrastructure
 @using ProjectBank.Core
+@using ProjectBank.Core.EF.DTO
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize]
+@inject HttpClient Http
 
 <PageTitle>@title</PageTitle>
 
@@ -50,12 +55,33 @@
     <div>
         <h3>Students</h3>
         <textarea>Students</textarea>
+        <textarea>@ProjectId</textarea>
     </div>
 </div>
 
 <div>
     <h2>Related projects</h2>
     <button>Tap to see within target group</button>
+    @if (project == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>    
+                <tr>
+                    <td>@project[0].Id</td>
+                </tr>
+           
+        </tbody>
+    </table>
+}
 </div>
 
 @code {
@@ -64,15 +90,25 @@
     
     private IProject[]? projects;
 
+    string description = "";
+    
+    [Parameter]
+    public int? ProjectId {get; set;}
+
+    ProjectDTO[] project;
+
      protected override async Task OnInitializedAsync()
      {
-        /*try
+        try
         {
+            //string str = "Whah work";
+            ProjectId = 1;
+            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{ProjectId}");
         }
         catch (Exception exception)
         {
-            exception.Redirect();
-        }*/
+            Console.WriteLine(":((( {0}",exception.Message);
+            //exception.Redirect();
+        }
      }
-
 }

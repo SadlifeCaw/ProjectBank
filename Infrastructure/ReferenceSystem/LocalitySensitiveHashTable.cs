@@ -10,17 +10,17 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         private int groupSize = 2;
         private int k = 6;
         public int NumberOfGroups;
-        public Dictionary<string, Bucket> Map;
+        public Dictionary<string, Bucket<Tagable>> Map;
 
         public LocalitySensitiveHashTable()
         {
             NumberOfGroups = k / groupSize;
-            Map = new Dictionary<string, Bucket>();
+            Map = new Dictionary<string, Bucket<Tagable>>();
         }
 
         private void AddSignature(string bucketString)
         {
-            Map[bucketString] = new Bucket();
+            Map[bucketString] = new Bucket<Tagable>();
         }
 
         public void Insert(Tagable tagable)
