@@ -21,7 +21,7 @@ public class Project : ITagable, IProject
     public ProjectStatus Status { get; set; }
 
     [Required]
-    public Category Category {get; set; }
+    public Category Category { get; set; }
 
     public IReadOnlyCollection<Tag> Tags
     {
@@ -49,6 +49,14 @@ public class Project : ITagable, IProject
     public Supervisor Author {get; set;}
 
     [Required]
+    public ICollection<Supervisor> Collaborators { get; set; } = null!;
+}
+
+/*public record ProjectDTO
+    {
+        public int Id {get; set;}
+        public string Title {get; set;}
+    }*/
     public int MaxStudents {get; set;}
 
     //ignore 'Signature' warning, since Signature is automatically set when Tags is set
