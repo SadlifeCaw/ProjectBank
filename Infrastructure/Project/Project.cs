@@ -65,6 +65,10 @@ public class Project : ITagable, IProject
         this.Buckets = Buckets;
         this.MaxStudents = MaxStudents;
     }
+
+    public Project(){
+        
+    }
 }
 
 

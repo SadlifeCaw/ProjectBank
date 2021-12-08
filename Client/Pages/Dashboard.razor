@@ -15,9 +15,10 @@
 
 <h1>@title</h1>
 
-<div>
+<div id="extendableDiv">
     <h2>Description</h2>
-    <textarea>Description here...</textarea>
+    <textarea>@Description</textarea>
+    <button @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>
 </div>
 
 <div>
@@ -87,10 +88,11 @@ else
 @code {
     string title = "your mom";
     string empty = string.Empty;
+    string Description = "no description";
+    string description = string.Empty;
+    string ExpandDescription = "Contract";
     
     private IProject[]? projects;
-
-    string description = "";
     
     [Parameter]
     public int? ProjectId {get; set;}
@@ -98,7 +100,7 @@ else
     ProjectDTO[] project;
 
     protected override async Task OnInitializedAsync()
-     {
+    {
         try
         {
             string Projectstr = "Hah work";
@@ -110,5 +112,24 @@ else
             Console.WriteLine(":((( {0}",exception.Message);
             //exception.Redirect();
         }
-     }
+        this.description = project[0].Description;
+        ExpandedDescription(false);
+    }
+
+    public void ExpandedDescription(bool IsExpanded){
+        Console.WriteLine("pressed the button");
+        if(IsExpanded) {
+            this.Description = description;
+            this.ExpandDescription = "Contract";
+        }
+        else {
+            this.Description = description.Substring(0,3) + "...";
+            this.ExpandDescription = "Expand";
+        }
+    }
+
+    public void ExpandedDescription(){
+        if(this.ExpandDescription == "Expand") ExpandedDescription(true);
+        else ExpandedDescription(false);
+    }
 }
