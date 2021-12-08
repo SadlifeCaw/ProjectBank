@@ -110,7 +110,7 @@ namespace ProjectBank.Infrastructure.Entities;
             return Response.Updated;
         } 
 
-        return Response.NotFound;
+        return Response.BadRequest;
     }
 
     //changes a bucket's projects to another set of projects.
@@ -142,6 +142,7 @@ namespace ProjectBank.Infrastructure.Entities;
             bucket.Projects.Add(project);
         }
 
+        await _dbcontext.SaveChangesAsync();
         return Response.Updated;
     }
 
@@ -159,6 +160,7 @@ namespace ProjectBank.Infrastructure.Entities;
 
         bucket.Projects.Clear();
 
+        await _dbcontext.SaveChangesAsync();
         return Response.Updated;
     }
 
