@@ -9,7 +9,6 @@ namespace ProjectBank.Infrastructure.Entities
 
 
         public Bucket() {}
-
     }
 
     public class ProjectBucket : Bucket<Project>
@@ -26,6 +25,5 @@ namespace ProjectBank.Infrastructure.Entities
         }
 
          public ProjectBucket() {}
-    }
-        
+    } 
 }
