@@ -1,0 +1,10 @@
+.ProjectListDisplay{
+    width: 100%;
+    background-color: green !important;
+}
+
+.ProjectListDisplay .ProjectDisplay{
+    float: left;
+    min-width: 300px;
+    background-color: red !important;
+}

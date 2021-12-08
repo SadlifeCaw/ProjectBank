@@ -29,7 +29,8 @@ public class ProjectRepository : IProjectRepository
 
         var category = await GetCategoryAsync(project.CategoryID);
 
-        var entity = new Project(author, project.Title, project.Description, project.Status, category, await GetTagsAsync(project.TagIDs).ToListAsync(),
+        var entity = new Project(author, project.Title, project.Description, project.Status, category,
+            await GetTagsAsync(project.TagIDs).ToListAsync(),
             await GetUsersAsync(project.UserIDs).ToListAsync(),
             await GetBucketsAsync(project.BucketIDs).ToListAsync(), project.MaxStudents);
         /*
