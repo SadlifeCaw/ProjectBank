@@ -27,6 +27,9 @@
 <div class="row ProjectInfoDisplay">
   <div class="col-md-8 DescriptionContainer">
     <div class="DescriptionDisplay">
+        <div class="row">
+            
+        </div>
         <div class="DescriptionTitle">
             <p>Published by <span id="AuthorContainer">Mette 'Slette' Frederiksen</span></p>
         </div>
@@ -38,7 +41,7 @@
   </div>
   <div class="col-6 col-md-4 AuxInfoContainer">
       <div class="row TargetGroup">
-          <h1>Target group</h1>
+          <h1>Target Group</h1>
           <div class="TargetGroupContainer">
               <p>IT University of Copenhagen</p>
           </div>
@@ -49,7 +52,7 @@
                 <h1>Collaborators</h1>
               </div>
               <div class="col-4">
-                <button type="button" class="btn btn-sm InviteButton">Invite</button>  
+                <button type="button" class="btn btn-sm InviteButton" @onclick="() => inviteModal.Open()">Invite</button>  
               </div>
           </div>
           <div class="CardContainer">
@@ -65,7 +68,7 @@
                 <h1>Students</h1>
               </div>
               <div class="col-4">
-                <button type="button" class="btn btn-sm InviteButton">Apply</button>  
+                <button type="button" class="btn btn-sm InviteButton"  @onclick="() => applyModal.Open()">Apply</button>  
               </div>
           </div>
           <div class="CardContainer">
@@ -90,6 +93,34 @@
   </div>
 </div>
 
+<Modal @ref="inviteModal">
+    <Title>Invite Supervisor</Title>
+    <Body>
+        <p>
+            Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
+        </p>
+        <div class="form-group">
+            <label for="InviteFormGroup">Email Address: </label>
+            <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com">
+        </div>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
+    </Footer>
+</Modal>
+
+<Modal @ref="applyModal">
+    <Title>Apply for project</Title>
+    <Body>
+        <p>
+            Sorry, this functionality has not been implemented yet!
+        </p>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
+    </Footer>
+</Modal>
+
 <div class="Buffer_40"></div>
 
 <div class="RelatedProjectsContainer">
@@ -110,6 +141,10 @@
     public int? ProjectId {get; set;}
 
     ProjectDTO[] project;
+
+    private Modal inviteModal { get; set; }
+
+    private Modal applyModal { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
