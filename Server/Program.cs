@@ -11,7 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddControllersWithViews();
+builder.Services.Configure<JwtBearerOptions>(
+    JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.TokenValidationParameters.NameClaimType = "name";
+    });
+
 builder.Services.AddRazorPages();
 
 // Connect to database
@@ -19,6 +24,8 @@ builder.Services.AddDbContext<ProjectBankContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectBank"))
 );
 
+
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 
 var app = builder.Build();
 

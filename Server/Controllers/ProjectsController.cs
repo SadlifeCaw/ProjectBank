@@ -2,7 +2,7 @@ namespace ProjectBank.Server.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class ProjectsController : ControllerBase
 {
@@ -17,7 +17,7 @@ public class ProjectsController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IReadOnlyCollection<ProjectKeyDTO>> Get()
+    public async Task<IReadOnlyCollection<ProjectDTO>> Get()
         => await _repository.ReadAllAsync();
 
     [AllowAnonymous]

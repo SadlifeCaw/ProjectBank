@@ -1,4 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
+//I'm pretty sure this class is useless when we have ProjectsController
+//Outcommented
+
+
+/* using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using System.Collections.Generic;
@@ -21,18 +25,18 @@ public class ProjectController : ControllerBase
     private readonly ILogger<ProjectController> _logger;
     private readonly IProjectRepository _ProjectRepository;
     
-    public ProjectController(ILogger<ProjectController> logger)// , IProjectRepository ProjectRepository)
+    public ProjectController(ILogger<ProjectController> logger, IProjectRepository ProjectRepository)
     {
         _logger = logger;
-        //_ProjectRepository = ProjectRepository;
+        _ProjectRepository = ProjectRepository;
     }
     
     [AllowAnonymous]
     [HttpGet("Get/{Projectstr}")]
-    public async Task<IEnumerable<ProjectDTO>> Get(string Projectstr)
+    public async Task<IEnumerable<ProjectDTO>> Get(int id)
     {
         //Hent project fra databasen
-        //var projectDTO = await _ProjectRepository.ReadProjectByIDAsync(ProjectId);
+        var project = await _ProjectRepository.ReadByIDAsync(id);
         
         //var TagIds = projectDTO.TagIDs;
         //var Tags = new List<TagDTO>();
@@ -54,4 +58,4 @@ public class ProjectController : ControllerBase
         return Enumerable.Range(1, 5).Select(index => dto).ToArray();
     }
 }
-}
+} */

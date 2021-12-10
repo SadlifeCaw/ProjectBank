@@ -31,7 +31,7 @@
             
         </div>
         <div class="DescriptionTitle">
-            <p>Published by <span id="AuthorContainer">Mette 'Slette' Frederiksen</span></p>
+            <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
         </div>
         <div class="Description">
             <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
@@ -43,7 +43,7 @@
       <div class="row TargetGroup">
           <h1>Target Group</h1>
           <div class="TargetGroupContainer">
-              <p>IT University of Copenhagen</p>
+              <p>@TargetGroup</p>
           </div>
       </div>
       <div class="row">
@@ -132,15 +132,18 @@
     string title = "Project Title Which is Long";
     string empty = string.Empty;
     string Description = "Loading description...";
+    int AuthorName = -1;
     string description = string.Empty;
     string ExpandDescription = "Contract";
+
+    int TargetGroup = -1;
     
     private IProject[]? projects;
     
     [Parameter]
     public int? ProjectId {get; set;}
 
-    ProjectDTO[] project;
+    ProjectDTO project;
 
     private Modal inviteModal { get; set; }
 
@@ -150,17 +153,20 @@
     {
         try
         {
-            string Projectstr = "Hah work";
-            //ProjectId = 1;
-            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{Projectstr}");
+            int ProjectID = 1;
+            ProjectId = 1;
+            project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectID}");
         }
         catch (Exception exception)
         {
             Console.WriteLine(":((( {0}",exception.Message);
+            Console.WriteLine("What the fuck?");
             //exception.Redirect();
         }
-        this.description = project[0].Description;
-        this.title = title + ", ID: " + project[0].Id;
+        this.description = project.Description;
+        this.title = project.Title + ", ID: " + project.Id;
+        this.TargetGroup = project.CategoryID;
+        this.AuthorName = project.AuthorID;
         ExpandedDescription(true);
     }
 
