@@ -1,5 +1,5 @@
 @page "/projects"
-@attribute [Authorize]
+@attribute [AllowAnonymous]
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -30,12 +30,14 @@ else
             {
                 <tr>
                     <td>@project.Title</td>
-                    <td>@project.Description</td>
+                    <td>@project.Id</td>
                     <td><button class="btn btn-info" @onclick="@(() => View(project))">View</button></td>
                 </tr>
             }
         </tbody>
     </table>
+    <button class="btn btn-info" @onclick="@(() => TestGet(3))">Test Get</button>
+
 }
 
 @code {
@@ -43,7 +45,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        projects = await Http.GetFromJsonAsync<ProjectDTO[]>("api/projects");
+        try
+        {
+            projects = await Http.GetFromJsonAsync<ProjectDTO[]>("Projects");
+        } catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    private async void TestGet(int id)
+    {
+        try
+        {
+            await Http.GetFromJsonAsync<ProjectDTO>($"Projects/{id}");
+        } catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
     private void View(ProjectDTO project)

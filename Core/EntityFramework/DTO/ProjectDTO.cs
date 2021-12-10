@@ -39,7 +39,7 @@ public record ProjectDTO(
     //[Required]
     ICollection<int> BucketIDs
 
-) : ProjectKeyDTO;
+);// : ProjectKeyDTO;
 
 public record ProjectCreateDTO
 {
