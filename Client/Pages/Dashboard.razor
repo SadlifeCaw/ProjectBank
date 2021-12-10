@@ -21,82 +21,86 @@
     </div>
 </div>
 
-<div class="Buffer_10"></div>   
+<div class="Buffer_20"></div>   
 
-<div class="DescriptionDisplay">
-    <div class="DescriptionTitle">
-        <p>Published by <span id="AuthorContainer">Author Name</span></p>
-    </div>
-    <div class="Description">
-        <textarea readonly id="ProjectDescription">@Description</textarea>
-        <button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>
-    </div>
-</div>
 
-<div>
-    <h2>Info</h2>
-    <div>
-        <h3>Target group</h3>
-        <textarea>Target group here..</textarea>
-    </div>
-    <div>
-        <h3>Tags</h3>
-        <textarea>Tags...</textarea>
-    </div>
-</div>
-
-<div>
-    <h2>Participants</h2>
-    <div>
-        <h3>Supervisors</h3>
-        <h5>Supervisor</h5>
-        <textarea>Supervisors...</textarea>
-        <div class="row">
-            <div class="column">
-                <label for="inputEmail" class="form-label">Invite a supervisor</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-            </div>
-            <div class="column">
-                <button>Invite</button>
-            </div>
+<div class="row ProjectInfoDisplay">
+  <div class="col-md-8 DescriptionContainer">
+    <div class="DescriptionDisplay">
+        <div class="DescriptionTitle">
+            <p>Published by <span id="AuthorContainer">Mette 'Slette' Frederiksen</span></p>
+        </div>
+        <div class="Description">
+            <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
+            <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
         </div>
     </div>
-    <div>
-        <h3>Students</h3>
-        <textarea>Students</textarea>
-        <textarea>@ProjectId</textarea>
-    </div>
+  </div>
+  <div class="col-6 col-md-4 AuxInfoContainer">
+      <div class="row TargetGroup">
+          <h1>Target group</h1>
+          <div class="TargetGroupContainer">
+              <p>IT University of Copenhagen</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="row">
+              <div class="col-8">
+                <h1>Collaborators</h1>
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn btn-sm InviteButton">Invite</button>  
+              </div>
+          </div>
+          <div class="CardContainer">
+              <ul>
+                  <li>Jens</li>
+                  <li>Joe Biden</li>
+              </ul>
+          </div>
+      </div>
+      <div class="row">
+          <div class="row">
+              <div class="col-8">
+                <h1>Students</h1>
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn btn-sm InviteButton">Apply</button>  
+              </div>
+          </div>
+          <div class="CardContainer">
+              <ul>
+                  <li>Student 1</li>
+                  <li>Student 2</li>
+                  <li>Donald J. Trump</li>
+              </ul>
+          </div>
+      </div>
+      <div class="row">
+          <h1>Project Tags</h1>
+          <div class="CardContainer">
+              <ul>
+                  <li>Economics</li>
+                  <li>Database</li>
+                  <li>C#</li>
+                  <li>Mink</li>
+              </ul>
+          </div>
+      </div>
+  </div>
 </div>
 
-<div>
+<div class="Buffer_40"></div>
+
+<div class="RelatedProjectsContainer">
     <h2>Related projects</h2>
-    <button>Tap to see within target group</button>
-    @if (project == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-            </tr>
-        </thead>
-        <tbody>    
-                <tr>
-                    <td>@project[0].Id</td>
-                </tr>
-           
-        </tbody>
-    </table>
-}
+    <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
 </div>
 
 @code {
-    string title = "Project Title";
+    string title = "Project Title Which is Long";
     string empty = string.Empty;
-    string Description = "no description ";
+    string Description = "Loading description...";
     string description = string.Empty;
     string ExpandDescription = "Contract";
     
@@ -121,7 +125,8 @@ else
             //exception.Redirect();
         }
         this.description = project[0].Description;
-        ExpandedDescription(false);
+        this.title = title + ", ID: " + project[0].Id;
+        ExpandedDescription(true);
     }
 
     public void ExpandedDescription(bool IsExpanded){
@@ -131,7 +136,7 @@ else
             this.ExpandDescription = "Contract";
         }
         else {
-            this.Description = description.Substring(0,3) + "...";
+            this.Description = description.Substring(0,200) + "...";
             this.ExpandDescription = "Expand";
         }
     }
