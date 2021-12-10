@@ -177,7 +177,7 @@ public class ProjectRepository : IProjectRepository
                             .Select(p => p)
                             .FirstOrDefaultAsync();
         
-        if(project == null)
+        if(projectEntity == null)
         {
             return Response.NotFound;
         }
