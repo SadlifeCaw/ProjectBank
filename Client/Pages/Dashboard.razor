@@ -1,4 +1,4 @@
-@page "/dashboard"
+@page "/Projects/{projectID:int}"
 @using ProjectBank.Infrastructure
 @using ProjectBank.Core
 @using ProjectBank.Core.EF.DTO
@@ -153,9 +153,9 @@
     {
         try
         {
-            int ProjectID = 1;
-            ProjectId = 1;
-            project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectID}");
+            //int ProjectID = 1;
+            //ProjectId = 1;
+            project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
         }
         catch (Exception exception)
         {
