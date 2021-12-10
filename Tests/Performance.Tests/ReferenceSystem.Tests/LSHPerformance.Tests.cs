@@ -14,14 +14,14 @@ namespace Performance.Tests
         static int NumOfProjects = 10000;
         static int NumOfTags = 500;
         static int NumOfTagsPerProject = 10;
-        static List<Tag> AllTags = GenerateTags(NumOfTags).ToList();
-        static List<ITagable> Projects = GenerateProjects(NumOfProjects, AllTags).ToList();
-        LocalitySensitiveHashTable<ITagable> LSH = GetInsertedLSH(Projects);
+        //static List<Tag> AllTags = GenerateTags(NumOfTags).ToList();
+        //static List<ITagable> Projects = GenerateProjects(NumOfProjects, AllTags).ToList();
+        //LocalitySensitiveHashTable<ITagable> LSH = GetInsertedLSH(Projects);
         public LSHPerformanceTests()
         {
 
         }
-
+        /*
         [Theory]
         [InlineData(2)]
         public void Insert_performance(float seconds)
@@ -119,6 +119,7 @@ namespace Performance.Tests
             }
             yield break;
         }
+        */
     }
 }
 

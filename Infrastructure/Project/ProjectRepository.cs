@@ -28,12 +28,16 @@ public class ProjectRepository : IProjectRepository
         var author = await GetSupervisorAsync(project.AuthorID);
 
         var category = await GetCategoryAsync(project.CategoryID);
+        if (author == null || category == null)
+        {
+            return (Response.NotFound, new ProjectDTO(-1, project.AuthorID, project.Title, project.Description, project.Status, project.MaxStudents, project.CategoryID, project.TagIDs, project.UserIDs, project.BucketIDs));
+        }
 
-        var entity = new Project(author, project.Title, project.Description, project.Status, category,
+        /* var entity = new Project(author, project.Title, project.Description, project.Status, category,
             await GetTagsAsync(project.TagIDs).ToListAsync(),
             await GetUsersAsync(project.UserIDs).ToListAsync(),
-            await GetBucketsAsync(project.BucketIDs).ToListAsync(), project.MaxStudents);
-        /*
+            await GetBucketsAsync(project.BucketIDs).ToListAsync(), project.MaxStudents); */
+        var entity = new Project
         {
             Author = author,
             Title = project.Title,
@@ -45,7 +49,6 @@ public class ProjectRepository : IProjectRepository
             Users = await GetUsersAsync(project.UserIDs).ToListAsync(),
             Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync(),
         };
-        */
 
         _dbcontext.Projects.Add(entity);
 
