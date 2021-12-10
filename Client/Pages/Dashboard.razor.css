@@ -1,4 +1,9 @@
 
+.ProjectInfoDisplay {
+    height: auto;
+    width: 100%;
+}
+
 .ProjectHeader {
     height: auto;
     min-height: 80px;
@@ -13,7 +18,8 @@
 
 .ProjectHeader .ProjectTitle {
     font-size: 60px;
-    float: left;
+
+    height: auto;
 }
 
 .ProjectHeader .Status {
@@ -25,7 +31,7 @@
     width: 100px;
     height: 50px;
 
-    border-radius: 1cm;
+    border-radius: 2mm;
 
     box-shadow: rgb(38, 57, 77) 0px 10px 10px -10px;
 }
@@ -39,8 +45,8 @@
 }
 
 .Status.Public {
-    background-color: #7CFC00;
-    color: rgb(0, 0, 0)
+    background-color: #5bb105;
+    color: white;
 }
 
 .Status.Deleted {
@@ -53,33 +59,111 @@
     color: white;
 }
 
+.ProjectInfoDisplay {
+    height: 500px;
+    width: 100%;
+    margin-left: 5px;
+}
+
+.DescriptionContainer {
+    /*border: 1px dashed green;*/
+}
+
+.AuxInfoContainer {
+    border-left: 4px solid #153243;
+}
+
+.AuxInfoContainer .row {
+    height: auto;
+    width: 100%;
+    padding-bottom: 20px;
+    /*border: 1px dashed red;*/
+}
+
+.AuxInfoContainer .row h1 {
+    font-size: 20px;
+}
 
 .DescriptionDisplay {
-    height: 600px; 
+    height: 100%; 
+    margin-top: 10px;
 }
 
 .Description {
    position: relative;
+   height: 100%;
 }
 
 .DescriptionTitle {
+    color:rgb(38, 57, 77);
+    font-size: 20px;
+}
 
+.DescriptionTitle p {
+    
+}
+
+#AuthorContainer {  
+    font-weight: 600;
 }
 
 .DescriptionDisplay #ProjectDescription {
-    width: 50%;
+    width: 100%;
+    height: 90%;
     margin: 0 auto 0 auto;
-    height: 500px;
 
     border-radius: 2mm;
     border: none;
+
+    resize: none;
+}
+
+.TagContainer {
+    width: 100%;
+    height: 50px;
+
+    /*border: 1px dashed purple;*/
+}
+
+.CardContainer ul {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+
+    height: auto;
+}
+
+.CardContainer ul li {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    min-width: 70px;
+    width: auto;
+    min-height: 20px;
+    text-align: center;
+
+    padding: 5px 10px 5px 10px;
+
+    float: left;
+    display: block;
+
+    background-color: #d4d8cd;
+    color: black;
+    border-radius: 5mm;
+}
+
+.RelatedProjectsContainer {
+    width: 100%;
+    height: auto;
 }
 
 
-
-.Buffer_10 {
+.Buffer_20 {
     width: 100%;
-    height: 10px;
+    height: 20px;
+}
+
+.Buffer_40 {
+    width: 100%;
+    height: 40px;
 }
 
 .ContractButton {
@@ -90,3 +174,37 @@
     bottom: 0;
 }
 
+.CustomButton {
+    background-color:#284B63 !important;
+    color: white !important;
+}
+
+.InviteButton {
+    background-color:#284B63 !important;
+    color: white !important;
+
+    width: 100%;
+
+    float: right;
+}
+
+@media only screen and (max-width: 1000px) {
+    .DescriptionDisplay #ProjectDescription {
+        height: 300px;
+    }
+
+    .AuxInfoContainer {
+        width: 100%;
+        margin: 0 0 0 0;
+
+        border: none;
+    }
+
+    .ProjectHeader .ProjectTitle {
+        font-size: 30px;
+    }
+
+    .ProjectInfoDisplay {
+        height: auto;
+    }
+}
