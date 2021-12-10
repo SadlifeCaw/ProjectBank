@@ -94,18 +94,18 @@ public class TeachingProgramRepositoryTests : IDisposable
             Assert.Collection(programs,
                 program =>
                  {
-                     Assert.Equal(program.Title, "SWU");
-                     Assert.Equal(program.Description, "Softwareudvikling");
-                     Assert.Equal(program.FacultyName, "Comp Sci");
-                     Assert.Equal(program.Code, "SWU2021");
+                     Assert.Equal("SWU",program.Title);
+                     Assert.Equal("Softwareudvikling",program.Description);
+                     Assert.Equal("Comp Sci",program.FacultyName);
+                     Assert.Equal("SWU2021",program.Code);
                      Assert.Equal(testList,program.CourseCodes);
                  },
                 program =>
                 {
-                        Assert.Equal(program.Title, "DDS");
-                        Assert.Equal(program.Description, "Data Design");
-                        Assert.Equal(program.FacultyName, "Comp Sci");
-                        Assert.Equal(program.Code, "DDS2021");
+                        Assert.Equal("DDS",program.Title);
+                        Assert.Equal("Data Design",program.Description);
+                        Assert.Equal("Comp Sci",program.FacultyName);
+                        Assert.Equal("DDS2021",program.Code);
                         Assert.Empty(program.CourseCodes);
                 }
             );
