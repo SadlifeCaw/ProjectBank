@@ -69,12 +69,21 @@
 
 .TagDisplay {
     width: 100%;
+    height: 50px;
 
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 .TagDisplay ul {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
+
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    display: flex;
+    flex-wrap: nowrap;
 
     height: auto;
 }
@@ -87,6 +96,8 @@
 
     float: left;
     display: block;
+
+    flex: 0 0 auto;
 
     background-color: #F4F9E9;
     color: black;
