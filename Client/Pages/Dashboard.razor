@@ -82,12 +82,14 @@
       <div class="row">
           <h1>Project Tags</h1>
           <div class="CardContainer">
-              <ul>
-                  <li>Economics</li>
-                  <li>Database</li>
-                  <li>C#</li>
-                  <li>Mink</li>
-              </ul>
+            <ul>
+                @foreach (var element in tags)
+                {
+                    <li>
+                        @element.Name;
+                    </li>
+                }
+            </ul>
           </div>
       </div>
   </div>
@@ -143,7 +145,11 @@
     [Parameter]
     public int? ProjectId {get; set;}
 
-    ProjectDTO project;
+    private ProjectDTO project;
+
+    private UserDTO author;
+
+    private List<TagDTO> tags;
 
     private Modal inviteModal { get; set; }
 
@@ -156,6 +162,7 @@
             //int ProjectID = 1;
             //ProjectId = 1;
             project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
+            tags = await Http.GetFromJsonAsync<List<TagDTO>>($"api/Tag");
         }
         catch (Exception exception)
         {
@@ -167,6 +174,7 @@
         this.title = project.Title + ", ID: " + project.Id;
         this.TargetGroup = project.CategoryID;
         this.AuthorName = project.AuthorID;
+
         ExpandedDescription(true);
     }
 
@@ -181,7 +189,6 @@
             this.ExpandDescription = "Expand";
         }
     }
-
     public void ExpandedDescription(){
         if(this.ExpandDescription == "Expand") ExpandedDescription(true);
         else ExpandedDescription(false);

@@ -54,4 +54,12 @@ public class TagRepository : ITagRepository
                         .Select(t => new TagDTO(t.Id, t.Name))
                         .ToListAsync())
                         .AsReadOnly();
+
+    public async Task<IReadOnlyCollection<TagDTO>> ReadCollectionAsync(ICollection<int> tagIDs) =>
+        (await _dbcontext.Tags
+                        .Where(t => tagIDs
+                            .Any( inT => inT == t.Id))
+                        .Select(t => new TagDTO(t.Id, t.Name))
+                        .ToListAsync())
+                        .AsReadOnly();
 }
