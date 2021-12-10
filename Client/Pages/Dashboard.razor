@@ -13,12 +13,24 @@
     <link rel="stylesheet" href="Dashboard.razor.css">
 </head>
 
-<h1>@title</h1>
+<div class="ProjectHeader">
+    <h1 class="ProjectTitle">@title</h1>
+    <!--Idea is to only show Status to the author of the project-->
+    <div class="Status Public">
+        <p>Public</p>
+    </div>
+</div>
 
-<div id="extendableDiv">
-    <h2>Description</h2>
-    <textarea>@Description</textarea>
-    <button @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>
+<div class="Buffer_10"></div>   
+
+<div class="DescriptionDisplay">
+    <div class="DescriptionTitle">
+        <p>Published by <span id="AuthorContainer">Author Name</span></p>
+    </div>
+    <div class="Description">
+        <textarea readonly id="ProjectDescription">@Description</textarea>
+        <button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>
+    </div>
 </div>
 
 <div>
@@ -26,10 +38,6 @@
     <div>
         <h3>Target group</h3>
         <textarea>Target group here..</textarea>
-    </div>
-    <div>
-        <h3>Status</h3>
-        <textarea>Status here...</textarea>
     </div>
     <div>
         <h3>Tags</h3>
@@ -86,9 +94,9 @@ else
 </div>
 
 @code {
-    string title = "your mom";
+    string title = "Project Title";
     string empty = string.Empty;
-    string Description = "no description";
+    string Description = "no description ";
     string description = string.Empty;
     string ExpandDescription = "Contract";
     
