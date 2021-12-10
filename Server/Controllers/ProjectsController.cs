@@ -9,16 +9,21 @@ public class ProjectsController : ControllerBase
     private readonly ILogger<ProjectsController> _logger;
     private readonly IProjectRepository _repository;
 
-    public ProjectsController(ILogger<ProjectsController> logger, IProjectRepository repository)
+    public ProjectsController(ILogger<ProjectsController> logger)//, IProjectRepository repository)
     {
         _logger = logger;
-        _repository = repository;
+        _repository = new TestProjectRepository().TestRepository;
     }
 
     [AllowAnonymous]
     [HttpGet]
     public async Task<IReadOnlyCollection<ProjectKeyDTO>> Get()
-        => await _repository.ReadAllAsync();
+        //=> await _repository.ReadAllAsync();
+        {
+            var meh = await _repository.ReadAllAsync();
+            Console.WriteLine(meh.Count());
+            return meh;
+        }
 
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
