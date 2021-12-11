@@ -76,7 +76,8 @@ public class TagRepositoryTests: IDisposable
     [Fact]
     public async void ReadTagAsync_provided_ID_exists_returns_Tag()
     {
-        var tag = await _repository.ReadTagByIDAsync(2);
+        var option = await _repository.ReadTagByIDAsync(2);
+        var tag = option.Value;
 
         Assert.Equal(2, tag.Id);
         Assert.Equal("Java",tag.Name);
