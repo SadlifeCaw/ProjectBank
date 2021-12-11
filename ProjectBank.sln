@@ -21,6 +21,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers.Tests", "Tests\Controllers.Tests\Controllers.Tests.csproj", "{66BFF394-F9B6-4AC4-A1B1-4894BDF1D8AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagGenerator.Tests", "Tests\TagGenerator.Tests\TagGenerator.Tests.csproj", "{BECC4160-8204-4A7F-A9D9-0E7DDF08244D}"
+
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

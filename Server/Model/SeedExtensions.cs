@@ -76,7 +76,7 @@ public static class SeedExtensions
                 TP_TRUTH_NK,
                 TP_LOG_NK
             );
-
+ 
             //Supervisors
             var SP_1 = new Supervisor("troe@itu.dk", Institution_ITU, "Troels", "Jyde", new List<Project>(), Faculty_COMPSCI_ITU, new List<Project>());
             var SP_2 = new Supervisor("kim@nk.nk",Institution_NK,"Kim","Jong-Il", new List<Project>(), Faculty_MILSCI_NK, new List<Project>());

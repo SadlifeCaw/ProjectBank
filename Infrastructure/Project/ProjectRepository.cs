@@ -27,7 +27,6 @@ public class ProjectRepository : IProjectRepository
 
         var author = await GetSupervisorAsync(project.AuthorID);
         var category = await GetCategoryAsync(project.CategoryID);
-
         if (author == null || category == null)
         {
             return (Response.NotFound, new ProjectDTO(-1, project.AuthorID, project.Title, project.Description, project.Status, project.MaxStudents, project.CategoryID, project.TagIDs, project.UserIDs, project.BucketIDs));
@@ -49,7 +48,6 @@ public class ProjectRepository : IProjectRepository
             Users = await GetUsersAsync(project.UserIDs).ToListAsync(),
             Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync(),
         };
-        
 
         _dbcontext.Projects.Add(entity);
 
@@ -178,7 +176,7 @@ public class ProjectRepository : IProjectRepository
                             .Select(p => p)
                             .FirstOrDefaultAsync();
         
-        if(project == null)
+        if(projectEntity == null)
         {
             return Response.NotFound;
         }
