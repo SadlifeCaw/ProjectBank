@@ -15,4 +15,6 @@ public class Tag
     {
         this.Name = name;
     }
+
+    public ICollection<Project> Projects {get; set;}
 }

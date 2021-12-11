@@ -30,7 +30,7 @@ public class TagRepository : ITagRepository
 
         return (Response.Created, new TagDTO(entity.Id, entity.Name));
     }
-    public async Task<TagDTO> ReadTagByIDAsync(int TagID)
+    public async Task<Option<TagDTO>> ReadTagByIDAsync(int TagID)
     {
         var tags = from t in _dbcontext.Tags
                         where t.Id == TagID

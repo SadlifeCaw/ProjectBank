@@ -131,13 +131,10 @@
 </div>
 
 @code {
-    string title = "Project Title Which is Long";
+    string title = "Loading title...";
     string empty = string.Empty;
     string Description = "Loading description...";
     int AuthorName = -1;
-    string description = string.Empty;
-    string ExpandDescription = "Contract";
-
     int TargetGroup = -1;
     
     private IProject[]? projects;
@@ -149,7 +146,7 @@
 
     private UserDTO author;
 
-    private List<TagDTO> tags;
+    private List<TagDTO> tags = new List<TagDTO>();
 
     private Modal inviteModal { get; set; }
 
@@ -159,10 +156,8 @@
     {
         try
         {
-            //int ProjectID = 1;
-            //ProjectId = 1;
             project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
-            tags = await Http.GetFromJsonAsync<List<TagDTO>>($"api/Tag");
+            this.tags = await GetTagDTOs(project.TagIDs).ToListAsync();
         }
         catch (Exception exception)
         {
@@ -170,27 +165,20 @@
             Console.WriteLine("What the fuck?");
             //exception.Redirect();
         }
-        this.description = project.Description;
-        this.title = project.Title + ", ID: " + project.Id;
+        this.Description = project.Description;
+        this.title = project.Title;
         this.TargetGroup = project.CategoryID;
         this.AuthorName = project.AuthorID;
-
-        ExpandedDescription(true);
     }
 
-    public void ExpandedDescription(bool IsExpanded){
-        Console.WriteLine("pressed the button");
-        if(IsExpanded) {
-            this.Description = description;
-            this.ExpandDescription = "Contract";
+    private async IAsyncEnumerable<TagDTO> GetTagDTOs(ICollection<int> tagIds) 
+    {
+        Console.WriteLine("Looking through tagIDs");
+        foreach (var tagId in tagIds)
+        {
+            //dsadsadas
+            Console.Write("Fetching tag with ID: " + tagId);
+            yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{tagId}");
         }
-        else {
-            this.Description = description.Substring(0,200) + "...";
-            this.ExpandDescription = "Expand";
-        }
-    }
-    public void ExpandedDescription(){
-        if(this.ExpandDescription == "Expand") ExpandedDescription(true);
-        else ExpandedDescription(false);
     }
 }

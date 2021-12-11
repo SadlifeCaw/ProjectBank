@@ -27,11 +27,11 @@ public class TagController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("Tags/{TagId}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(TagDTO), StatusCodes.Status200OK)]
-    public async Task<ActionResult<TagDTO>> GetTag(int TagId) =>
-        await _repository.ReadTagByIDAsync(TagId);
+    [HttpGet("{id}")]
+    public async Task<ActionResult<TagDTO>> Get(int id) =>
+        (await _repository.ReadTagByIDAsync(id)).ToActionResult();
 
     [AllowAnonymous]
     [HttpGet]
