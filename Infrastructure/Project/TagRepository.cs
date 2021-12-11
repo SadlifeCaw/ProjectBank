@@ -30,7 +30,7 @@ public class TagRepository : ITagRepository
 
         return (Response.Created, new TagDTO(entity.Id, entity.Name));
     }
-    public async Task<TagDTO> ReadTagByIDAsync(int TagID)
+    public async Task<Option<TagDTO>> ReadTagByIDAsync(int TagID)
     {
         var tags = from t in _dbcontext.Tags
                         where t.Id == TagID
@@ -51,6 +51,14 @@ public class TagRepository : ITagRepository
 
     public async Task<IReadOnlyCollection<TagDTO>> ReadAllAsync() =>
         (await _dbcontext.Tags
+                        .Select(t => new TagDTO(t.Id, t.Name))
+                        .ToListAsync())
+                        .AsReadOnly();
+
+    public async Task<IReadOnlyCollection<TagDTO>> ReadCollectionAsync(ICollection<int> tagIDs) =>
+        (await _dbcontext.Tags
+                        .Where(t => tagIDs
+                            .Any( inT => inT == t.Id))
                         .Select(t => new TagDTO(t.Id, t.Name))
                         .ToListAsync())
                         .AsReadOnly();

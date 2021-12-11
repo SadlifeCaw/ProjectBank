@@ -26,7 +26,6 @@ public class ProjectRepository : IProjectRepository
         }
 
         var author = await GetSupervisorAsync(project.AuthorID);
-
         var category = await GetCategoryAsync(project.CategoryID);
         if (author == null || category == null)
         {
