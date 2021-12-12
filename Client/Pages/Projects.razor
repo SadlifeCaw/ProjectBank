@@ -18,40 +18,125 @@
 
 
 
-
-
 @if (projects == null)
 {
     <p><em>Loading...</em></p>
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in projects)
-            {
-                <tr>
-                    <td>@project.Title</td>
-                    <td>@project.Id</td>
-                    <td><button class="btn btn-info" @onclick="@(() => View(project))">View</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <button class="btn btn-info" @onclick="@(() => TestGet(3))">Test Get</button>
 
-}
-
-<div class="container-fluid  mb-3 mt-5">
+<!-- Row 1 -->
+<div class="row mb-3">
+         <div class="col-12 col-md-6 col-xl-4">
+            <div class="card col project">
+  <div class="card-body">
     <div class="row">
-         <div class="col-12 col-xl-6">
+    <h2 class="card-title col-10">@title</h2>
+    <div class="col-2">
+        <a href="" class=" nrbtn btn">@amount/@capacity</a>
+    </div>
+    </div>
+    <p class="card-text mb-5">@description</p>
+    <div class="tagdiv mb-3">
+    <ul>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    </ul>
+    </div>
+    <a href="#" class="btn btn-primary">@more</a>
+  </div>
+</div>
+    </div>
+
+ <div class="col-12 col-md-6 col-xl-4">
+            <div class="card col project">
+  <div class="card-body">
+   <div class="row">
+    <h2 class="card-title col-10">@title</h2>
+    <div class="col-2">
+        <a href="" class=" nrbtn btn">@amount/@capacity</a>
+    </div>
+    </div>
+    <p class="card-text mb-5">@description</p>
+    <div class="tagdiv mb-3">
+    <ul>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    </ul>
+    </div>
+    <a href="#" class="btn btn-primary">@more</a>
+  </div>
+</div>
+    </div>
+
+ <div class="col-12 col-md-6 col-xl-4">
+<div class="card col project">
+  <div class="card-body">
+     <div class="row">
+    <h2 class="card-title col-10">@title</h2>
+    <div class="col-2">
+        <a href="" class=" nrbtn btn">@amount/@capacity</a>
+    </div>
+    </div>
+    <p class="card-text mb-5">@description</p>
+    <div class="tagdiv mb-3">
+    <ul>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
+    </ul>
+    </div>
+    <a href="#" class="btn btn-primary">@more</a>
+  </div>
+</div>
+    </div>
+
+
+
+</div>
+
+<!-- Row 2 -->
+<div class="row">
+         <div class="col-12 col-md-6 col-xl-4">
             <div class="card col project">
   <div class="card-body">
       <div class="row">
@@ -67,7 +152,7 @@ else
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
-     <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
@@ -85,24 +170,25 @@ else
   </div>
 </div>
     </div>
-       <div class="col-12 col-md-6">
-            <div class="card project col">
-    <div class="card-body">
-    <div class="row">
+
+ <div class="col-12 col-md-6 col-xl-4">
+            <div class="card col project">
+  <div class="card-body">
+     <div class="row">
     <h2 class="card-title col-10">@title</h2>
     <div class="col-2">
         <a href="" class=" nrbtn btn">@amount/@capacity</a>
     </div>
     </div>
     <p class="card-text mb-5">@description</p>
-        <div class="tagdiv mb-3">
+    <div class="tagdiv mb-3">
     <ul>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
-     <li class="tag tagbtn mx-1">@tag</li>
+    <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
@@ -118,13 +204,12 @@ else
     <a href="#" class="btn btn-primary">@more</a>
   </div>
 </div>
- </div>
     </div>
-<div class="row mt-3">
-        <div class="col-12 col-md-6">
-           <div class="card project col">
+
+ <div class="col-12 col-md-6 col-xl-4">
+ <div class="card col project">
   <div class="card-body">
-    <div class="row">
+     <div class="row">
     <h2 class="card-title col-10">@title</h2>
     <div class="col-2">
         <a href="" class=" nrbtn btn">@amount/@capacity</a>
@@ -132,7 +217,7 @@ else
     </div>
     <p class="card-text mb-5">@description</p>
     <div class="tagdiv mb-3">
-  <ul>
+    <ul>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
     <li class="tag tagbtn mx-1">@tag</li>
@@ -155,41 +240,11 @@ else
   </div>
 </div>
     </div>
-        <div class="col-12 col-md-6">
-            <div id= class="card project col"
-  <div class="card-body project">
-    <div class="row">
-    <h2 class="card-title col-10">@title</h2>
-    <div class="col-2">
-        <a href="" class=" nrbtn btn">@amount/@capacity</a>
-    </div>
-    </div>
-    <p class="card-text mb-5">@description</p>
-    <div class="tagdiv mb-3">
-   <ul>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    </ul>
-    </div>
-    <a href="#" class="btn btn-primary">@more</a>
-  </div>
-    </div>
-</div>
-</div>
-</div>
+</div>          
+
+
+
+
 
 
 @code {
