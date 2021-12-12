@@ -1,6 +1,6 @@
 namespace EntityFramework.Tests;
 
-/* public class BucketRepositoryTests : IDisposable
+public class BucketRepositoryTests : IDisposable
 {
     private readonly ProjectBankContext _context;
     private readonly BucketRepository _repository;
@@ -18,12 +18,12 @@ namespace EntityFramework.Tests;
         var context = new ProjectBankContext(builder.Options);
         context.Database.EnsureCreated();
 
+        var Bucket1 = new ProjectBucket(){Projects = new HashSet<Project>(), Key = "Algorithm", Id = 1};
+        var Bucket2 = new ProjectBucket(){Projects = new HashSet<Project>(), Key = "Agriculture", Id = 2};;
 
-        var Bucket1 = new ProjectBucket(new HashSet<Project>(),"Algorithm");
-        var Bucket2 = new ProjectBucket(new HashSet<Project>(), "Agriculture");
-
+        context.Buckets.Add(Bucket1);
+        context.Buckets.Add(Bucket2);
         
-
         
         context.SaveChanges();
         _context = context;
@@ -32,23 +32,19 @@ namespace EntityFramework.Tests;
     }
 
     [Fact]
-     public async void CreateAsync_creates_new_bucket_with_generated_id() 
+     public async void CreateAsync_creates_new_bucket_with_generated_id()//Fail
     {
         //Arrange
         var bucketDTO = new BucketCreateDTO
         {
             ProjectIds = new HashSet<int>(),
             Key = "S3CR3TC0D3"
-
         };
 
         //Act
         var created = await _repository.CreateAsync(bucketDTO);
 
-        if(created.Item1 == Response.Conflict)
-        {
-            Assert.False(true);
-        }
+        Assert.False(created.Item1 == Response.Conflict);
 
         var i = created.Item2;
 
@@ -80,7 +76,7 @@ namespace EntityFramework.Tests;
     public async void ReadAsync_provided_ID_exists_returns_Bucket()
     {
         var bucket = await _repository.ReadBucketByIDAsync(2);
-        Assert.Equal(1, bucket.Id);
+        Assert.Equal(2, bucket.Id);
         Assert.Equal("Agriculture", bucket.Key);
         Assert.Empty(bucket.ProjectIds);
     }
@@ -112,4 +108,4 @@ namespace EntityFramework.Tests;
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
-} */
+}
