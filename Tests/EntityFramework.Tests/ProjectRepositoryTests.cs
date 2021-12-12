@@ -68,7 +68,7 @@ public class ProjectRepositoryTests : IDisposable
         //Act
         var created = await _repository.CreateAsync(TestProject);
 
-        if(created.Item1 == Response.Conflict)
+        if(created.Item1 == Response.Conflict) 
         {
             Assert.False(true);
         }
