@@ -9,7 +9,7 @@ public class ProjectsController : ControllerBase
     private readonly ILogger<ProjectsController> _logger;
     private readonly IProjectRepository _repository;
 
-    public ProjectsController(ILogger<ProjectsController> logger)//, IProjectRepository repository)
+    public ProjectsController(ILogger<ProjectsController> logger, IProjectRepository repository)//, IProjectRepository repository)
     {
         _logger = logger;
         //_repository = new TestProjectRepository().TestRepository;
