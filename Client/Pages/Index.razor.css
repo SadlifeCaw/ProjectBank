@@ -1,6 +1,6 @@
 .ProjectListDisplay{
     width: 100%;
-    min-height: 280px;
+    min-height: 350px;
     height: 10px;
     display: flex;
     flex-wrap: nowrap;
