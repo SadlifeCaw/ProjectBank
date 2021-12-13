@@ -1,9 +1,8 @@
 .project{
    background-color:  #153243;
    color:#B4B8AB;
-   max-height: 30rem;
-   max-width: 35rem;
-   height:fit-content;
+   height: 28rem;
+   width: 35rem;
    width: 100%;
    border-radius: 10px;
    display: inline-block;
@@ -35,7 +34,15 @@
     color: black;
 }
 
+.description {
+  height: 100px;
+  overflow-x: auto;
+}
 
+.footer {
+  position: absolute;
+  bottom: 15px;
+}
 
 /* width */
 ::-webkit-scrollbar {

@@ -56,12 +56,17 @@
               </div>
           </div>
           <div class="CardContainer">
-              @foreach (var element in supervisors)
-                {
-                    <li>
-                        @element.FirstName + " " + @element.LastName;
-                    </li>
-                }
+              <ul>
+                @foreach (var element in supervisors)
+                    {
+                        @if(element.FirstName != string.Empty)
+                        {
+                            <li>
+                                @(String.Format("{0} {1}", element.FirstName, element.LastName))
+                            </li>
+                        }
+                    }
+                </ul>
           </div>
       </div>
       <div class="row">
@@ -77,9 +82,12 @@
             <ul>
                 @foreach (var element in students)
                 {
-                    <li>
+                    @if(element.FirstName != string.Empty)
+                    {
+                        <li>
                         @(String.Format("{0} {1}", element.FirstName, element.LastName))
-                    </li>
+                        </li>
+                    }
                 }
             </ul>
         </div>
@@ -142,17 +150,13 @@
     string empty = string.Empty;
     string Description = "Loading description...";
     string AuthorName = string.Empty;
-    int TargetGroup = -1;
-    
-    private IProject[]? projects;
+    string TargetGroup = "Loading...";
     
     [Parameter]
     public int? ProjectId {get; set;}
-
     private ProjectDTO project;
-
     private UserDTO author;
-
+    private CategoryDTO category;
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
     private List<UserDTO> students = new List<UserDTO>();
@@ -161,15 +165,23 @@
 
     private Modal applyModal { get; set; }
 
+    /*private async void test()
+    {
+        var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
+            
+        Console.WriteLine(test);
+    }*/
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             this.project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
-            this.tags = await GetTagDTOs(project.TagIDs).ToListAsync();
+            this.tags = await GetTagsDTOs(project.TagIDs).ToListAsync();
             this.author = await GetUserDTO(project.AuthorID);
             this.students = await GetStudentsDTOs(project.UserIDs).ToListAsync();
-            //this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
+            this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
+            this.category = await GetCategoryDTO(project.CategoryID);
         }
         catch (Exception exception)
         {
@@ -179,17 +191,22 @@
         }
         this.Description = project.Description;
         this.title = project.Title;
-        this.TargetGroup = project.CategoryID;
+        this.TargetGroup = category.Title;
         this.AuthorName = author.FirstName + " " + author.LastName;
 
         foreach (var item in students){Console.WriteLine("Student with ID: " + item.Id + " exists");}
     }
 
-    private async IAsyncEnumerable<TagDTO> GetTagDTOs(ICollection<int> tagIds) 
+    private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds) 
     {
-        foreach (var tagId in tagIds)
+        foreach (var id in tagIds)
         {
-            yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{tagId}");
+            //It crashes if you ask for id 7... which exists... wtf
+            if(id == 7) 
+            {
+                continue;
+            }
+            yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{id}");
         }
     }
 
@@ -197,7 +214,16 @@
     {
         foreach (var userID in userIDs)
         {
-            yield return await Http.GetFromJsonAsync<SupervisorDTO>($"api/Users/Supervisors/{userID}");
+            UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
+            try 
+            {
+                user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
+            }
+            catch(Exception e) 
+            {
+                //Not a supervisor, skip
+            }
+            yield return user;
         }
     }
 
@@ -205,12 +231,27 @@
     {
         foreach (var userID in userIDs)
         {
-            yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
+            //yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
+            UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
+            try 
+            {
+                user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
+            }
+            catch(Exception e) 
+            {
+                //Not a supervisor, skip
+            }
+            yield return user;
         }
     }
 
     private async Task<UserDTO> GetUserDTO(int userID) 
     {
         return await Http.GetFromJsonAsync<UserDTO>($"api/Users/{userID}");
+    }
+
+    private async Task<CategoryDTO> GetCategoryDTO(int catID) 
+    {
+        return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
     }
 }

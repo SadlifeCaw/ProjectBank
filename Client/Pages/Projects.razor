@@ -42,7 +42,7 @@
                                 <a href="" class=" nrbtn btn">@project.UserIDs.Count()/@project.MaxStudents</a>
                             </div>
                         </div>
-                        <p class="card-text mb-5">@project.Description</p>
+                        <p class="card-text mb-5 description">@project.Description</p>
                         <div class="tagdiv mb-3">
                             <ul>
                                 @foreach (var tag in project.TagIDs)
@@ -51,7 +51,7 @@
                                 }
                             </ul>
                         </div>
-                        <a href="Projects/@project.Id" class="btn btn-primary">@more</a>
+                        <a href="Projects/@project.Id" class="btn btn-primary footer">@more</a>
                     </div>
                 </div>
             </div>
