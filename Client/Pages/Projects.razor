@@ -24,187 +24,47 @@
 {
     <p><em>Loading...</em></p>
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Id</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var project in projects)
-            {
-                <tr>
-                    <td>@project.Title</td>
-                    <td>@project.Description</td>
-                    <td>@project.Id</td>
-                    <td><button class="btn btn-info" @onclick="@(() => View(project))">View</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <button class="btn btn-info" @onclick="@(() => TestGet(3))">Test Get</button>
 
-}
 
-<div class="container-fluid  mb-3 mt-5">
-    <div class="row">
-         <div class="col-12 col-xl-6">
-            <div class="card col project">
-  <div class="card-body">
-      <div class="row">
-    <h2 class="card-title col-10">@title</h2>
-    <div class="col-2">
-        <a href="" class=" nrbtn btn">@amount/@capacity</a>
-    </div>
-    </div>
-    <p class="card-text mb-5">@description</p>
-    <div class="tagdiv mb-3">
-    <ul>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-     <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    </ul>
-    </div>
-    <a href="#" class="btn btn-primary">@more</a>
-  </div>
-</div>
-    </div>
-       <div class="col-12 col-md-6">
-            <div class="card project col">
-    <div class="card-body">
-    <div class="row">
-    <h2 class="card-title col-10">@title</h2>
-    <div class="col-2">
-        <a href="" class=" nrbtn btn">@amount/@capacity</a>
-    </div>
-    </div>
-    <p class="card-text mb-5">@description</p>
-        <div class="tagdiv mb-3">
-    <ul>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-     <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    </ul>
-    </div>
-    <a href="#" class="btn btn-primary">@more</a>
-  </div>
-</div>
- </div>
-    </div>
-<div class="row mt-3">
-        <div class="col-12 col-md-6">
-           <div class="card project col">
-  <div class="card-body">
-    <div class="row">
-    <h2 class="card-title col-10">@title</h2>
-    <div class="col-2">
-        <a href="" class=" nrbtn btn">@amount/@capacity</a>
-    </div>
-    </div>
-    <p class="card-text mb-5">@description</p>
-    <div class="tagdiv mb-3">
-  <ul>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    </ul>
-    </div>
-    <a href="#" class="btn btn-primary">@more</a>
-  </div>
-</div>
-    </div>
-        <div class="col-12 col-md-6">
-            <div id= class="card project col"
-  <div class="card-body project">
-    <div class="row">
-    <h2 class="card-title col-10">@title</h2>
-    <div class="col-2">
-        <a href="" class=" nrbtn btn">@amount/@capacity</a>
-    </div>
-    </div>
-    <p class="card-text mb-5">@description</p>
-    <div class="tagdiv mb-3">
-   <ul>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    <li class="tag tagbtn mx-1">@tag</li>
-    </ul>
-    </div>
-    <a href="#" class="btn btn-primary">@more</a>
-  </div>
-    </div>
-</div>
-</div>
-</div>
+<!-- Row 1 -->
+<div class="container">
 
+    <div class="row my-3">
+
+        @foreach (var project in projects)
+        {
+            <div class="col-12 col-md-6 col-xl-4 my-3">
+                <div class="card col project">
+                    <div class="card-body">
+                        <div class="row">
+                            <h2 class="card-title col-9">@project.Title</h2>
+                            <div class="col-2">
+                                <a href="" class=" nrbtn btn">@project.UserIDs.Count()/@project.MaxStudents</a>
+                            </div>
+                        </div>
+                        <p class="card-text mb-5">@project.Description</p>
+                        <div class="tagdiv mb-3">
+                            <ul>
+                                @foreach (var tag in project.TagIDs)
+                                {
+                                    <li class="tag tagbtn mx-1">@tag</li>
+                                }
+                            </ul>
+                        </div>
+                        <a href="Projects/@project.Id" class="btn btn-primary">@more</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+</div>
 
 @code {
-    string title = "Project Title";
-    string description = "Description Description Description DescriptionDescription DescriptionDescript. Description Description Description DescriptionDescription DescriptionDescript";
+
     string more = "View more";
 
-    string tag = "Tag";
-
-    string amount ="3";
-
-    string capacity = "5";
-    
     private ProjectDTO[]? projects;
 
     protected override async Task OnInitializedAsync()
@@ -212,7 +72,9 @@ else
         try
         {
             projects = await Http.GetFromJsonAsync<ProjectDTO[]>($"api/Projects");
-        } catch(Exception e)
+
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
@@ -223,7 +85,8 @@ else
         try
         {
             await Http.GetFromJsonAsync<ProjectDTO>($"Projects/{id}");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }

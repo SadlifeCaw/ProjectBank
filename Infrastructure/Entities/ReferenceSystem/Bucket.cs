@@ -11,6 +11,7 @@ namespace ProjectBank.Infrastructure.Entities
         public Bucket() {}
     }
 
+    [Index(nameof(Key), IsUnique = true)]
     public class ProjectBucket : Bucket<Project>
     {
         public ISet<Project> Projects = new HashSet<Project>();

@@ -1,4 +1,7 @@
 ﻿@page "/"
+@attribute [AllowAnonymous]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <PageTitle>Index</PageTitle>
 
@@ -13,16 +16,16 @@
 <div>
     <h2> Your Projects </h2>
     <div class="ProjectListDisplay">
+        @foreach (var project in projects)
+    {
         <div class="ProjectDisplay">
             <div class="TitleContainer">
-                <h1 class="Title"> Title</h1>
+                <h1 class="Title">@project.Title</h1>
                  <div class="StudentDisplay">
-                    <p class="StudentContent">3/5</p>
+                    <p class="StudentContent">@project.UserIDs.Count()/@project.MaxStudents</p>
                  </div>
             </div>
-
-            <p class="Description"> Description Description Description Description Description Description Description Description Description Description</p>
-            
+            <p class="Description">@project.Description</p>
             <div class="TagDisplay">
                 <ul>
                     <li> Tag1 Long Name</li>
@@ -30,48 +33,19 @@
                     <li> Tag3</li>
                 </ul>
             </div>
-        </div>
-
-        <div class="ProjectDisplay">
-            <div class="TitleContainer">
-                 <h1 class="Title"> Title2</h1>
-                 <div class="StudentDisplay">
-                    <p class="StudentContent">3/5</p>
-                 </div>
+            <div class="ButtonDisplay">
+            <a href ="Projects/@project.Id" class="btn btn-primary">View More</a>
             </div>
-
-            <p class="Description"> Description </p>
-            
-            <div class="TagDisplay">
-                <ul>
-                    <li> Tag1</li>
-                </ul>
             </div>
-        </div>
-
-        <div class="ProjectDisplay">
-            <div class="TitleContainer">
-                 <h1 class="Title"> Title2</h1>
-                 <div class="StudentDisplay">
-                    <p class="StudentContent">3/5</p>
-                 </div>
-            </div>
-
-            <p class="Description"> Description </p>
-            
-            <div class="TagDisplay">
-                <ul>
-                    <li> Tag1</li>
-                </ul>
-            </div>
-        </div>
-
+    }
+    
     </div>
 </div>
 
 <div>
-    <h2 class="mt-4"> Your Selection </h2>
+    <h2 class="mt-4"> Your Selection -- To be implemented </h2>
     <div class="ProjectListDisplay">
+        
         <div class="ProjectDisplay">
             <div class="TitleContainer">
                 <h1 class="Title"> Title2</h1>
@@ -79,15 +53,17 @@
                     <p class="StudentContent">3/5</p>
                  </div>
             </div>
-
             <p class="Description">  big description big description big description. big description, big description big description. big description </p>
-            
             <div class="TagDisplay">
                 <ul>
                     <li> Tag1</li>
                 </ul>
             </div>
+             <div class="ButtonDisplay">
+            <a href ="#" class="btn btn-primary">View More</a>
+            </div>
         </div>
+
 
         <div class="ProjectDisplay">
             <div class="TitleContainer">
@@ -98,7 +74,6 @@
             </div>
 
             <p class="Description"> Shitty project </p>
-            
             <div class="TagDisplay">
                 <ul>
                     <li> Tag1</li>
@@ -107,6 +82,9 @@
                     <li> Tag4</li>
                 </ul>
             </div>
+            <div class="ButtonDisplay">
+            <a href ="#" class="btn btn-primary">View More</a>
+            </div>
         </div>
 
         <div class="ProjectDisplay">
@@ -118,7 +96,6 @@
             </div>
 
             <p class="Description"> Shitty project </p>
-            
             <div class="TagDisplay">
                 <ul>
                     <li> Tag1</li>
@@ -128,6 +105,27 @@
                     <li> Tag5</li>
                 </ul>
             </div>
+             <div class="ButtonDisplay">
+            <a href ="#" class="btn btn-primary">View More</a>
+            </div>
         </div>
     </div>
 </div>
+
+@code{
+string more = "View more";
+    
+    private ProjectDTO[]? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            projects = await Http.GetFromJsonAsync<ProjectDTO[]>($"api/Projects");
+         
+        } catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+}

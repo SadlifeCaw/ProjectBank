@@ -12,26 +12,28 @@ using ProjectBank.Core.EF.Repository;
 namespace ProjectBank.Server.Controllers;
 [Authorize]
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+
 
 public class TagController : ControllerBase
 {
     private readonly ILogger<TagController> _logger;
-    private readonly ITagRepository _repository;
+    private readonly ITagRepository _TagRepository;
     
     public TagController(ILogger<TagController> logger, ITagRepository TagRepository)
     {
         _logger = logger;
-        _repository = TagRepository;
+        _TagRepository = TagRepository;
     }
 
     [AllowAnonymous]
+    [HttpGet("GetTag/{TagId}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(TagDTO), StatusCodes.Status200OK)]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<TagDTO>> Get(int id) =>
-        (await _repository.ReadTagByIDAsync(id)).ToActionResult();
+    public async Task<ActionResult<TagDTO>> GetTag(int TagId) 
+    =>(await _TagRepository.ReadTagByIDAsync(TagId)).ToActionResult();
+}
 
     [AllowAnonymous]
     [HttpGet]
