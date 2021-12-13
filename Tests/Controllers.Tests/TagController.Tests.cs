@@ -24,7 +24,7 @@ public class TagControllerTests
         var controller = new TagController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.GetTag(42);
+        var response = await controller.Get(42);
 
         // Assert
         Assert.IsType<NotFoundResult>(response.Result);
@@ -41,7 +41,7 @@ public class TagControllerTests
         var controller = new TagController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.GetTag(1);
+        var response = await controller.Get(1);
 
         // Assert
         Assert.Equal(tag, response.Value);

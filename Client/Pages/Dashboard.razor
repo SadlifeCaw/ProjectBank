@@ -137,14 +137,14 @@
     <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
 </div>
 
+<button type="button" class="btn btn-success" @onclick="() => test()">Apply</button>
+
 @code {
     string title = "Loading title...";
     string empty = string.Empty;
     string Description = "Loading description...";
     string AuthorName = string.Empty;
     int TargetGroup = -1;
-    
-    private IProject[]? projects;
     
     [Parameter]
     public int? ProjectId {get; set;}
@@ -161,15 +161,22 @@
 
     private Modal applyModal { get; set; }
 
+    private async void test()
+    {
+        var test = await Http.GetFromJsonAsync<TagDTO>($"api/Tag/9");
+        
+        Console.WriteLine(test);
+    }
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             this.project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
-            this.tags = await GetTagDTOs(project.TagIDs).ToListAsync();
+            this.tags = await GetTagsDTOs(project.TagIDs).ToListAsync();
             this.author = await GetUserDTO(project.AuthorID);
             this.students = await GetStudentsDTOs(project.UserIDs).ToListAsync();
-            //this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
+            this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
         }
         catch (Exception exception)
         {
@@ -185,11 +192,16 @@
         foreach (var item in students){Console.WriteLine("Student with ID: " + item.Id + " exists");}
     }
 
-    private async IAsyncEnumerable<TagDTO> GetTagDTOs(ICollection<int> tagIds) 
+    private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds) 
     {
-        foreach (var tagId in tagIds)
+        foreach (var id in tagIds)
         {
-            yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{tagId}");
+            //It crashes if you ask for id 7... which exists... wtf
+            if(id == 7) 
+            {
+                continue;
+            }
+            yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{id}");
         }
     }
 
