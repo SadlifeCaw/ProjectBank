@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using ProjectBank.Infrastructure;
+using ProjectBank.Infrastructure.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddControllersWithViews();
+builder.Services.Configure<JwtBearerOptions>(
+    JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.TokenValidationParameters.NameClaimType = "name";
+    });
+
 builder.Services.AddRazorPages();
 
 // Connect to database
@@ -19,6 +25,9 @@ builder.Services.AddDbContext<ProjectBankContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectBank"))
 );
 
+
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 var app = builder.Build();
 

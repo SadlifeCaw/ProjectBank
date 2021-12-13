@@ -2,23 +2,26 @@ namespace ProjectBank.Server.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class ProjectsController : ControllerBase
 {
     private readonly ILogger<ProjectsController> _logger;
     private readonly IProjectRepository _repository;
 
-    public ProjectsController(ILogger<ProjectsController> logger, IProjectRepository repository)
+    public ProjectsController(ILogger<ProjectsController> logger, IProjectRepository repository)//, IProjectRepository repository)
     {
         _logger = logger;
+        //_repository = new TestProjectRepository().TestRepository;
         _repository = repository;
+
     }
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IReadOnlyCollection<ProjectKeyDTO>> Get()
+    public async Task<IReadOnlyCollection<ProjectDTO>> Get()
         => await _repository.ReadAllAsync();
+
 
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,8 +36,7 @@ public class ProjectsController : ControllerBase
     public async Task<IActionResult> Post(ProjectCreateDTO project)
     {
         var created = await _repository.CreateAsync(project);
-
-        return CreatedAtAction(nameof(Get), new { created.Item2.Id }, created);
+        return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
     }
 
     [Authorize(Roles = $"{Member},{Administrator}")]

@@ -11,11 +11,11 @@ namespace ProjectBank.Infrastructure.Entities;
 
     public async Task<(Response, BucketDTO)> CreateAsync(BucketCreateDTO bucket)
     {
+
         var conflict =
             await (_dbcontext.Buckets
                             .Where(b => b.Key == bucket.Key)
-                            .Where(b => b.Projects == bucket.ProjectIds)
-                            .Select(b => new BucketDTO(b.Projects.Select(b => b.Id).ToHashSet(),b.Key)))
+                            .Select(b => new BucketDTO(b.Projects.Select(b => b.Id).ToHashSet(), b.Key, b.Id)))
                             .FirstOrDefaultAsync();
 
         if (conflict != null)
@@ -31,7 +31,7 @@ namespace ProjectBank.Infrastructure.Entities;
 
         await _dbcontext.SaveChangesAsync();
 
-        return (Response.Created, new BucketDTO(entity.Projects.Select(p => p.Id).ToHashSet(), entity.Key));
+        return (Response.Created, new BucketDTO(entity.Projects.Select(p => p.Id).ToHashSet(), entity.Key, entity.Id));
     }
     public async Task<BucketDTO> ReadBucketByKeyAsync(string key)
     {
@@ -46,7 +46,7 @@ namespace ProjectBank.Infrastructure.Entities;
     {
         var buckets = from b in _dbcontext.Buckets
                       where b.Id == bucketId
-                      select new BucketDTO(b.Projects.Select(p => p.Id).ToHashSet(), b.Key);
+                      select new BucketDTO(b.Projects.Select(p => p.Id).ToHashSet(), b.Key, b.Id);
 
         return await buckets.FirstOrDefaultAsync();
     }

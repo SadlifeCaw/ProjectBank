@@ -27,6 +27,7 @@ public class ProjectRepositoryTests : IDisposable
         var ituFaculty = new Faculty("Computer Science", "Computers and Science", ituInst);
         var Supervisor1 = new Supervisor("troe@itu.dk", ituInst, "Troels", "Jyde", new List<Project>(), ituFaculty, new List<Project>());
         TestUser = new Supervisor("Jan@itu.dk", ituInst, "Jan", "Jensen", new List<Project>(), ituFaculty, new List<Project>());
+
         var Tag1 = new Tag("Programming");
         var Tag2 = new Tag("Testing");
 
@@ -161,7 +162,7 @@ public class ProjectRepositoryTests : IDisposable
         );
     }
 
-    [Fact]
+   [Fact]
     public async void ReadAllAuthoredAsync_returns_all_projects_from_chosen_author()
     {
         var TestProjectAuthor = new ProjectCreateDTO{
@@ -178,7 +179,7 @@ public class ProjectRepositoryTests : IDisposable
         
         await _repository.CreateAsync(TestProjectAuthor);
 
-        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(), new List<int>(), new List<int>());
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
         var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
         var project3 = new ProjectDTO(3, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<int>(), new List<int>());
         
@@ -335,7 +336,7 @@ public class ProjectRepositoryTests : IDisposable
         var project2 = option2.Value;
 
         var projects = await _repository.ReadCollectionAsync(new List<int>(){1,2});
-        
+
         Assert.Collection(projects,
            project => 
            {

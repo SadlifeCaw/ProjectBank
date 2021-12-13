@@ -58,6 +58,9 @@ public class ProjectBankContext : DbContext
         //manually determine Bucket-Project relationship
         modelBuilder.Entity<ProjectBucket>().HasMany(b => b.Projects).WithMany(p => p.Buckets);
 
+        //manually determine Tag-Project relationship
+        modelBuilder.Entity<Project>().HasMany(p => p.Tags).WithMany(t => t.Projects);
+
         //do not delete project when author is deleted
         modelBuilder.Entity<User>()
             .HasOne(u => u.Institution)
