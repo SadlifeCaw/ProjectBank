@@ -29,10 +29,10 @@ public record ProjectDTO(
     //not required to allow value binding in razor
     ICollection<int> UserIDs,
 
-    //[Required]
+    //[Required] 
     ICollection<int> BucketIDs
 
-);
+) : ProjectKeyDTO(AuthorID, Title);
 
 public record ProjectCreateDTO
 {
