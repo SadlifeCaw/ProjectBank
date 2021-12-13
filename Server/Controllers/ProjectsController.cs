@@ -12,7 +12,6 @@ public class ProjectsController : ControllerBase
     public ProjectsController(ILogger<ProjectsController> logger, IProjectRepository repository)
     {
         _logger = logger;
-        //_repository = new TestProjectRepository().TestRepository;
         _repository = repository;
 
     }

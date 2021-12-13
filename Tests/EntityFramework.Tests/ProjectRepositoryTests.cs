@@ -4,6 +4,10 @@ public class ProjectRepositoryTests : IDisposable
 {
     private readonly ProjectBankContext _context;
     private readonly ProjectRepository _repository;
+
+    private ProjectCreateDTO TestProject;
+
+    private User TestUser;
     private bool disposed;
 
     public ProjectRepositoryTests()
@@ -22,11 +26,13 @@ public class ProjectRepositoryTests : IDisposable
         var ituInst = new Institution("ITU", "IT-Universitetet i København");
         var ituFaculty = new Faculty("Computer Science", "Computers and Science", ituInst);
         var Supervisor1 = new Supervisor("troe@itu.dk", ituInst, "Troels", "Jyde", new List<Project>(), ituFaculty, new List<Project>());
+        TestUser = new Supervisor("Jan@itu.dk", ituInst, "Jan", "Jensen", new List<Project>(), ituFaculty, new List<Project>());
+
         var Tag1 = new Tag("Programming");
         var Tag2 = new Tag("Testing");
 
         context.Categories.AddRange(ituInst, ituFaculty);
-        context.Users.AddRange(Supervisor1);
+        context.Users.AddRange(Supervisor1, TestUser);
         context.Tags.AddRange(Tag1, Tag2);
         
         context.Projects.AddRange(
@@ -38,16 +44,11 @@ public class ProjectRepositoryTests : IDisposable
         _context = context;
         _repository = new ProjectRepository(_context);
 
-    }
-
-     [Fact]
-    public async void CreateAsync_adds_a_the_new_project_to_the_repository() 
-    {
-        //Arrange
+        //Creating a CreateProjectDTO() to use for test
         var TestInstitution = new Institution("ITU", "IT-Universitetet i København");
         var TestFaculty = new Faculty("Computer Science", "Computers and Science", TestInstitution);
         var TestSupervisor = new Supervisor("troe@itu.dk", TestInstitution, "Troels", "Jyde", new List<Project>(), TestFaculty, new List<Project>());
-        var project = new ProjectCreateDTO{
+        TestProject = new ProjectCreateDTO{
             AuthorID = 1,
             Title = "Test Project",
             Description = "This is a test project",
@@ -58,18 +59,29 @@ public class ProjectRepositoryTests : IDisposable
             UserIDs = new List<int>(),
             BucketIDs = new List<int>()
         };
+    }
+
+     [Fact]
+    public async void CreateAsync_adds_a_the_new_project_to_the_repository() 
+    {
+        //Arrange
 
         //Act
-        var created = await _repository.CreateAsync(project);
+        var created = await _repository.CreateAsync(TestProject);
 
-        if(created.Item1 == Response.Conflict)
+        if(created.Item1 == Response.Conflict) 
         {
             Assert.False(true);
         }
 
         var i = created.Item2;
+        
+        var option = await _repository.ReadByIDAsync(3);
+        var created2 = option.Value;
 
         //Assert
+
+        //For response
         Assert.Equal(Response.Created, created.Item1);
         Assert.Equal(1, i.AuthorID);
         Assert.Equal(3, i.Id);
@@ -81,8 +93,35 @@ public class ProjectRepositoryTests : IDisposable
         Assert.Equal(new List<int>(){1}, i.TagIDs);
         Assert.Equal(new List<int>(), i.UserIDs);
         Assert.Equal(new List<int>(), i.BucketIDs);
+
+        //For database
+        Assert.Equal(1, created2.AuthorID);
+        Assert.Equal(3, created2.Id);
+        Assert.Equal("Test Project", created2.Title);
+        Assert.Equal("This is a test project",created2.Description);
+        Assert.Equal(ProjectStatus.PUBLIC, created2.Status);
+        Assert.Equal(3, created2.MaxStudents);
+        Assert.Equal(1, created2.CategoryID);
+        Assert.Equal(new List<int>(){1}, created2.TagIDs);
+        Assert.Equal(new List<int>(), created2.UserIDs);
+        Assert.Equal(new List<int>(), created2.BucketIDs);
     }
 
+    [Fact]
+    public async void CreateAsync_adding_exisisting_project_returns_Conflict() 
+    {
+        //Arrange
+
+        //Act
+        await _repository.CreateAsync(TestProject);
+        var created = await _repository.CreateAsync(TestProject);
+        
+
+        var i = created.Item2;
+
+        //Assert
+        Assert.Equal(Response.Conflict, created.Item1); 
+    }
     
     [Fact]
     public async void ReadAllAsync_returns_all_projects()
@@ -123,6 +162,324 @@ public class ProjectRepositoryTests : IDisposable
         );
     }
 
+   [Fact]
+    public async void ReadAllAuthoredAsync_returns_all_projects_from_chosen_author()
+    {
+        var TestProjectAuthor = new ProjectCreateDTO{
+            AuthorID = 2,
+            Title = "Test Project",
+            Description = "This is a test project",
+            Status = ProjectStatus.PUBLIC,
+            MaxStudents = 3,
+            CategoryID = 1,
+            TagIDs = new List<int>(){1},
+            UserIDs = new List<int>(),
+            BucketIDs = new List<int>()
+        };
+        
+        await _repository.CreateAsync(TestProjectAuthor);
+
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
+        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
+        var project3 = new ProjectDTO(3, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<int>(), new List<int>());
+        
+        var projects = await _repository.ReadAllAuthoredAsync(1);
+
+        Assert.Collection(projects,
+           project => 
+           {
+                Assert.Equal(project1.Id, project.Id);
+                Assert.Equal(project1.AuthorID, project.AuthorID);
+                Assert.Equal(project1.Title, project.Title);
+                Assert.Equal(project1.Description, project.Description);
+                Assert.Equal(project1.Status, project.Status);
+                Assert.Equal(project1.MaxStudents, project.MaxStudents);
+                Assert.Equal(project1.CategoryID, project.CategoryID);
+                Assert.Equal(project1.TagIDs, project.TagIDs);
+                Assert.Equal(project1.UserIDs, project.UserIDs);
+                Assert.Equal(project1.BucketIDs, project.BucketIDs);
+           },
+           project => 
+           {
+                Assert.Equal(project2.Id, project.Id);
+                Assert.Equal(project2.AuthorID, project.AuthorID);
+                Assert.Equal(project2.Title, project.Title);
+                Assert.Equal(project2.Description, project.Description);
+                Assert.Equal(project2.Status, project.Status);
+                Assert.Equal(project2.MaxStudents, project.MaxStudents);
+                Assert.Equal(project2.CategoryID, project.CategoryID);
+                Assert.Equal(project2.TagIDs, project.TagIDs);
+                Assert.Equal(project2.UserIDs, project.UserIDs);
+                Assert.Equal(project2.BucketIDs, project.BucketIDs);
+           }
+        );
+
+        var projects2 = await _repository.ReadAllAuthoredAsync(2);
+
+        Assert.Collection(projects2,
+           project => 
+           {
+                Assert.Equal(project3.Id, project.Id);
+                Assert.Equal(project3.AuthorID, project.AuthorID);
+                Assert.Equal(project3.Title, project.Title);
+                Assert.Equal(project3.Description, project.Description);
+                Assert.Equal(project3.Status, project.Status);
+                Assert.Equal(project3.MaxStudents, project.MaxStudents);
+                Assert.Equal(project3.CategoryID, project.CategoryID);
+                Assert.Equal(project3.TagIDs, project.TagIDs);
+                Assert.Equal(project3.UserIDs, project.UserIDs);
+                Assert.Equal(project3.BucketIDs, project.BucketIDs);
+           }
+        );
+    }
+
+    [Fact]
+    public async void ReadAllAuthoredAsync_returns_empty_list_if_provided_authorID_does_not_exist()
+    {
+        var Emptylist = await _repository.ReadAllAuthoredAsync(500);
+
+        Assert.Equal(new List<ProjectDTO>(), Emptylist);
+    }
+
+    [Fact]
+    public async void ReadAllByTagAsync_returns_all_projects_with_specified_tag()
+    {
+        var option1 = await _repository.ReadByIDAsync(1);
+        var project1 = option1.Value;
+        
+        var projects = await _repository.ReadAllByTagAsync(1);
+
+        Assert.Collection(projects,
+           project => 
+           {
+                Assert.Equal(project1.Id, project.Id);
+                Assert.Equal(project1.AuthorID, project.AuthorID);
+                Assert.Equal(project1.Title, project.Title);
+                Assert.Equal(project1.Description, project.Description);
+                Assert.Equal(project1.Status, project.Status);
+                Assert.Equal(project1.MaxStudents, project.MaxStudents);
+                Assert.Equal(project1.CategoryID, project.CategoryID);
+                Assert.Equal(project1.TagIDs, project.TagIDs);
+                Assert.Equal(project1.UserIDs, project.UserIDs);
+                Assert.Equal(project1.BucketIDs, project.BucketIDs);
+           }
+        );
+    }
+
+    [Fact]
+    public async void ReadAllByTagAsync_returns_empty_list_if_provided_tag_does_not_exist()
+    {
+        var Emptylist = await _repository.ReadAllByTagAsync(999);
+
+        Assert.Equal(new List<ProjectDTO>(), Emptylist);
+    }
+
+    [Fact]
+    public async void ReadAsync_provided_ID_exists_returns_Project()
+    {
+        var option = await _repository.ReadByIDAsync(2);
+        var project = option.Value;
+
+        Assert.Equal(2, project.Id);
+        Assert.Equal(1, project.AuthorID);
+        Assert.Equal("Worst Project", project.Title);
+        Assert.Equal("Don't join this project.", project.Description);
+        Assert.Equal(ProjectStatus.PUBLIC, project.Status);
+        Assert.Equal(5, project.MaxStudents);
+        Assert.Equal(2, project.CategoryID);
+        Assert.Equal(new List<int>(){2}, project.TagIDs);
+        Assert.Equal(new List<int>(), project.UserIDs);
+        Assert.Equal(new List<int>(), project.BucketIDs);
+    }
+
+    [Fact]
+    public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
+    {
+        var nonExisting = await _repository.ReadByIDAsync(8000);
+
+        Assert.Equal(null, nonExisting);
+    }
+
+    [Fact]
+    public async void ReadByKeyAsync_returns_project_with_specified_Title_and_authorID()
+    {
+        var project = await _repository.ReadByKeyAsync("Worst Project", 1);
+
+        Assert.Equal(2, project.Id);
+        Assert.Equal(1, project.AuthorID);
+        Assert.Equal("Worst Project", project.Title);
+        Assert.Equal("Don't join this project.", project.Description);
+        Assert.Equal(ProjectStatus.PUBLIC, project.Status);
+        Assert.Equal(5, project.MaxStudents);
+        Assert.Equal(2, project.CategoryID);
+        Assert.Equal(new List<int>(){2}, project.TagIDs);
+        Assert.Equal(new List<int>(), project.UserIDs);
+        Assert.Equal(new List<int>(), project.BucketIDs);
+    }
+
+    [Fact]
+    public async void ReadByKeyAsync_returns_null_if_provided_Title_and_authorID_combination_does_not_exist()
+    {
+        var NonExistingTitle = await _repository.ReadByKeyAsync("Not a Project", 1);
+        var NonExistingAuthor = await _repository.ReadByKeyAsync("Worst Project", 300);
+
+        Assert.Equal(null, NonExistingTitle);
+        Assert.Equal(null, NonExistingAuthor);
+    }
+
+    [Fact]
+    public async void ReadCollectionAsync_returns_list_with_projects_from_provided_projectIDs()
+    {
+        var option1 = await _repository.ReadByIDAsync(1);
+        var project1 = option1.Value;
+        var option2 = await _repository.ReadByIDAsync(2);
+        var project2 = option2.Value;
+
+        var projects = await _repository.ReadCollectionAsync(new List<int>(){1,2});
+
+        Assert.Collection(projects,
+           project => 
+           {
+                Assert.Equal(project1.Id, project.Id);
+                Assert.Equal(project1.AuthorID, project.AuthorID);
+                Assert.Equal(project1.Title, project.Title);
+                Assert.Equal(project1.Description, project.Description);
+                Assert.Equal(project1.Status, project.Status);
+                Assert.Equal(project1.MaxStudents, project.MaxStudents);
+                Assert.Equal(project1.CategoryID, project.CategoryID);
+                Assert.Equal(project1.TagIDs, project.TagIDs);
+                Assert.Equal(project1.UserIDs, project.UserIDs);
+                Assert.Equal(project1.BucketIDs, project.BucketIDs);
+           },
+           project => 
+           {
+                Assert.Equal(project2.Id, project.Id);
+                Assert.Equal(project2.AuthorID, project.AuthorID);
+                Assert.Equal(project2.Title, project.Title);
+                Assert.Equal(project2.Description, project.Description);
+                Assert.Equal(project2.Status, project.Status);
+                Assert.Equal(project2.MaxStudents, project.MaxStudents);
+                Assert.Equal(project2.CategoryID, project.CategoryID);
+                Assert.Equal(project2.TagIDs, project.TagIDs);
+                Assert.Equal(project2.UserIDs, project.UserIDs);
+                Assert.Equal(project2.BucketIDs, project.BucketIDs);
+           }
+        );
+    }
+
+    [Fact]
+    public async void ReadCollectionAsync_returns_emptylist_if_the_content_of_provided_list_of_IDs_does_not_exist()
+    {
+        var Emptylist = await _repository.ReadCollectionAsync(new List<int>(){998, 998});
+
+        Assert.Equal(new List<ProjectDTO>(){}, Emptylist);
+    }
+
+    [Fact]
+    public async void AddUserAsync_adds_specified_user_to_specified_project()
+    {
+        var Key = new ProjectKeyDTO(1, "Best Project");
+        var response = await _repository.AddUserAsync(Key, 2);
+
+        var option = await _repository.ReadByIDAsync(1);
+        var created = option.Value;
+
+        Assert.Equal(Response.Updated, response);
+        Assert.Equal(new List<int>(){2}, created.UserIDs);
+    }
+
+    [Fact]
+    public async void AddUserAsync_returns_NotFound_if_provided_userID_or_ProjectKey_does_not_exist()
+    {
+        var RealKey = new ProjectKeyDTO(1, "Best Project");
+        var FakeKey = new ProjectKeyDTO(1, "Shitty Project");
+        var ResponseFromNonExistingKey = await _repository.AddUserAsync(FakeKey, 2);
+        var ResponseFromNonExistingUserID = await _repository.AddUserAsync(RealKey, 999);
+
+        Assert.Equal(Response.NotFound, ResponseFromNonExistingKey);
+        Assert.Equal(Response.NotFound, ResponseFromNonExistingUserID);
+    }
+
+    [Fact]
+    public async void RemoveUserAsync_removes_specified_user_from_specified_project()
+    {
+        var Key = new ProjectKeyDTO(1, "Best Project");
+        var AddResponse = await _repository.AddUserAsync(Key, 2);
+        Assert.Equal(Response.Updated, AddResponse);
+        
+        var response = await _repository.RemoveUserAsync(Key, 2);
+        var option = await _repository.ReadByIDAsync(1);
+        var created = option.Value;
+
+        Assert.Equal(Response.Updated, response);
+        Assert.Equal(new List<int>(){}, created.UserIDs);
+
+    }
+
+    [Fact]
+    public async void RemoveUserAsync_returns_NotFound_if_provided_userID_or_ProjectKey_does_not_exist()
+    {
+        var RealKey = new ProjectKeyDTO(1, "Best Project");
+        var FakeKey = new ProjectKeyDTO(1, "Shitty Project");
+        var ResponseFromNonExistingKey = await _repository.RemoveUserAsync(FakeKey, 2);
+        var ResponseFromNonExistingUserID = await _repository.RemoveUserAsync(RealKey, 999);
+
+        Assert.Equal(Response.NotFound, ResponseFromNonExistingKey);
+        Assert.Equal(Response.NotFound, ResponseFromNonExistingUserID);
+    }   
+
+    [Fact]
+    public async void UpdateAsync_updates_project_succesfully_given_that_provided_ProjectUpdateDTO_is_valid()
+    {
+        //Arrange
+        var UpdatedProject = new ProjectUpdateDTO
+        {
+           Id = 1,
+           AuthorID = 1,
+           Title = "Best Updated Project",
+           Description = "Simply the updated project",
+           Status = ProjectStatus.PUBLIC,
+           MaxStudents = 3,
+           CategoryID = 2,
+           TagIDs = new List<int>(){1},
+           UserIDs = new List<int>(),
+           BucketIDs = new List<int>()
+        };
+        
+        //Act
+        var updated = await _repository.UpdateAsync(UpdatedProject);
+        var option = await _repository.ReadByIDAsync(1);
+        var actual = option.Value;
+
+        //Assert.Equa
+        Assert.Equal(Response.Updated, updated);
+        Assert.Equal("Best Updated Project", actual.Title);
+        Assert.Equal("Simply the updated project", actual.Description);
+        Assert.Equal(3, actual.MaxStudents);
+    }
+
+    [Fact]
+    public async void UpdateAsync_returns_NotFound_if_project_does_not_exist()
+    {
+        var NonExistingID = new ProjectUpdateDTO{Id = 999, AuthorID = 1, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+        var NonExistingAuthor = new ProjectUpdateDTO{Id = 1, AuthorID = 999, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+
+        var CreatedNonExistingID = await _repository.UpdateAsync(NonExistingID);
+        var CreatedNonExistingAuthor = await _repository.UpdateAsync(NonExistingAuthor);
+
+        Assert.Equal(Response.NotFound, CreatedNonExistingID);
+        Assert.Equal(Response.NotFound, CreatedNonExistingAuthor);
+    } 
+
+    [Fact]
+    public async void UpdateAsync_returns_NotFound_if_provided_category_does_not_exist()
+    {
+        var NonExistingCategory = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 999, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+
+        var CreatedNonExistingCategory = await _repository.UpdateAsync(NonExistingCategory);
+
+        Assert.Equal(Response.NotFound, CreatedNonExistingCategory);
+    }
 
     protected virtual void Dispose(bool disposing)
     {
