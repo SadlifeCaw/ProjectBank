@@ -30,7 +30,6 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

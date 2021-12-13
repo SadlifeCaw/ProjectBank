@@ -97,10 +97,28 @@ public class UsersControllers
         var controller = new UsersController(logger.Object, repository.Object);
 
         var user = new StudentDTO(1, "jens@gmail.com", "Jens", "Jensen", "SWU2020", "ITU", new List<int>(), new List<int>());
-        repository.Setup(m => m.ReadByID(1)).ReturnsAsync(user);
+        repository.Setup(m => m.ReadStudent(1)).ReturnsAsync(user);
 
         // Act
         var response = await controller.GetStudent(1);
+
+        // Assert
+        Assert.Equal(user, response.Value);
+    }
+
+    [Fact]
+    public async Task Get_given_Supervisor_existing_returns_given()
+    {
+        //Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        var user = new SupervisorDTO(1, "jens@gmail.com", "Jens", "Jensen", "Computer Science", "ITU", new List<int>(), new List<int>());
+        repository.Setup(m => m.ReadSupervisor(1)).ReturnsAsync(user);
+
+        // Act
+        var response = await controller.GetSupervisor(1);
 
         // Assert
         Assert.Equal(user, response.Value);
