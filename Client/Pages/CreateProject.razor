@@ -5,9 +5,11 @@
 
 <PageTitle>Create Project</PageTitle>
 
-<h1>Create Project</h1>
+<head>
+    <link rel="stylesheet" href="Dashboard.razor.css">
+</head>
 
-<hr />
+<h1>Create Project</h1>
 
 <EditForm Model="@project" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -20,6 +22,34 @@
         <label for="Description">Description</label>
         <InputTextArea id="Description" @bind-Value="project.Description" class="form-control" rows="7"/>
     </div>
+
+    <div class="form-group">
+    <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
+        <div class="TagContainer">
+            <ul>
+                @foreach (var name in AllTags)
+                {
+                    <li>
+                        @name;
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="NewTagContainer">
+            <div class="row w-50">
+                <div class="col-7">
+                    <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
+                </div>
+                
+                <div class="col-4">
+                    <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="Buffer_20"></div>
+
     <div class="form-group">
         <div>Project visibility</div>
         <InputRadioGroup @bind-Value="project.Status">
@@ -38,10 +68,13 @@
     </div>
 </EditForm>
 
-
-
 @code{
     private ProjectCreateDTO project = new();
+    private TagGenerator tagGenerator = new TagGenerator();
+    private ISet<string> AllTags = new HashSet<string>();
+    private ISet<string> CreatedTags = new HashSet<string>();
+    private string NewTag = string.Empty;
+    private string description = string.Empty;
 
     private async Task HandleValidSubmit()
     {   
@@ -67,17 +100,34 @@
         NavigationManager.NavigateTo(uri);
     }
 
-    public IEnumerable<String> getTags(){
-        var text = "Hej med dig det er mig";
-        TagGenerator tagGenerator = new TagGenerator();
-        List<String> tags = new List<string>{"hej", "at", "Skriver", "det", "er"};
-        tagGenerator.Add(tags);
+    public async void GetTags()
+    {
+        tagGenerator = new TagGenerator();
+
+        var TagDTOs = await Http.GetFromJsonAsync<ICollection<TagDTO>>($"api/Tag");
+        var TagNames = TagDTOs.Select(t => t.Name).ToList();
+
+        tagGenerator.Add(TagNames);
         tagGenerator.Build();
-        return tagGenerator.Find(text);
+
+        AllTags = tagGenerator.Find(project.Description).ToHashSet();
+        AllTags.UnionWith(CreatedTags);
+
+        StateHasChanged();
     }
 
     public ICollection<int>? ConvertToTagIDs(IEnumerable<string> TagNames){
         return new List<int>();
+    }
+
+    private void AddTagToList()
+    {
+        if(NewTag != "")
+        {
+            CreatedTags.Add(NewTag);
+            AllTags.UnionWith(CreatedTags);
+            StateHasChanged();
+        }
     }
     
     /*
