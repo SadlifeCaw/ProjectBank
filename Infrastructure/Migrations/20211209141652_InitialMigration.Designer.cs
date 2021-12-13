@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectBank.Infrastructure;
 
@@ -11,9 +12,10 @@ using ProjectBank.Infrastructure;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectBankContext))]
-    partial class ProjectBankContextModelSnapshot : ModelSnapshot
+    [Migration("20211209141652_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,10 +164,15 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Tags");
                 });
@@ -225,21 +232,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ProjectsId");
 
                     b.ToTable("ProjectProjectBucket");
-                });
-
-            modelBuilder.Entity("ProjectTag", b =>
-                {
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectsId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("ProjectTag");
                 });
 
             modelBuilder.Entity("ProjectUser", b =>
@@ -384,6 +376,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ProjectBank.Infrastructure.Tag", b =>
+                {
+                    b.HasOne("ProjectBank.Infrastructure.Project", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("ProjectId");
+                });
+
             modelBuilder.Entity("ProjectBank.Infrastructure.User", b =>
                 {
                     b.HasOne("ProjectBank.Infrastructure.Institution", "Institution")
@@ -406,21 +405,6 @@ namespace Infrastructure.Migrations
                     b.HasOne("ProjectBank.Infrastructure.Project", null)
                         .WithMany()
                         .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProjectTag", b =>
-                {
-                    b.HasOne("ProjectBank.Infrastructure.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjectBank.Infrastructure.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -530,6 +514,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("ProjectBank.Infrastructure.Project", b =>
                 {
                     b.Navigation("Collaborators");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("ProjectBank.Infrastructure.Institution", b =>

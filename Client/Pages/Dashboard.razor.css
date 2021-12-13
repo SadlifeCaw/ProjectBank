@@ -1,23 +1,203 @@
-h1{
+
+.ProjectHeader {
+    height: auto;
+    min-height: 80px;
+    width: 100%;
+
+    border-bottom: 1px solid #153243;
+
+    position: relative;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.ProjectHeader .ProjectTitle {
     font-size: 60px;
-    font-family: 'Arial';
+
+    height: auto;
+    width: 50%;
 }
 
-h2{
-    font-size: 35px;
-    font-family: 'Arial';
+.ProjectHeader .Status {
+    position: absolute;
+    right: 0;
+    top: 45%;
+    transform: translateY(-50%);
+
+    width: 100px;
+    height: 50px;
+
+    border-radius: 2mm;
+
+    box-shadow: rgb(38, 57, 77) 0px 10px 10px -10px;
 }
 
-h3{
-    font-size: 30px;
-    font-family: 'Arial';
+.Status p {
+    position: absolute;
+    left: 28%;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
 }
 
-p{
+.Status.Public {
+    background-color: #5bb105;
+    color: white;
+}
+
+.Status.Deleted {
+    background-color: red;
+    color: white;
+}
+
+.Status.Draft {
+    background-color: gray;
+    color: white;
+}
+
+.AuxInfoContainer {
+    border-left: 4px solid #153243;
+}
+
+.AuxInfoContainer .row {
+    height: 110px;
+    width: 100%;
+    padding-bottom: 20px;
+    /*border: 1px dashed red;*/
+
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.AuxInfoContainer .row h1 {
     font-size: 20px;
-    font-family: 'Calibri';
 }
 
-#extendableDiv{
-    background-color: #c4c4c4;
+.DescriptionDisplay {
+    height: 100%; 
+    margin-top: 10px;
+}
+
+.Description {
+   position: relative;
+   height: 100%;
+}
+
+.DescriptionTitle {
+    color:rgb(38, 57, 77);
+    font-size: 20px;
+}
+
+.DescriptionTitle p {
+    
+}
+
+#AuthorContainer {  
+    font-weight: 600;
+}
+
+.DescriptionDisplay #ProjectDescription {
+    width: 100%;
+    height: 90%;
+    margin: 0 auto 0 auto;
+
+    border-radius: 2mm;
+    border: none;
+
+    resize: none;
+}
+
+.CardContainer ul {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.CardContainer ul li {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    min-width: 70px;
+    width: auto;
+    min-height: 20px;
+    text-align: center;
+
+    padding: 5px 10px 5px 10px;
+
+    text-align: center;
+    float: left;
+    display: block;
+
+    flex: 0 0 auto;
+
+    background-color: #d4d8cd;
+    color: black;
+    border-radius: 5mm;
+}
+
+.RelatedProjectsContainer {
+    width: 100%;
+    height: auto;
+}
+
+
+.Buffer_20 {
+    width: 100%;
+    height: 20px;
+}
+
+.Buffer_40 {
+    width: 100%;
+    height: 40px;
+}
+
+.ContractButton {
+    color: white;
+    
+    position: relative;
+    left: 0;
+    bottom: 0;
+}
+
+.CustomButton {
+    background-color:#284B63 !important;
+    color: white !important;
+}
+
+.InviteButton {
+    background-color:#284B63 !important;
+    color: white !important;
+
+    width: 100%;
+
+    float: right;
+}
+
+
+.ProjectInfoDisplay {
+    height: auto;
+    width: 100%;
+    margin-left: 5px;
+}
+
+@media only screen and (max-width: 1000px) {
+    .DescriptionDisplay #ProjectDescription {
+        height: 300px;
+    }
+
+    .AuxInfoContainer {
+        width: 100%;
+        margin: 0 0 0 0;
+
+        border: none;
+    }
+
+    .ProjectHeader .ProjectTitle {
+        font-size: 30px;
+    }
+
+    .ProjectInfoDisplay {
+        height: auto;
+    }
 }

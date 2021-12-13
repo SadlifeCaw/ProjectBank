@@ -1,4 +1,4 @@
-@page "/dashboard"
+@page "/Projects/{projectID:int}"
 @using ProjectBank.Infrastructure
 @using ProjectBank.Core
 @using ProjectBank.Core.EF.DTO
@@ -13,123 +13,172 @@
     <link rel="stylesheet" href="Dashboard.razor.css">
 </head>
 
-<h1>@title</h1>
-
-<div id="extendableDiv">
-    <h2>Description</h2>
-    <textarea>@Description</textarea>
-    <button @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>
-</div>
-
-<div>
-    <h2>Info</h2>
-    <div>
-        <h3>Target group</h3>
-        <textarea>Target group here..</textarea>
-    </div>
-    <div>
-        <h3>Status</h3>
-        <textarea>Status here...</textarea>
-    </div>
-    <div>
-        <h3>Tags</h3>
-        <textarea>Tags...</textarea>
+<div class="ProjectHeader">
+    <h1 class="ProjectTitle">@title</h1>
+    <!--Idea is to only show Status to the author of the project-->
+    <div class="Status Public">
+        <p>Public</p>
     </div>
 </div>
 
-<div>
-    <h2>Participants</h2>
-    <div>
-        <h3>Supervisors</h3>
-        <h5>Supervisor</h5>
-        <textarea>Supervisors...</textarea>
+<div class="Buffer_20"></div>   
+
+
+<div class="row ProjectInfoDisplay">
+  <div class="col-md-8 DescriptionContainer">
+    <div class="DescriptionDisplay">
         <div class="row">
-            <div class="column">
-                <label for="inputEmail" class="form-label">Invite a supervisor</label>
-                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-            </div>
-            <div class="column">
-                <button>Invite</button>
-            </div>
+            
+        </div>
+        <div class="DescriptionTitle">
+            <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
+        </div>
+        <div class="Description">
+            <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
+            <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
         </div>
     </div>
-    <div>
-        <h3>Students</h3>
-        <textarea>Students</textarea>
-        <textarea>@ProjectId</textarea>
-    </div>
+  </div>
+  <div class="col-6 col-md-4 AuxInfoContainer">
+      <div class="row TargetGroup">
+          <h1>Target Group</h1>
+          <div class="TargetGroupContainer">
+              <p>@TargetGroup</p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="row">
+              <div class="col-8">
+                <h1>Collaborators</h1>
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn btn-sm InviteButton" @onclick="() => inviteModal.Open()">Invite</button>  
+              </div>
+          </div>
+          <div class="CardContainer">
+              <ul>
+                  <li>Jens</li>
+                  <li>Joe Biden</li>
+              </ul>
+          </div>
+      </div>
+      <div class="row">
+          <div class="row">
+              <div class="col-8">
+                <h1>Students</h1>
+              </div>
+              <div class="col-4">
+                <button type="button" class="btn btn-sm InviteButton"  @onclick="() => applyModal.Open()">Apply</button>  
+              </div>
+          </div>
+          <div class="CardContainer">
+              <ul>
+                  <li>Student 1</li>
+                  <li>Student 2</li>
+                  <li>Donald J. Trump</li>
+              </ul>
+          </div>
+      </div>
+      <div class="row">
+          <h1>Project Tags</h1>
+          <div class="CardContainer">
+            <ul>
+                @foreach (var element in tags)
+                {
+                    <li>
+                        @element.Name;
+                    </li>
+                }
+            </ul>
+          </div>
+      </div>
+  </div>
 </div>
 
-<div>
+<Modal @ref="inviteModal">
+    <Title>Invite Supervisor</Title>
+    <Body>
+        <p>
+            Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
+        </p>
+        <div class="form-group">
+            <label for="InviteFormGroup">Email Address: </label>
+            <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com">
+        </div>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
+    </Footer>
+</Modal>
+
+<Modal @ref="applyModal">
+    <Title>Apply for project</Title>
+    <Body>
+        <p>
+            Sorry, this functionality has not been implemented yet!
+        </p>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
+    </Footer>
+</Modal>
+
+<div class="Buffer_40"></div>
+
+<div class="RelatedProjectsContainer">
     <h2>Related projects</h2>
-    <button>Tap to see within target group</button>
-    @if (project == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-            </tr>
-        </thead>
-        <tbody>    
-                <tr>
-                    <td>@project[0].Id</td>
-                </tr>
-           
-        </tbody>
-    </table>
-}
+    <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
 </div>
 
 @code {
-    string title = "your mom";
+    string title = "Loading title...";
     string empty = string.Empty;
-    string Description = "no description";
-    string description = string.Empty;
-    string ExpandDescription = "Contract";
+    string Description = "Loading description...";
+    int AuthorName = -1;
+    int TargetGroup = -1;
     
     private IProject[]? projects;
     
     [Parameter]
     public int? ProjectId {get; set;}
 
-    ProjectDTO[] project;
+    private ProjectDTO project;
+
+    private UserDTO author;
+
+    private List<TagDTO> tags = new List<TagDTO>();
+
+    private Modal inviteModal { get; set; }
+
+    private Modal applyModal { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            string Projectstr = "Hah work";
-            //ProjectId = 1;
-            project = await Http.GetFromJsonAsync<ProjectDTO[]>($"Project/Get/{Projectstr}");
+            project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
+            this.tags = await GetTagDTOs(project.TagIDs).ToListAsync();
         }
         catch (Exception exception)
         {
             Console.WriteLine(":((( {0}",exception.Message);
+            Console.WriteLine("What the fuck?");
             //exception.Redirect();
         }
-        this.description = project[0].Description;
-        ExpandedDescription(false);
+        this.Description = project.Description;
+        this.title = project.Title;
+        this.TargetGroup = project.CategoryID;
+        this.AuthorName = project.AuthorID;
     }
 
-    public void ExpandedDescription(bool IsExpanded){
-        Console.WriteLine("pressed the button");
-        if(IsExpanded) {
-            this.Description = description;
-            this.ExpandDescription = "Contract";
+    private async IAsyncEnumerable<TagDTO> GetTagDTOs(ICollection<int> tagIds) 
+    {
+        Console.WriteLine("Looking through tagIDs");
+        foreach (var tagId in tagIds)
+        {
+            //dsadsadas
+            Console.Write("Fetching tag with ID: " + tagId);
+            yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{tagId}");
         }
-        else {
-            this.Description = description.Substring(0,3) + "...";
-            this.ExpandDescription = "Expand";
-        }
-    }
-
-    public void ExpandedDescription(){
-        if(this.ExpandDescription == "Expand") ExpandedDescription(true);
-        else ExpandedDescription(false);
     }
 }
