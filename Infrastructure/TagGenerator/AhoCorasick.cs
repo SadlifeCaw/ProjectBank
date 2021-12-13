@@ -102,6 +102,7 @@ namespace AhoCorasick;
         //Find all added keywords in the text
         public IEnumerable<TValue> Find(IEnumerable<T> text)
         {
+            text = text.ToHashSet();
             var node = root;
 
             foreach (T c in text)

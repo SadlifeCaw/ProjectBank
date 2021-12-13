@@ -37,7 +37,7 @@ public record ProjectDTO(
 public record ProjectCreateDTO
 {
     [Required]
-    public int AuthorID {get; init;}
+    public int AuthorID {get; set;}
 
     [Required, StringLength(50)]
     public string? Title {get; set;}

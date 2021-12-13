@@ -1,5 +1,6 @@
 @page "/projects/create"
 @using ProjectBank.Infrastructure.Generator;
+@using ProjectBank.Core;
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -78,6 +79,9 @@
 
     private async Task HandleValidSubmit()
     {   
+
+        project.TagIDs = new List<int>();
+
         foreach (var item in CreatedTags)
         {
             //post user generated tag
@@ -92,7 +96,14 @@
             }
         }
 
-        var response = await Http.PostAsJsonAsync("Projects/Post", project);
+        project.UserIDs = new List<int>();
+        project.AuthorID = 1;
+        project.MaxStudents = 5;
+        project.BucketIDs = new List<int>();
+        project.CategoryID = 3;
+        project.Status = ProjectStatus.PUBLIC;
+
+        var response = await Http.PostAsJsonAsync("api/Projects", project);
 
         if (response.IsSuccessStatusCode)
         {   

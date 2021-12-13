@@ -45,7 +45,6 @@ public class TagController : ControllerBase
     public async Task<IActionResult> Post(TagCreateDTO tag)
     {
         var created = (await _repository.CreateAsync(tag)).Item2;
-
         return CreatedAtAction(nameof(Get), new { created.Id }, created);
     }
 }
