@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
@@ -8,6 +8,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>133c8e75-6c4a-4262-ac1f-2e9a64df6c59</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
