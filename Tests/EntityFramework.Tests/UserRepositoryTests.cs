@@ -134,7 +134,7 @@ public class UserRepositoryTest : IDisposable
     [Fact]
     public async void ReadByID_provided_ID_exists_returns_User()
     {
-        var user = await _repository.ReadByID(1);
+        var user = (await _repository.ReadByID(1)).Value;
 
         Assert.Equal(1, user.Id);
         Assert.Equal("bob@email.com", user.Email);

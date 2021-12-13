@@ -31,6 +31,7 @@ else
             <tr>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Id</th>
                 <th></th>
             </tr>
         </thead>
@@ -39,6 +40,7 @@ else
             {
                 <tr>
                     <td>@project.Title</td>
+                    <td>@project.Description</td>
                     <td>@project.Id</td>
                     <td><button class="btn btn-info" @onclick="@(() => View(project))">View</button></td>
                 </tr>
@@ -209,7 +211,7 @@ else
     {
         try
         {
-            projects = await Http.GetFromJsonAsync<ProjectDTO[]>("Projects");
+            projects = await Http.GetFromJsonAsync<ProjectDTO[]>($"api/Projects");
         } catch(Exception e)
         {
             Console.WriteLine(e.Message);
