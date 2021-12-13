@@ -10,96 +10,84 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         private int groupSize = 2;
         private int k = 6;
         public int NumberOfGroups;
-        public Dictionary<string, Bucket<Tagable>> Map;
+        //public Dictionary<string, Bucket<Tagable>> Map;
+        public IBucketRepository _bucketRepository;
+        public IProjectRepository _projectRepository;
 
-        public LocalitySensitiveHashTable()
+
+        public LocalitySensitiveHashTable(IBucketRepository repository, IProjectRepository projectRepository)
         {
             NumberOfGroups = k / groupSize;
-            Map = new Dictionary<string, Bucket<Tagable>>();
+            //Map = new Dictionary<string, Bucket<Tagable>>();
+            _bucketRepository = repository;
+            _projectRepository = projectRepository;
         }
 
-        private void AddSignature(string bucketString)
+        private async Task<(Response, BucketDTO)> AddSignature(string bucketString)
         {
-            Map[bucketString] = new Bucket<Tagable>();
+           var dto = new BucketCreateDTO{ProjectIds = new HashSet<int>(),Key = bucketString};
+           var task = await _bucketRepository.CreateAsync(dto);
+           return task;
+            //Map[bucketString] = new Bucket<Tagable>();
         }
 
-        public void Insert(Tagable tagable)
+        public async Task<Response> Insert(Tagable tagable)
         {
-            if (tagable.Tags.Count() == 0) { throw new ArgumentException("Cannot insert project without tags"); }
+            if (tagable.Tags.Count() == 0) { return Response.Conflict; }
             var bucketStrings = HashesToBucketString(tagable.Signature);
             foreach (string bucketString in bucketStrings)
             {
-                if (!Map.ContainsKey(bucketString)) AddSignature(bucketString);
-                if (!Map[bucketString].Projects.Add(tagable)) { throw new ArgumentException("Project already inserted"); }
-            }
-        }
-
-        public void Update(Tagable tagable)
-        {
-            Delete(tagable);
-            //tagable.Tags = tags;
-            Insert(tagable);
-        }
-
-        public void Delete(Tagable tagable)
-        {
-            //if()
-            var bucketStrings = HashesToBucketString(tagable.Signature);
-            foreach (string bucketString in bucketStrings)
-            {
-                if (!Map.ContainsKey(bucketString) || !Map[bucketString].Projects.Remove(tagable)) throw new ArgumentException("Project does not exist in the table.");
-            }
-        }
-
-
-        public IEnumerable<Tagable> Get(Tagable tagable)
-        {
-            HashSet<Tagable> set = new HashSet<Tagable>();
-            var bucketStrings = HashesToBucketString(tagable.Signature);
-            foreach (string bucketString in bucketStrings)
-            {
-                foreach (Tagable relatedTagable in Map[bucketString].Projects)
+                var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(bucketString);
+                if (bucketdto == null) bucketdto = (await AddSignature(bucketString)).Item2;
+                if (bucketdto.ProjectIds.Contains(tagable.Id)) {
+                    return Response.Conflict;
+                    //throw new ArgumentException("Project already inserted");
+                } else 
                 {
-                    if (!relatedTagable.Equals(tagable))
+                    var response = await _bucketRepository.AddProjectAsync(bucketdto.Id, tagable.Id);
+                }
+            }
+            return Response.Created;
+        }
+
+        public async Task<Response> Update(Tagable tagable)
+        {
+            var deleted = await Delete(tagable);
+            //tagable.Tags = tags;
+            var inserted = await Insert(tagable);
+            if(deleted == Response.Deleted && inserted == Response.Created) return Response.Updated;
+            else return Response.Conflict;
+        }
+
+        public async Task<Response> Delete(Tagable tagable)
+        {
+            var bucketStrings = HashesToBucketString(tagable.Signature);
+            foreach (string bucketString in bucketStrings)
+            {
+                var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(bucketString);
+                if(bucketdto != null && bucketdto.ProjectIds.Contains(tagable.Id)) await _bucketRepository.RemoveProjectAsync(bucketdto.Id, tagable.Id);
+                else return Response.Conflict;
+            }
+            return Response.Deleted;
+        }
+
+
+        public async Task<IEnumerable<int>> Get(Tagable tagable)
+        {
+            HashSet<int> set = new HashSet<int>();
+            var bucketStrings = HashesToBucketString(tagable.Signature);
+            foreach (string bucketString in bucketStrings)
+            {
+                var bucket = (await _bucketRepository.ReadBucketByKeyAsync(bucketString));
+                foreach (int id in bucket.ProjectIds)
+                {
+                    if (id != tagable.Id)
                     {
-                        set.Add(relatedTagable);
+                        set.Add(id);
                     }
                 }
             }
             return set.AsEnumerable();
-        }
-
-        public IReadOnlyCollection<Tagable> GetSorted(Tagable tagable)
-        {
-            var NotSortedTagables = Get(tagable);
-
-            List<(float, Tagable)> jaccardList = new List<(float, Tagable)>();
-
-            foreach (Tagable project in NotSortedTagables)
-            {
-                var tags = new HashSet<Tag>(project.Tags);
-                int inCommon = 0;
-
-                foreach (Tag tag in tagable.Tags)
-                {
-                    if (tags.Contains(tag))
-                    {
-                        inCommon++;
-                    }
-                }
-
-                int total = project.Tags.Count + tagable.Tags.Count - inCommon;
-                float jaccardindex = inCommon / (float)total;
-
-                jaccardList.Add((jaccardindex, project));
-            }
-            jaccardList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
-            List<Tagable> SortedTagables = new List<Tagable>();
-            foreach ((float, Tagable) tagger in jaccardList)
-            {
-                SortedTagables.Add(tagger.Item2);
-            }
-            return SortedTagables.AsReadOnly();
         }
 
         public string[] HashesToBucketString(Signature signature)
