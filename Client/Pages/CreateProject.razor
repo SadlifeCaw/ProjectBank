@@ -78,13 +78,24 @@
 
     private async Task HandleValidSubmit()
     {   
+        foreach (var item in CreatedTags)
+        {
+            //post user generated tag
+            TagCreateDTO newTag = new TagCreateDTO{Name = item};
+            var tagResponse = await Http.PostAsJsonAsync("api/Tag", newTag);
+
+            //add to project to post
+            if (tagResponse.IsSuccessStatusCode)
+            {
+                var created = await tagResponse.Content.ReadFromJsonAsync<TagDTO>();
+                project.TagIDs.Add(created.Id);
+            }
+        }
 
         var response = await Http.PostAsJsonAsync("Projects/Post", project);
 
         if (response.IsSuccessStatusCode)
         {   
-            
-            
             var created = await response.Content.ReadFromJsonAsync<ProjectDTO>();
 
             var uri = $"{NavigationManager.BaseUri}projects/{created?.Id}";

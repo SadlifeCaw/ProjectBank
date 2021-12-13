@@ -37,4 +37,15 @@ public class TagController : ControllerBase
     [HttpGet]
     public async Task<IReadOnlyCollection<TagDTO>> Get()
         => await _repository.ReadAllAsync();
+
+
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(TagDTO), 201)]
+    [HttpPost]
+    public async Task<IActionResult> Post(TagCreateDTO tag)
+    {
+        var created = (await _repository.CreateAsync(tag)).Item2;
+
+        return CreatedAtAction(nameof(Get), new { created.Id }, created);
+    }
 }
