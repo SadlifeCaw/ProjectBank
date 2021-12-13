@@ -119,7 +119,7 @@ public class ProjectRepositoryTests : IDisposable
         var i = created.Item2;
 
         //Assert
-        Assert.Equal(Response.Conflict, created.Item1);
+        Assert.Equal(Response.Conflict, created.Item1); 
     }
     
     [Fact]
