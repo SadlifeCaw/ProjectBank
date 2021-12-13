@@ -60,17 +60,18 @@
 }
 
 .AuxInfoContainer .row {
-    height: 110px;
+    height: auto;
     width: 100%;
     padding-bottom: 20px;
     /*border: 1px dashed red;*/
 
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .AuxInfoContainer .row h1 {
     font-size: 20px;
+    float: left;
 }
 
 .DescriptionDisplay {
@@ -107,12 +108,19 @@
     resize: none;
 }
 
+.CardContainer {
+    max-height: 80px;
+
+    overflow-x: hidden;
+    overflow-y: auto;   
+}
+
 .CardContainer ul {
     margin: 0 0 0 0;
     padding: 0 0 0 0;
 
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .CardContainer ul li {
@@ -165,11 +173,11 @@
     color: white !important;
 }
 
-.InviteButton {
+.ModalButton {
     background-color:#284B63 !important;
     color: white !important;
 
-    width: 100%;
+    width: 100% !important;
 
     float: right;
 }
