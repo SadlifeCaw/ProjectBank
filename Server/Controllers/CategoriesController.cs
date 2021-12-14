@@ -17,6 +17,11 @@ public class CategoriesController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpGet]
+    public async Task<IReadOnlyCollection<CategoryDTO>> Get()
+        => await _repository.Read();
+
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(CategoryDTO), StatusCodes.Status200OK)]
     [HttpGet("{id}")]
