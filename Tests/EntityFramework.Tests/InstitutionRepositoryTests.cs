@@ -73,7 +73,7 @@ public class InstitutionRepositoryTest : IDisposable
     {
         var nonExisting = await _repository.ReadByIDAsync(42);
 
-        Assert.Equal(null, nonExisting);
+        Assert.Null(nonExisting);
     }
 
     [Fact]
