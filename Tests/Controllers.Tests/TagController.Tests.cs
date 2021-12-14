@@ -34,4 +34,25 @@ public class TagControllerTests
         // Assert
         Assert.Equal(tag, response.Value);
     }
+
+    [Fact]
+    public async Task Post_Adds_Tag()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<TagController>>();
+        var repository = new Mock<ITagRepository>();
+        var toCreate = new TagCreateDTO();
+        var created = new TagDTO(1, "Java");
+
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
+        var controller = new TagController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate) as CreatedAtActionResult;
+
+        // Assert
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
+    }
 }

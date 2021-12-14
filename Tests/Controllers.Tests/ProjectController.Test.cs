@@ -37,24 +37,28 @@ public class ProjectControllersTests
         Assert.IsType<ConflictResult>(response);
     }
 
+    /* Testing code mainly taken from Rasmus Lybæk
+    *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+    */
     [Fact]
     public async Task Post_Adds_Project()
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
-        //var project = new ProjectUpdateDTO{Id = 1, };
-        var project = new ProjectCreateDTO{AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.CreateAsync(project)).ReturnsAsync((Response.Created, default(ProjectDTO)));
+        var toCreate = new ProjectCreateDTO();
+        var created = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<int>{2}, new List<int>{1, 2, 3}
+        );
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Post(project);
+        var result = await controller.Post(toCreate) as CreatedAtActionResult;
 
         // Assert
-        Assert.IsType<CreatedAtActionResult>(response);
-        //Assert.Equal((await controller.Get(1)).ToString(), project.ToString());
-        //Assert.Equal(response.Item2, project);
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 
 
