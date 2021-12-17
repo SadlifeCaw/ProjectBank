@@ -11,7 +11,7 @@ using ProjectBank.Core;
 using System.Collections.Generic;
 
 
-namespace ProjectBank.Tests.Controllers.Tests;
+namespace ProjectBank.Tests.Controllers.Tests{}
 
 public class ProjectControllersTests
 {
@@ -44,7 +44,7 @@ public class ProjectControllersTests
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Put(1, project);
+        var response = await controller.Put(project.Id, project);
 
         // Assert
         Assert.IsType<ConflictResult>(response);
@@ -66,28 +66,45 @@ public class ProjectControllersTests
 
         // Assert
         Assert.IsType<CreatedAtActionResult>(response);
-        //Assert.Equal((await controller.Get(1)).ToString(), project.ToString());
+        //Assert.Equal(1, (await controller.Get()).Count);
+        //Assert.Equal(project.ToString(), (await controller.Get()).Count);
         //Assert.Equal(response.Item2, project);
     }
 
-
-/*
     [Fact]
-    public async Task Delete_given_non_existing_returns_NotFound()
+    public async Task Put_updates_Project()
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
+        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.DeleteAsync(42)).ReturnsAsync(Status.NotFound);
+        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.Updated);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Delete(42);
+        var response = await controller.Put(project.Id, project);
+
+        // Assert
+        Assert.IsType<NoContentResult>(response);
+    }
+
+
+     [Fact]
+    public async Task Put_given_unknown_id_returns_NotFound()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<ProjectsController>>();
+        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
+        var repository = new Mock<IProjectRepository>();
+        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.NotFound);
+        var controller = new ProjectsController(logger.Object, repository.Object);
+
+        // Act
+        var response = await controller.Put(project.Id, project);
 
         // Assert
         Assert.IsType<NotFoundResult>(response);
     }
-    */
 
 
     
@@ -117,16 +134,13 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync(created);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var result = await controller.Post(toCreate) as CreatedAtActionResult;
-
         // Assert
         Assert.Equal(created, result?.Value);
         Assert.Equal("Get", result?.ActionName);
         Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
-
     [Fact]
     public async Task Get_returns_Characters_from_repo()
     {
@@ -136,14 +150,11 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.ReadAsync()).ReturnsAsync(expected);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var actual = await controller.Get();
-
         // Assert
         Assert.Equal(expected, actual);
     }
-
     [Fact]
     public async Task Get_given_non_existing_returns_NotFound()
     {
@@ -152,14 +163,11 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.ReadAsync(42)).ReturnsAsync(default(CharacterDetailsDto));
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var response = await controller.Get(42);
-
         // Assert
         Assert.IsType<NotFoundResult>(response.Result);
     }
-
     [Fact]
     public async Task Get_given_existing_returns_character()
     {
@@ -169,14 +177,11 @@ public class CharactersControllerTests
         var character = new CharacterDetailsDto(1, "Superman", "Clark", "Kent", "Metropolis", Male, 1938, "Reporter", "https://images.com/superman.png", new HashSet<string>());
         repository.Setup(m => m.ReadAsync(1)).ReturnsAsync(character);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var response = await controller.Get(1);
-
         // Assert
         Assert.Equal(character, response.Value);
     }
-
     [Fact]
     public async Task Put_updates_Character()
     {
@@ -186,14 +191,11 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.UpdateAsync(1, character)).ReturnsAsync(Updated);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var response = await controller.Put(1, character);
-
         // Assert
         Assert.IsType<NoContentResult>(response);
     }
-
     [Fact]
     public async Task Put_given_unknown_id_returns_NotFound()
     {
@@ -203,14 +205,11 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.UpdateAsync(1, character)).ReturnsAsync(NotFound);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var response = await controller.Put(1, character);
-
         // Assert
         Assert.IsType<NotFoundResult>(response);
     }
-
     [Fact]
     public async Task Delete_given_non_existing_returns_NotFound()
     {
@@ -219,14 +218,11 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.DeleteAsync(42)).ReturnsAsync(Status.NotFound);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var response = await controller.Delete(42);
-
         // Assert
         Assert.IsType<NotFoundResult>(response);
     }
-
     [Fact]
     public async Task Delete_given_existing_returns_NoContent()
     {
@@ -235,10 +231,8 @@ public class CharactersControllerTests
         var repository = new Mock<ICharacterRepository>();
         repository.Setup(m => m.DeleteAsync(1)).ReturnsAsync(Status.Deleted);
         var controller = new CharactersController(logger.Object, repository.Object);
-
         // Act
         var response = await controller.Delete(1);
-
         // Assert
         Assert.IsType<NoContentResult>(response);
     }

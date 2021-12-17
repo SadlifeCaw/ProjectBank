@@ -13,7 +13,6 @@ public class ProjectsController : ControllerBase
     {
         _logger = logger;
         _repository = repository;
-
     }
 
     [AllowAnonymous]

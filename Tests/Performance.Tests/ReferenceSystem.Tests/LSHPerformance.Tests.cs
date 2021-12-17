@@ -31,9 +31,35 @@ namespace Performance.Tests
         static Supervisor Supervisor1 = new Supervisor("troe@itu.dk", ITU, "Troels", "Jyde", new List<Project>(), FacultyComputerScienceITU, new List<Project>());
         public LSHPerformanceTests()
         {
-            
+            AllTags = GenerateTags(NumOfTags).ToList();
+            Projects = GenerateProjects(NumOfProjects).ToList();
+            var connection = new SqliteConnection("Filename=:memory:");
+            connection.Open();
+            //defer connection.CloseConnection();
 
+            var builder = new DbContextOptionsBuilder<ProjectBankContext>();
+            builder.UseSqlite(connection);
+            //builder.UseSqlite(connection, x => x.SuppressForeignKeyEnforcement());
+            //sqlBuilder.SuppressForeignKeyEnforcement();
+            builder.EnableSensitiveDataLogging();
+
+            var context = new ProjectBankContext(builder.Options);
+            context.Database.EnsureCreated();
+            context.SaveChanges();
+
+            context.Categories.AddRange(ITU, FacultyComputerScienceITU);
+            context.Users.Add(Supervisor1);
+            foreach (var Tag in AllTags)
+            {
+                context.Tags.Add(Tag);
+            }
+            context.Projects.AddRange(Projects);
+            context.SaveChanges();
+            _context = context;
+            _bucketRepository = new BucketRepository(_context);
+            _projectRepository = new ProjectRepository(_context);
         }
+
 
         public void meh()
         {
@@ -80,7 +106,7 @@ namespace Performance.Tests
             _bucketRepository = new BucketRepository(_context);
             _projectRepository = new ProjectRepository(_context);
         }
-
+/*
         [Theory]
         [InlineData(2)]
         public async void Insert_performance(float seconds)
@@ -98,7 +124,7 @@ namespace Performance.Tests
 
             Assert.True(TimeSpan.FromSeconds(seconds) >= timer.Elapsed, string.Format("Actual time was {0} milliseconds", timer.ElapsedMilliseconds));
         }
-
+*/
         [Theory]
         [InlineData(0.01)]
         public async void Get_performance(float seconds)
