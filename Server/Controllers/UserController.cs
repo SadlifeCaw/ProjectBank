@@ -31,6 +31,14 @@ public class UsersController : ControllerBase
         => (await _repository.ReadByID(id)).ToActionResult();
 
     [AllowAnonymous]
+    [Route("Mail/{email}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
+    [HttpGet]
+    public async Task<ActionResult<UserDTO>> Get(string email)
+        => (await _repository.ReadByEmail(email)).ToActionResult();
+
+    [AllowAnonymous]
     [Route("Supervisors/{id}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
@@ -45,4 +53,51 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<UserDTO>> GetStudent(int id)
         => (await _repository.ReadStudent(id)).ToActionResult();
+
+
+    [Authorize]
+    [Route("Students")]
+    [ProducesResponseType(typeof(StudentDTO), 201)]
+    [HttpPost]
+    public async Task<IActionResult> Post(StudentCreateDTO student)
+    {
+        var response = await _repository.CreateAsync(student);
+        var status = response.Item1;
+        var created = response.Item2;
+
+        if(status == Core.Response.NotFound)
+        {
+            return new NotFoundResult();
+        }
+
+        if(status == Core.Response.Conflict || status == Core.Response.BadRequest)
+        {
+            return new ConflictResult();
+        }
+
+        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+    }
+
+    [Authorize]
+    [Route("Supervisors")]
+    [ProducesResponseType(typeof(SupervisorDTO), 201)]
+    [HttpPost]
+    public async Task<IActionResult> Post(SupervisorCreateDTO supervisor)
+    {
+        var response = await _repository.CreateAsync(supervisor);
+        var status = response.Item1;
+        var created = response.Item2;
+
+        if(status == Core.Response.NotFound)
+        {
+            return new NotFoundResult();
+        }
+
+        if(status == Core.Response.Conflict || status == Core.Response.BadRequest)
+        {
+            return new ConflictResult();
+        }
+
+        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+    }
 }

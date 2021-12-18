@@ -247,7 +247,7 @@
 
     private async Task<UserDTO> GetUserDTO(int userID) 
     {
-        return await Http.GetFromJsonAsync<UserDTO>($"api/Users/{userID}");
+        return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
     }
 
     private async Task<CategoryDTO> GetCategoryDTO(int catID) 

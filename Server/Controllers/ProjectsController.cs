@@ -38,11 +38,10 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
     }
 
-    [Authorize]
-    [Route("Update/{id}")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, [FromBody] ProjectUpdateDTO project)
     {
         if(id != project.Id)
@@ -51,6 +50,16 @@ public class ProjectsController : ControllerBase
         }
 
         var projectToReturn = await _repository.UpdateAsync(id, project);
+
+        if(projectToReturn == Core.Response.NotFound)
+        {
+            return BadRequest("project doesnt fucking exist");
+        } 
+        /* if(projectToReturn == Core.Response.Updated)
+        {
+            return NotFound("project does fucking exist");
+        }  */
+
         return projectToReturn.ToActionResult();
     }
 

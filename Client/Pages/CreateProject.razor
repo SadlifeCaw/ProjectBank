@@ -80,21 +80,10 @@
     </div>
 </EditForm>
 
-
-<button @onclick="@LogUsername">Log username</button>
-
 @code{
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    private async Task LogUsername()
-    {
-        var AuthState = await authenticationStateTask;
-        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value;
-
-        Console.WriteLine(email);
-    }
 
 
     private ProjectCreateDTO project = new();
@@ -102,15 +91,22 @@
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
+    private UserDTO Author;
     private string NewTag = string.Empty;
     private string description = string.Empty;
 
+    private async Task test()
+    {
+        Author = await GetUser();
+        Console.WriteLine(Author.Email);
+    }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             this.AllCategories = await GetAllCategories();
+            this.Author = await GetUser();
         }
         catch (Exception exception)
         {
@@ -139,7 +135,7 @@
 
         project.UserIDs = new List<int>();
         project.BucketIDs = new List<int>();
-        project.AuthorID = 1;
+        project.AuthorID = Author.Id;
         project.MaxStudents = 5;
         project.Status = project.Status;
 
@@ -202,18 +198,14 @@
     {
         return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
     }
-    
-    /*
-    THIS NEEDS TO BE IMPLEMENTED:
-    private string Tags
+
+    private async Task<UserDTO> GetUser()
     {
-        get => string.Join(Environment.NewLine, project.TagIDs);
-        set => project.TagIDs = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p));
-        
-        <div class="form-group">
-        <label for="Powers">Tags</label>
-        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
-        </div>
-    } 
-    */
+        var AuthState = await authenticationStateTask;
+        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
+
+        var user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{email}");
+
+        return user;
+    }
 }

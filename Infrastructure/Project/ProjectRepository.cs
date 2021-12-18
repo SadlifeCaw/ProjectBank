@@ -171,7 +171,8 @@ public class ProjectRepository : IProjectRepository
     public async Task<Response> UpdateAsync(int id, ProjectUpdateDTO project)
     {
         var projectEntity = await _dbcontext.Projects
-                .FirstOrDefaultAsync(p => p.Id == project.Id);
+                .Where(p => p.Id == project.Id)
+                .FirstOrDefaultAsync();
         
         if(projectEntity == null)
         {
@@ -182,8 +183,8 @@ public class ProjectRepository : IProjectRepository
         projectEntity.Description = project.Description;
         projectEntity.MaxStudents = project.MaxStudents;
         projectEntity.Status = project.Status;
-        projectEntity.Category = await GetCategory(project.CategoryID);
-        projectEntity.Tags = await GetTagsAsync(project.TagIDs).ToListAsync();
+        projectEntity.Category = await GetCategoryAsync(project.CategoryID);
+        //projectEntity.Tags = (await GetTagsAsync(new List<int>() {1, 2, 3}).ToListAsync()).AsReadOnly();
         projectEntity.Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync();
         projectEntity.Users = await GetUsersAsync(project.UserIDs).ToListAsync();
 
@@ -198,14 +199,6 @@ public class ProjectRepository : IProjectRepository
                     select u;
                            
         return await users.FirstOrDefaultAsync();
-    }
-
-    private async Task<Category> GetCategory(int catId)
-    {
-        return await _dbcontext.Categories
-                        .Where(u => u.Id == catId)
-                        .Select(u => u)
-                        .FirstOrDefaultAsync();
     }
 
     private async IAsyncEnumerable<Tag> GetTagsAsync(ICollection<int> inTags)
