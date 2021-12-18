@@ -295,7 +295,7 @@ public class ProjectRepositoryTests : IDisposable
     [Fact]
     public async void ReadByIDAsync_provided_ID_does_not_exist_returns_Null()
     {
-        var nonExisting = await _repository.ReadByIDAsync(8000);
+        var nonExisting = await _repository.ReadByIDAsync(1000);
 
         Assert.Equal(null, nonExisting);
     }
@@ -323,8 +323,8 @@ public class ProjectRepositoryTests : IDisposable
         var NonExistingTitle = await _repository.ReadByKeyAsync("Not a Project", 1);
         var NonExistingAuthor = await _repository.ReadByKeyAsync("Worst Project", 300);
 
-        Assert.Equal(null, NonExistingTitle);
-        Assert.Equal(null, NonExistingAuthor);
+        Assert.Null(NonExistingTitle);
+        Assert.Null(NonExistingAuthor);
     }
 
     [Fact]

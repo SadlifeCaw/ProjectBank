@@ -29,12 +29,12 @@ public class ProjectsController : ControllerBase
         => (await _repository.ReadByIDAsync(id)).ToActionResult();
 
     [Authorize]
-    [HttpPost("Post")]
     [ProducesResponseType(typeof(ProjectDTO), 201)]
+    [HttpPost]
     public async Task<IActionResult> Post(ProjectCreateDTO project)
     {
-        var created = await _repository.CreateAsync(project);
-        return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
+        var created = (await _repository.CreateAsync(project)).Item2;
+        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
     }
 
     [Authorize(Roles = $"{Member},{Administrator}")]

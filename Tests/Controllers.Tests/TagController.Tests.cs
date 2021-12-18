@@ -1,15 +1,3 @@
-using Xunit;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using ProjectBank.Server.Controllers;
-using ProjectBank.Core.EF.DTO;
-using ProjectBank.Core.EF.Repository;
-using ProjectBank.Infrastructure;
-using ProjectBank.Core;
-using System.Collections.Generic;
-
 namespace ProjectBank.Tests.Controller.Tests;
 
 public class TagControllerTests
@@ -24,7 +12,7 @@ public class TagControllerTests
         var controller = new TagController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.GetTag(42);
+        var response = await controller.Get(42);
 
         // Assert
         Assert.IsType<NotFoundResult>(response.Result);
@@ -41,9 +29,30 @@ public class TagControllerTests
         var controller = new TagController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.GetTag(1);
+        var response = await controller.Get(1);
 
         // Assert
         Assert.Equal(tag, response.Value);
+    }
+
+    [Fact]
+    public async Task Post_Adds_Tag()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<TagController>>();
+        var repository = new Mock<ITagRepository>();
+        var toCreate = new TagCreateDTO();
+        var created = new TagDTO(1, "Java");
+
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
+        var controller = new TagController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate) as CreatedAtActionResult;
+
+        // Assert
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 }

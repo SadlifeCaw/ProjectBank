@@ -1,11 +1,13 @@
 .ProjectListDisplay{
-    width: 100%;
-    min-height: 280px;
+    width: 90%;
+    margin: 0 auto 0 auto;
+    min-height: 350px;
     height: 10px;
-    display: flex;
+    
+    /*display:inline-block;
     flex-wrap: nowrap;
     overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-x: scroll;*/
 }
 
 .ProjectListDisplay .ProjectDisplay{
@@ -14,7 +16,7 @@
     height: 100%;
     width: 47%;
     padding: 10px 20px 10px 20px;
-    margin: 0 10px 0 10px;
+    margin: 20px 10px 0 10px;
     background-color: #153243;
     color: #B4B8AB;
     border-radius: 10px;
@@ -97,16 +99,16 @@
     padding: 5px 10px 5px 10px;
 }
 
-.ProjectDisplay:hover {
-    cursor: pointer;
-}
-
 .buffer_20 {
     height: 20px;
 }
 
 .buffer_10 {
     height: 20px;
+}
+
+.align {
+    margin-left: 5%;
 }
 
  /* width */

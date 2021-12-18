@@ -1,15 +1,19 @@
 @page "/projects/create"
 @using ProjectBank.Infrastructure.Generator;
+@using ProjectBank.Core;
+@using Microsoft.AspNetCore.Components.Web
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create Project</PageTitle>
 
+<head>
+    <link rel="stylesheet" href="Dashboard.razor.css">
+</head>
+
 <h1>Create Project</h1>
 
-<hr />
-
-<EditForm Model="@project" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@project" OnValidSubmit="@HandleValidSubmit" class="pb-4">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group">
@@ -20,11 +24,49 @@
         <label for="Description">Description</label>
         <InputTextArea id="Description" @bind-Value="project.Description" class="form-control" rows="7"/>
     </div>
+
+    <div class="form-group">
+    <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
+        <div class="TagContainer">
+            <ul>
+                @foreach (var name in AllTags)
+                {
+                    <li>
+                        @name;
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="NewTagContainer">
+            <div class="row w-50">
+                <div class="col-7">
+                    <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
+                </div>
+                
+                <div class="col-4">
+                    <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Code for binding database entries to a selection taken from
+         https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
+     -->
+    <InputSelect id="Categories" class="mt-2 form-control" @bind-Value="project.CategoryID">
+        @foreach (var category in AllCategories)
+        {
+            <option value="@category.Id">@category.Title</option>
+        }
+    </InputSelect>
+
+    <div class="row">&#8205;</div>
+
     <div class="form-group">
         <div>Project visibility</div>
         <InputRadioGroup @bind-Value="project.Status">
-            <InputRadio id="Public" Value="@PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
-            <InputRadio id="Private" Value="@PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
+            <InputRadio id="Public" Value="ProjectStatus.PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
+            <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
         </InputRadioGroup>
     </div>
     <div class="form-group">
@@ -38,20 +80,57 @@
     </div>
 </EditForm>
 
-
-
 @code{
     private ProjectCreateDTO project = new();
+    private TagGenerator tagGenerator = new TagGenerator();
+    private ISet<string> AllTags = new HashSet<string>();
+    private ISet<string> CreatedTags = new HashSet<string>();
+    private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
+    private string NewTag = string.Empty;
+    private string description = string.Empty;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            this.AllCategories = await GetAllCategories();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(":((( {0}",exception.Message);
+        }
+    }
+    string SelectedString = "Choose a category";
 
     private async Task HandleValidSubmit()
     {   
+        project.TagIDs = new List<int>();
 
-        var response = await Http.PostAsJsonAsync("Projects/Post", project);
+        foreach (var item in CreatedTags)
+        {
+            //post user generated tag
+            TagCreateDTO newTag = new TagCreateDTO{Name = item};
+            var tagResponse = await Http.PostAsJsonAsync("api/Tag", newTag);
+
+            //add to project to post
+            if (tagResponse.IsSuccessStatusCode)
+            {
+                var created = await tagResponse.Content.ReadFromJsonAsync<TagDTO>();
+                project.TagIDs.Add(created.Id);
+            }
+        }
+
+        project.UserIDs = new List<int>();
+        project.BucketIDs = new List<int>();
+        project.AuthorID = 1;
+        project.MaxStudents = 5;
+        project.Status = project.Status;
+
+        var response = await Http.PostAsJsonAsync("api/Projects", project);
 
         if (response.IsSuccessStatusCode)
         {   
-            
-            
             var created = await response.Content.ReadFromJsonAsync<ProjectDTO>();
 
             var uri = $"{NavigationManager.BaseUri}projects/{created?.Id}";
@@ -67,17 +146,45 @@
         NavigationManager.NavigateTo(uri);
     }
 
-    public IEnumerable<String> getTags(){
-        var text = "Hej med dig det er mig";
-        TagGenerator tagGenerator = new TagGenerator();
-        List<String> tags = new List<string>{"hej", "at", "Skriver", "det", "er"};
-        tagGenerator.Add(tags);
+    void OnDropDownSelect (ChangeEventArgs e)
+    {
+            SelectedString = e.Value.ToString();
+    }
+
+    public async void GetTags()
+    {
+        tagGenerator = new TagGenerator();
+
+        var TagDTOs = await Http.GetFromJsonAsync<ICollection<TagDTO>>($"api/Tag");
+        var TagNames = TagDTOs.Select(t => t.Name).ToList();
+
+        tagGenerator.Add(TagNames);
         tagGenerator.Build();
-        return tagGenerator.Find(text);
+
+        AllTags = tagGenerator.Find(project.Description).ToHashSet();
+        AllTags.UnionWith(CreatedTags);
+
+        StateHasChanged();
     }
 
     public ICollection<int>? ConvertToTagIDs(IEnumerable<string> TagNames){
         return new List<int>();
+    }
+
+    private void AddTagToList()
+    {
+        if(NewTag != "")
+        {
+            CreatedTags.Add(NewTag);
+            AllTags.UnionWith(CreatedTags);
+            StateHasChanged();
+        }
+    }
+
+    //this will probably not be very smart in case of a lot of categories. Limit to a small number? Optimal would be to add search method
+    private async Task<ICollection<CategoryDTO>> GetAllCategories()
+    {
+        return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
     }
     
     /*
