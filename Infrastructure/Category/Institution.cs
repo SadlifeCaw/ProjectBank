@@ -14,7 +14,7 @@ public class Institution : Category {
     public Institution(string Title, string Description) 
     : base(Title, Description)
     {
-        
+
     }
 
     // Empty constructor to please the EF Gods

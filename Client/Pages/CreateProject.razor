@@ -88,6 +88,7 @@
 
     private ProjectCreateDTO project = new();
     private TagGenerator tagGenerator = new TagGenerator();
+
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
@@ -95,11 +96,6 @@
     private string NewTag = string.Empty;
     private string description = string.Empty;
 
-    private async Task test()
-    {
-        Author = await GetUser();
-        Console.WriteLine(Author.Email);
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +132,7 @@
         project.UserIDs = new List<int>();
         project.BucketIDs = new List<int>();
         project.AuthorID = Author.Id;
+
         project.MaxStudents = 5;
         project.Status = project.Status;
 
@@ -171,11 +168,10 @@
         var TagNames = TagDTOs.Select(t => t.Name).ToList();
 
         tagGenerator.Add(TagNames);
+        tagGenerator.Add(CreatedTags);
         tagGenerator.Build();
 
-        AllTags = tagGenerator.Find(project.Description).ToHashSet();
-        AllTags.UnionWith(CreatedTags);
-
+        AllTags = tagGenerator.Find(project.Description);
         StateHasChanged();
     }
 
@@ -187,8 +183,7 @@
     {
         if(NewTag != "")
         {
-            CreatedTags.Add(NewTag);
-            AllTags.UnionWith(CreatedTags);
+            CreatedTags.Append(NewTag);
             StateHasChanged();
         }
     }
