@@ -22,8 +22,8 @@ public class TagGeneratorTests
         string[] matches = trie.Find(text).ToArray();
 
         Assert.Equal(2, matches.Length);
-        Assert.Equal("hello", matches[0]);
-        Assert.Equal("world", matches[1]);
+        Assert.Equal("Hello", matches[0]);
+        Assert.Equal("World", matches[1]);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
-        Assert.Equal("caps", matches[0]);
+        Assert.Equal("Caps", matches[0]);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
-        Assert.Equal("caps", matches[0]);
+        Assert.Equal("Caps", matches[0]);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class TagGeneratorTests
         string[] matches = trie.Find(text).ToArray();
 
         Assert.Equal(1, matches.Length);
-        Assert.Equal("caps", matches[0]);
+        Assert.Equal("Caps", matches[0]);
     }
 
     [Fact]
@@ -81,8 +81,8 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
-        Assert.Equal("three", matches[0]);
-        Assert.Equal("four", matches[1]);
+        Assert.Equal("Three", matches[0]);
+        Assert.Equal("Four", matches[1]);
     }
 
 }
