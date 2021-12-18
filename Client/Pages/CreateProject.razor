@@ -80,7 +80,23 @@
     </div>
 </EditForm>
 
+
+<button @onclick="@LogUsername">Log username</button>
+
 @code{
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private async Task LogUsername()
+    {
+        var AuthState = await authenticationStateTask;
+        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value;
+
+        Console.WriteLine(email);
+    }
+
+
     private ProjectCreateDTO project = new();
     private TagGenerator tagGenerator = new TagGenerator();
     private ISet<string> AllTags = new HashSet<string>();
