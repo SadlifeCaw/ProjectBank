@@ -1,6 +1,7 @@
 @page "/projects/create"
 @using ProjectBank.Infrastructure.Generator;
 @using ProjectBank.Core;
+@using Microsoft.AspNetCore.Components.Web
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -12,7 +13,7 @@
 
 <h1>Create Project</h1>
 
-<EditForm Model="@project" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@project" OnValidSubmit="@HandleValidSubmit" class="pb-4">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group">
@@ -49,13 +50,23 @@
         </div>
     </div>
 
-    <div class="Buffer_20"></div>
+    <!-- Code for binding database entries to a selection taken from
+         https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
+     -->
+    <InputSelect id="Categories" class="mt-2 form-control" @bind-Value="project.CategoryID">
+        @foreach (var category in AllCategories)
+        {
+            <option value="@category.Id">@category.Title</option>
+        }
+    </InputSelect>
+
+    <div class="row">&#8205;</div>
 
     <div class="form-group">
         <div>Project visibility</div>
         <InputRadioGroup @bind-Value="project.Status">
-            <InputRadio id="Public" Value="@PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
-            <InputRadio id="Private" Value="@PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
+            <InputRadio id="Public" Value="ProjectStatus.PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
+            <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
         </InputRadioGroup>
     </div>
     <div class="form-group">
@@ -74,12 +85,26 @@
     private TagGenerator tagGenerator = new TagGenerator();
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
+    private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
     private string NewTag = string.Empty;
     private string description = string.Empty;
 
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            this.AllCategories = await GetAllCategories();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(":((( {0}",exception.Message);
+        }
+    }
+    string SelectedString = "Choose a category";
+
     private async Task HandleValidSubmit()
     {   
-
         project.TagIDs = new List<int>();
 
         foreach (var item in CreatedTags)
@@ -97,11 +122,10 @@
         }
 
         project.UserIDs = new List<int>();
+        project.BucketIDs = new List<int>();
         project.AuthorID = 1;
         project.MaxStudents = 5;
-        project.BucketIDs = new List<int>();
-        project.CategoryID = 3;
-        project.Status = ProjectStatus.PUBLIC;
+        project.Status = project.Status;
 
         var response = await Http.PostAsJsonAsync("api/Projects", project);
 
@@ -120,6 +144,11 @@
         var uri = $"{NavigationManager.BaseUri}projects";
 
         NavigationManager.NavigateTo(uri);
+    }
+
+    void OnDropDownSelect (ChangeEventArgs e)
+    {
+            SelectedString = e.Value.ToString();
     }
 
     public async void GetTags()
@@ -150,6 +179,12 @@
             AllTags.UnionWith(CreatedTags);
             StateHasChanged();
         }
+    }
+
+    //this will probably not be very smart in case of a lot of categories. Limit to a small number? Optimal would be to add search method
+    private async Task<ICollection<CategoryDTO>> GetAllCategories()
+    {
+        return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
     }
     
     /*

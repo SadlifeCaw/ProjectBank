@@ -17,4 +17,10 @@ public class CategoryRepository : ICategoryRepository
 
         return await categories.FirstOrDefaultAsync();
     }
+
+    public async Task<IReadOnlyCollection<CategoryDTO>> Read()
+        =>  (await _dbcontext.Categories
+                .Select(c => new CategoryDTO(c.Id, c.Title, c.Description))
+                .ToListAsync())
+                .AsReadOnly();
 }

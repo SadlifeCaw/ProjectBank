@@ -80,7 +80,7 @@ public class BucketRepositoryTests : IDisposable
     {
         var nonExisting = await _repository.ReadBucketByKeyAsync("N0TF0UND");
 
-        Assert.Equal(null, nonExisting);
+        Assert.Null(nonExisting);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class BucketRepositoryTests : IDisposable
     {
         var nonExisting = await _repository.ReadBucketByIDAsync(42);
 
-        Assert.Equal(null, nonExisting);
+        Assert.Null(nonExisting);
     }
 
     [Fact]

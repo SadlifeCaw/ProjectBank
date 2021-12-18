@@ -91,7 +91,7 @@ public class ProjectRepository : IProjectRepository
         var users = from p in _dbcontext.Projects
                     where p.Id == projectID
                     select new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
-                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList());
+                                          p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList());
 
         return await users.FirstOrDefaultAsync(); 
     }
