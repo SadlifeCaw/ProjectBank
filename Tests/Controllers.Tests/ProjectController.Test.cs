@@ -27,7 +27,7 @@ public class ProjectControllersTests
         //var project = new ProjectUpdateDTO{Id = 1, };
         var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.NotFound);
+        repository.Setup(m => m.UpdateAsync(100, project)).ReturnsAsync(Response.NotFound);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
@@ -35,6 +35,23 @@ public class ProjectControllersTests
 
         // Assert
         Assert.IsType<ConflictResult>(response);
+    }
+
+    [Fact]
+    public async Task Put_updates_Character()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<ProjectsController>>();
+        var character = new ProjectUpdateDTO();
+        var repository = new Mock<IProjectRepository>();
+        repository.Setup(m => m.UpdateAsync(1, character)).ReturnsAsync(Response.Updated);
+        var controller = new ProjectsController(logger.Object, repository.Object);
+
+        // Act
+        var response = await controller.Put(1, character);
+
+        // Assert
+        Assert.IsType<NoContentResult>(response);
     }
 
     /* Testing code mainly taken from Rasmus Lybæk

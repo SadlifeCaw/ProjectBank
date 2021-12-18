@@ -38,12 +38,21 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
     }
 
-    [Authorize(Roles = $"{Member},{Administrator}")]
-    [HttpPut("{id}")]
+    [Authorize]
+    [Route("Update/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpPut]
     public async Task<IActionResult> Put(int id, [FromBody] ProjectUpdateDTO project)
-            => (await _repository.UpdateAsync(project)).ToActionResult();
+    {
+        if(id != project.Id)
+        {
+            return BadRequest("Id mismatch");
+        }
+
+        var projectToReturn = await _repository.UpdateAsync(id, project);
+        return projectToReturn.ToActionResult();
+    }
 
     
     /*[Authorize(Roles = Administrator)]

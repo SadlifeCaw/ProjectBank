@@ -168,39 +168,21 @@ public class ProjectRepository : IProjectRepository
         return Response.NotFound;
     }
 
-    public async Task<Response> UpdateAsync(ProjectUpdateDTO project)
+    public async Task<Response> UpdateAsync(int id, ProjectUpdateDTO project)
     {
         var projectEntity = await _dbcontext.Projects
-                            .Where(p => p.Author.Id == project.AuthorID)
-                            .Where(p => p.Id == project.Id)
-                            .Select(p => p)
-                            .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(p => p.Id == project.Id);
         
         if(projectEntity == null)
         {
             return Response.NotFound;
         }
 
-        //only change category if it is not the same, cut down unnecesarry queries
-        if(project.CategoryID != projectEntity.Category.Id)
-        {
-            var category = await _dbcontext.Categories
-                            .Where(c => c.Id == project.CategoryID)
-                            .Select(c => c)
-                            .FirstOrDefaultAsync();
-
-            if(category == null)
-            {
-                return Response.NotFound;
-            }
-
-            projectEntity.Category = category;
-        }
-
         projectEntity.Title = project.Title;
         projectEntity.Description = project.Description;
         projectEntity.MaxStudents = project.MaxStudents;
         projectEntity.Status = project.Status;
+        projectEntity.Category = await GetCategory(project.CategoryID);
         projectEntity.Tags = await GetTagsAsync(project.TagIDs).ToListAsync();
         projectEntity.Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync();
         projectEntity.Users = await GetUsersAsync(project.UserIDs).ToListAsync();
@@ -216,6 +198,14 @@ public class ProjectRepository : IProjectRepository
                     select u;
                            
         return await users.FirstOrDefaultAsync();
+    }
+
+    private async Task<Category> GetCategory(int catId)
+    {
+        return await _dbcontext.Categories
+                        .Where(u => u.Id == catId)
+                        .Select(u => u)
+                        .FirstOrDefaultAsync();
     }
 
     private async IAsyncEnumerable<Tag> GetTagsAsync(ICollection<int> inTags)
