@@ -15,7 +15,7 @@ public interface ITagGenerator
 
 public class TagGenerator : ITagGenerator
 {
-    Trie t;
+    private Trie t;
 
     public TagGenerator() => t = new Trie();
 
@@ -39,6 +39,29 @@ public class TagGenerator : ITagGenerator
 
     public IEnumerable<string> Find(string text) {
         text = text.ToLower();
-        return t.Find(text);
+
+        var rawtags = t.Find(text).Distinct();
+        List<string> tags = new List<string>();
+
+        foreach (var tag in rawtags)
+        {
+            var lowerCaseTag = tag.ToCharArray();
+            char[] upperCaseTag = new char[tag.Length];
+            upperCaseTag[0] = lowerCaseTag[0].ToString().ToUpper().ToCharArray()[0];
+            var counter = 0;
+
+            foreach (var letter in lowerCaseTag)
+            {
+                if (counter != 0) 
+                {
+                    upperCaseTag[counter] = letter;
+                }
+                counter++;
+            }
+            tags.Add(new string(upperCaseTag));
+        }
+
+        return tags;
+
     }
 }
