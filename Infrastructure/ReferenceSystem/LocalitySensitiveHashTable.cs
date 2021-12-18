@@ -10,15 +10,15 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         private int groupSize = 2;
         private int k = 6;
         public int NumberOfGroups;
-        //public Dictionary<string, Bucket<Tagable>> Map;
         public IBucketRepository _bucketRepository;
         public IProjectRepository _projectRepository;
+        public Dictionary<string, Bucket<Tagable>> Map;
 
 
         public LocalitySensitiveHashTable(IBucketRepository repository, IProjectRepository projectRepository)
         {
             NumberOfGroups = k / groupSize;
-            //Map = new Dictionary<string, Bucket<Tagable>>();
+            Map = new Dictionary<string, Bucket<Tagable>>();
             _bucketRepository = repository;
             _projectRepository = projectRepository;
         }
@@ -27,6 +27,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         {
            var dto = new BucketCreateDTO{ProjectIds = new HashSet<int>(),Key = bucketString};
            var task = await _bucketRepository.CreateAsync(dto);
+           Map[bucketString] = new Bucket<Tagable>();
            return task;
             //Map[bucketString] = new Bucket<Tagable>();
         }
@@ -44,6 +45,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
                     //throw new ArgumentException("Project already inserted");
                 } else 
                 {
+                    Map[bucketString].ProjectIds.Add(tagable.Id);
                     var response = await _bucketRepository.AddProjectAsync(bucketdto.Id, tagable.Id);
                 }
             }
@@ -65,7 +67,11 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             foreach (string bucketString in bucketStrings)
             {
                 var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(bucketString);
-                if(bucketdto != null && bucketdto.ProjectIds.Contains(tagable.Id)) await _bucketRepository.RemoveProjectAsync(bucketdto.Id, tagable.Id);
+                if(bucketdto != null && bucketdto.ProjectIds.Contains(tagable.Id)) 
+                {
+                    await _bucketRepository.RemoveProjectAsync(bucketdto.Id, tagable.Id);
+                    Map[bucketString].ProjectIds.Remove(tagable.Id);
+                }
                 else return Response.Conflict;
             }
             return Response.Deleted;
@@ -78,7 +84,8 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             var bucketStrings = HashesToBucketString(tagable.Signature);
             foreach (string bucketString in bucketStrings)
             {
-                var bucket = (await _bucketRepository.ReadBucketByKeyAsync(bucketString));
+                //var bucket = (await _bucketRepository.ReadBucketByKeyAsync(bucketString));
+                var bucket = Map[bucketString];
                 foreach (int id in bucket.ProjectIds)
                 {
                     if (id != tagable.Id)

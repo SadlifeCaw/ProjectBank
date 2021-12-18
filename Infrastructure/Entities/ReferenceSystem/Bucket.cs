@@ -5,11 +5,12 @@ namespace ProjectBank.Infrastructure.Entities
     {
         [Required]
         public int Id {get; set;}
-        public ISet<Tagable> Projects = new HashSet<Tagable>(); 
-
+        //public ISet<Tagable> Projects = new HashSet<Tagable>(); 
+        public ISet<int> ProjectIds = new HashSet<int>(); //CHANGES THIS. MIGHT CAUSE PROBLEMS
 
         public Bucket() {}
     }
+
 
     [Index(nameof(Key), IsUnique = true)]
     public class ProjectBucket : Bucket<Project>

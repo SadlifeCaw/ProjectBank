@@ -1,6 +1,8 @@
 using Xunit;
 using System.Linq;
 using ProjectBank.Infrastructure.Generator;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Generator.Tests;
 
@@ -20,8 +22,8 @@ public class TagGeneratorTests
         string[] matches = trie.Find(text).ToArray();
 
         Assert.Equal(2, matches.Length);
-        Assert.Equal("hello", matches[0]);
-        Assert.Equal("world", matches[1]);
+        Assert.Equal("Hello", matches[0]);
+        Assert.Equal("World", matches[1]);
     }
 
     [Fact]
@@ -35,7 +37,22 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
-        Assert.Equal("caps", matches[0]);
+        Assert.Equal("Caps", matches[0]);
+    }
+
+    [Fact]
+    public void Adding_same_value_only_returns_one_value()
+    {
+        string text = "I always types in caps";
+
+        ITagGenerator trie = new TagGenerator();
+        trie.Add("caps");
+        trie.Add("caps");
+        trie.Build();
+
+        string[] matches = trie.Find(text).ToArray();
+
+        Assert.Equal("Caps", matches[0]);
     }
 
     [Fact]
@@ -49,7 +66,8 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
-        Assert.Equal("caps", matches[0]);
+        Assert.Equal(1, matches.Length);
+        Assert.Equal("Caps", matches[0]);
     }
 
     [Fact]
@@ -63,8 +81,8 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
-        Assert.Equal("three", matches[0]);
-        Assert.Equal("four", matches[1]);
+        Assert.Equal("Three", matches[0]);
+        Assert.Equal("Four", matches[1]);
     }
 
 }
