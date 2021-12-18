@@ -83,8 +83,8 @@
 @code{
     private ProjectCreateDTO project = new();
     private TagGenerator tagGenerator = new TagGenerator();
-    private ISet<string> AllTags = new HashSet<string>();
-    private ISet<string> CreatedTags = new HashSet<string>();
+    private IEnumerable<string> AllTags = new List<string>();
+    private IEnumerable<string> CreatedTags = new List<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
     private string NewTag = string.Empty;
     private string description = string.Empty;
@@ -159,11 +159,10 @@
         var TagNames = TagDTOs.Select(t => t.Name).ToList();
 
         tagGenerator.Add(TagNames);
+        tagGenerator.Add(CreatedTags);
         tagGenerator.Build();
 
-        AllTags = tagGenerator.Find(project.Description).ToHashSet();
-        AllTags.UnionWith(CreatedTags);
-
+        AllTags = tagGenerator.Find(project.Description);
         StateHasChanged();
     }
 
@@ -175,8 +174,7 @@
     {
         if(NewTag != "")
         {
-            CreatedTags.Add(NewTag);
-            AllTags.UnionWith(CreatedTags);
+            CreatedTags.Append(NewTag);
             StateHasChanged();
         }
     }
