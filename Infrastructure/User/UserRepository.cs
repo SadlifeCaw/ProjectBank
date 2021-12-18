@@ -128,8 +128,8 @@ public class UserRepository : IUserRepository
     public async Task<Option<UserDTO>> ReadByID(int userID)
     {
         var users = from u in _dbcontext.Users
-                           where u.Id == userID
-                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
+                    where u.Id == userID
+                    select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
 
         return await users.FirstOrDefaultAsync(); 
     }

@@ -559,7 +559,7 @@ namespace ReferenceSystem.Tests
             var LessManyTagsProject2DTO = await _projectRepository.ReadByIDAsync(LessManyTagsProject2.Id);
             var ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id);
             var ComputerScienceSimulationAlgorithmsAgricultureDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgriculture.Id);            
-            var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityDTO.Value.Id,ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO.Value.Id, LessManyTagsProject2DTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureDTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO.Value.Id}.AsEnumerable();
+            var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityDTO.Value.Id, LessManyTagsProject2DTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureDTO.Value.Id}.AsEnumerable();
             
             //Act
             var actualDTO = (await LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity)).AsEnumerable();
