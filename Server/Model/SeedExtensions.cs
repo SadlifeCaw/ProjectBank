@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using ProjectBank.Infrastructure;
 using ProjectBank.Core;
@@ -31,11 +32,14 @@ public static class SeedExtensions
             var Institution_KU = new Institution("KU", "Københavns Universitet"); 
             var Institution_NK = new Institution("Kim Il-Sung University", "The Korean people made the first university of new Korea bear the august name of President Kim Il Sung, the hero of the nation and peerless patriot."); 
 
+            /*
             context.Institutions.AddRange(
                 Institution_ITU,
                 Institution_KU,
                 Institution_NK
             );
+            */
+            context.Institutions.AddRange(Seeding.Institutions);
 
             //Faculties
             var Faculty_COMPSCI_ITU = new Faculty("Computer Science", "Computers and Science", Institution_ITU);
@@ -47,6 +51,7 @@ public static class SeedExtensions
             var Faculty_MILSCI_NK = new Faculty("Millitary Science","The mission is to educate the people on the most acclaimed millitary power in the world.", Institution_NK);
             var Faculty_HIS_NK = new Faculty("History", "The mission is to train specialists in the history of the revolutionary activities of the peerless great persons of Mt Paektu, Korean history, world history, archeology, and folklore", Institution_NK); 
 
+            /*
             context.Faculties.AddRange(
                 Faculty_COMPSCI_ITU,
                 Faculty_BUSI_ITU,
@@ -57,6 +62,8 @@ public static class SeedExtensions
                 Faculty_MILSCI_NK,
                 Faculty_HIS_NK
             );
+            */
+            context.Faculties.AddRange(Seeding.Faculties);
 
             //TeachingPrograms
             var TP_SWU_ITU = new TeachingProgram("Software Development", "The development of software", Faculty_COMPSCI_ITU, "SWU2021", new List<Course>());
@@ -67,6 +74,7 @@ public static class SeedExtensions
             var TP_TRUTH_NK = new TeachingProgram("Truth Studies", "Teachings in the truth of the history of the peerless new Korean nation", Faculty_HIS_NK, "TRU2022", new List<Course>());
             var TP_LOG_NK = new TeachingProgram("Logistics", "How to supply the glorious army of new Korea", Faculty_MILSCI_NK, "LOG2020", new List<Course>());
             
+            /*
             context.Programs.AddRange(
                 TP_SWU_ITU,
                 TP_DATA_ITU,
@@ -76,17 +84,23 @@ public static class SeedExtensions
                 TP_TRUTH_NK,
                 TP_LOG_NK
             );
+            */
+            context.Programs.AddRange(Seeding.TeachingPrograms);
  
             //Supervisors
             var SP_1 = new Supervisor("troe@itu.dk", Institution_ITU, "Troels", "Jyde", new List<Project>(), Faculty_COMPSCI_ITU, new List<Project>());
             var SP_2 = new Supervisor("kim@nk.nk",Institution_NK,"Kim","Jong-Il", new List<Project>(), Faculty_MILSCI_NK, new List<Project>());
             var SP_3 = new Supervisor("augu@ku.dk",Institution_KU,"August","Beck", new List<Project>(), Faculty_HIS_KU, new List<Project>());
 
+            /*
             context.Supervisors.AddRange(
                 SP_1,
                 SP_2,
                 SP_3
             );
+            */
+            context.Supervisors.AddRange(Seeding.Supervisors);
+
 
             //Students
             var ST_1 = new Student("jens@itu.dk", Institution_ITU, "Jens", "Jensen", new List<Project>(), TP_SWU_ITU, new List<Course>());
@@ -98,6 +112,7 @@ public static class SeedExtensions
             var ST_7 = new Student("bob@ku.dk", Institution_KU, "Bob", "Bobsen", new List<Project>(), TP_SWU_ITU, new List<Course>());
             var ST_8 = new Student("hans@ku.dk", Institution_KU, "Hans", "Jensen", new List<Project>(), TP_SWU_ITU, new List<Course>());
 
+            /*
             context.Students.AddRange(
                 ST_1,
                 ST_2,
@@ -108,6 +123,8 @@ public static class SeedExtensions
                 ST_7,
                 ST_8
             );
+            */
+            context.Students.AddRange(Seeding.Students);
 
 
             //Tags
@@ -139,7 +156,7 @@ public static class SeedExtensions
             var EAST = new Tag("East Asia");
             var USA = new Tag("USA");
             var SURVEILLANCE = new Tag("Surveillance");
-            
+            /*
             context.Tags.AddRange(
                 WARFARE,
                 TECHNOLOGY,
@@ -170,6 +187,8 @@ public static class SeedExtensions
                 LIT,
                 PHIL
             );
+            */
+            context.Tags.AddRange(Seeding.Tags);
             
 
 
@@ -184,6 +203,7 @@ public static class SeedExtensions
             var PR_4 = new Project(SP_2, "Decadence of the West", "This will focus on the study of the decadent, capitalist West compared to the honorable, liberated North Korean lifestyle", ProjectStatus.PUBLIC, Faculty_HIS_NK, new List<Tag>() {ECON, EAST, LIT}, new List<User>() {ST_4, ST_5}, new List<ProjectBucket>(), 3);
             var PR_5 = new Project(SP_1, "The Role of Software in Government Surveillance", "This thesis is concerned with the growing use of technology by governments to control their populations", ProjectStatus.PUBLIC, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {ST_1, ST_2, ST_3, ST_7}, new List<ProjectBucket>(), 7);
 
+            /*
             context.Projects.AddRange(
                 PR_1,
                 PR_2,
@@ -191,6 +211,9 @@ public static class SeedExtensions
                 PR_4,
                 PR_5
             );
+            */
+
+            context.Projects.AddRange(Seeding.Projects);
 
             await context.SaveChangesAsync();
         }
