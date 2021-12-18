@@ -50,15 +50,6 @@ public class ProjectsController : ControllerBase
 
         var projectToReturn = await _repository.UpdateAsync(id, project);
 
-        if(projectToReturn == Core.Response.NotFound)
-        {
-            return BadRequest("project doesnt fucking exist");
-        } 
-        /* if(projectToReturn == Core.Response.Updated)
-        {
-            return NotFound("project does fucking exist");
-        }  */
-
         return projectToReturn.ToActionResult();
     }
 

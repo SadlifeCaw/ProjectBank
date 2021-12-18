@@ -147,7 +147,7 @@ public class UserRepositoryTest : IDisposable
     {
         var nonExisting = await _repository.ReadByEmail("notExisting@email.com");
 
-        Assert.Null(nonExisting);
+        Assert.Equal(null, nonExisting);
     }
 
     [Fact]

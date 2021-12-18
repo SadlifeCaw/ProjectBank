@@ -1,4 +1,5 @@
 namespace ProjectBank.Tests.Controllers.Tests;
+
 public class ProjectControllersTests
 {
 
@@ -18,39 +19,22 @@ public class ProjectControllersTests
         Assert.IsType<NotFoundResult>(response.Result);
     }
     
-    [Fact]
-    public async Task Update_given_unknown_id_returns_NotFound()
-    {
-        // Arrange
-        var logger = new Mock<ILogger<ProjectsController>>();
-        //var project = new ProjectUpdateDTO{Id = 1, };
-        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
-        var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(100, project)).ReturnsAsync(Response.NotFound);
-        var controller = new ProjectsController(logger.Object, repository.Object);
-
-        // Act
-        var response = await controller.Put(project.Id, project);
-
-        // Assert
-        Assert.IsType<ConflictResult>(response);
-    }
 
     /* Testing code mainly taken from Rasmus Lybæk
     *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
     */
     [Fact]
-    public async Task Put_updates_Character()
+    public async Task Put_updates_Project()
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
-        var character = new ProjectUpdateDTO();
+        var project = new ProjectUpdateDTO{Id = 1};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(1, character)).ReturnsAsync(Response.Updated);
+        repository.Setup(m => m.UpdateAsync(1, project)).ReturnsAsync(Response.Updated);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Put(1, character);
+        var response = await controller.Put(1, project);
 
         // Assert
         Assert.IsType<NoContentResult>(response);
@@ -80,45 +64,26 @@ public class ProjectControllersTests
         //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 
-    }
-
-    [Fact]
-    public async Task Put_updates_Project()
-    {
-        // Arrange
-        var logger = new Mock<ILogger<ProjectsController>>();
-        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
-        var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.Updated);
-        var controller = new ProjectsController(logger.Object, repository.Object);
-
-        // Act
-        var response = await controller.Put(project.Id, project);
-
-        // Assert
-        Assert.IsType<NoContentResult>(response);
-    }
-
 
      [Fact]
     public async Task Put_given_unknown_id_returns_NotFound()
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
-        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
+        var project = new ProjectUpdateDTO{Id = 2};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.NotFound);
+        repository.Setup(m => m.UpdateAsync(2, project)).ReturnsAsync(Response.NotFound);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Put(project.Id, project);
+        var response = await controller.Put(2, project);
 
         // Assert
-        Assert.IsType<NotFoundResult>(response);
+        Assert.IsType<ConflictResult>(response);
     }
+}
 
 
-    
 
     
 
@@ -130,7 +95,6 @@ public class ProjectControllersTests
     public async Task<IActionResult> Put(int id, [FromBody] ProjectUpdateDTO project)
             => (await _repository.UpdateAsync(project)).ToActionResult();
     */
-}
 
 /*
 public class CharactersControllerTests
@@ -248,3 +212,4 @@ public class CharactersControllerTests
         Assert.IsType<NoContentResult>(response);
     }
 }*/
+    

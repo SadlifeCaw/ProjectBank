@@ -174,7 +174,9 @@ public class ProjectRepository : IProjectRepository
                 .Where(p => p.Id == project.Id)
                 .FirstOrDefaultAsync();
         
-        if(projectEntity == null)
+        var category = await GetCategoryAsync(project.CategoryID);
+
+        if(projectEntity == null || category == null)
         {
             return Response.NotFound;
         }
@@ -183,7 +185,7 @@ public class ProjectRepository : IProjectRepository
         projectEntity.Description = project.Description;
         projectEntity.MaxStudents = project.MaxStudents;
         projectEntity.Status = project.Status;
-        projectEntity.Category = await GetCategoryAsync(project.CategoryID);
+        projectEntity.Category = category;
         //projectEntity.Tags = (await GetTagsAsync(new List<int>() {1, 2, 3}).ToListAsync()).AsReadOnly();
         projectEntity.Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync();
         projectEntity.Users = await GetUsersAsync(project.UserIDs).ToListAsync();

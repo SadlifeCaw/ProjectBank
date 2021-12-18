@@ -171,7 +171,7 @@
         tagGenerator.Add(CreatedTags);
         tagGenerator.Build();
 
-        AllTags = tagGenerator.Find(project.Description);
+        AllTags = tagGenerator.Find(project.Description).ToHashSet();
         StateHasChanged();
     }
 
