@@ -184,12 +184,23 @@ public static class SeedExtensions
             var PR_4 = new Project(SP_2, "Decadence of the West", "This will focus on the study of the decadent, capitalist West compared to the honorable, liberated North Korean lifestyle", ProjectStatus.PUBLIC, Faculty_HIS_NK, new List<Tag>() {ECON, EAST, LIT}, new List<User>() {ST_4, ST_5}, new List<ProjectBucket>(), 3);
             var PR_5 = new Project(SP_1, "The Role of Software in Government Surveillance", "This thesis is concerned with the growing use of technology by governments to control their populations", ProjectStatus.PUBLIC, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {ST_1, ST_2, ST_3, ST_7}, new List<ProjectBucket>(), 7);
 
+            var PR_6 = new Project(SP_1, "My private project", "Project should only be visible for ID = 1", ProjectStatus.PRIVATE, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {ST_1, ST_2, ST_3, ST_7}, new List<ProjectBucket>(), 7);
+            var PR_7 = new Project(SP_2, "My other private project", "Project should only be visible for ID = 2", ProjectStatus.PRIVATE, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {ST_1, ST_2, ST_3, ST_7}, new List<ProjectBucket>(), 7);
+            var PR_8 = new Project(SP_1, "My drafted project", "Project should only be visible for ID = 1", ProjectStatus.DRAFT, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {}, new List<ProjectBucket>(), 7);
+            var PR_9 = new Project(SP_2, "My other drafted project", "Project should only be visible for ID = 2", ProjectStatus.DRAFT, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {}, new List<ProjectBucket>(), 7);
+            var PR_10 = new Project(SP_1, "My deleted project", "Project should never be visible", ProjectStatus.DELETED, Faculty_COMPSCI_ITU, new List<Tag>() {PHIL, EAST, NETWORK, TECHNOLOGY, ENCR, USA, SURVEILLANCE}, new List<User>() {ST_1, ST_2, ST_3, ST_7}, new List<ProjectBucket>(), 7);
+
             context.Projects.AddRange(
                 PR_1,
                 PR_2,
                 PR_3,
                 PR_4,
-                PR_5
+                PR_5,
+                PR_6,
+                PR_7,
+                PR_8,
+                PR_9,
+                PR_10
             );
 
             await context.SaveChangesAsync();
