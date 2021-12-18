@@ -1,6 +1,8 @@
 using Xunit;
 using System.Linq;
 using ProjectBank.Infrastructure.Generator;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Generator.Tests;
 
@@ -39,6 +41,21 @@ public class TagGeneratorTests
     }
 
     [Fact]
+    public void Adding_same_value_only_returns_one_value()
+    {
+        string text = "I always types in caps";
+
+        ITagGenerator trie = new TagGenerator();
+        trie.Add("caps");
+        trie.Add("caps");
+        trie.Build();
+
+        string[] matches = trie.Find(text).ToArray();
+
+        Assert.Equal("caps", matches[0]);
+    }
+
+    [Fact]
     public void Find_Add_In_LowerCase_Find_With_Capital_Letters()
     {
         string text = "I always types in CAPS";
@@ -49,6 +66,7 @@ public class TagGeneratorTests
 
         string[] matches = trie.Find(text).ToArray();
 
+        Assert.Equal(1, matches.Length);
         Assert.Equal("caps", matches[0]);
     }
 

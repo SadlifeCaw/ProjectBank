@@ -15,7 +15,7 @@ public interface ITagGenerator
 
 public class TagGenerator : ITagGenerator
 {
-    Trie t;
+    private Trie t;
 
     public TagGenerator() => t = new Trie();
 
@@ -39,6 +39,6 @@ public class TagGenerator : ITagGenerator
 
     public IEnumerable<string> Find(string text) {
         text = text.ToLower();
-        return t.Find(text);
+        return t.Find(text).Distinct();
     }
 }
