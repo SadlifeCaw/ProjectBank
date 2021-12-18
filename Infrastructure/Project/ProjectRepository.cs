@@ -65,6 +65,36 @@ public class ProjectRepository : IProjectRepository
                         .AsReadOnly();
     }
 
+    public async Task<IReadOnlyCollection<ProjectDTO>> ReadFirstHundred_PrioritozeAuthored(int author)
+    {
+        var AuthoredProjects = (await _dbcontext.Projects
+                                .Where(p => p.Author.Id == author)
+                                .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                            p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
+                                .ToListAsync());
+        
+        if(AuthoredProjects.Count() < 100)
+        {
+            /* Use IQueryable and take roughly the first hundred, improves performance
+               Code taken from Selvam M, Syncfusion
+               https://www.syncfusion.com/blogs/post/8-tips-writing-best-linq-to-entities-queries.aspx#use-IQueryable-skip-take
+            */
+            IQueryable<Project> FillerProjectCollection = _dbcontext.Projects;
+
+            var take = 100 - AuthoredProjects.Count();
+            var FillerProjects = await FillerProjectCollection
+                            .OrderBy(a=>a.Id)
+                            .Take(take)
+                            .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                                            p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
+                            .ToListAsync();
+            
+            AuthoredProjects.AddRange(FillerProjects);
+        }
+
+        return AuthoredProjects.AsReadOnly();
+    }
+
     public async Task<IReadOnlyCollection<ProjectDTO>> ReadAllAuthoredAsync(int authorID)
     {
         return (await _dbcontext.Projects

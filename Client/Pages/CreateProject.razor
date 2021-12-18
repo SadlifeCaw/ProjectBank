@@ -108,6 +108,8 @@
         {
             Console.WriteLine(":((( {0}",exception.Message);
         }
+
+        project.CategoryID = 1;
     }
     string SelectedString = "Choose a category";
 
@@ -115,7 +117,20 @@
     {   
         project.TagIDs = new List<int>();
 
-        foreach (var item in CreatedTags)
+        project.UserIDs = new List<int>();
+        project.BucketIDs = new List<int>();
+        project.AuthorID = Author.Id;
+
+        project.Status = project.Status;
+
+        Console.WriteLine(project.CategoryID);
+        Console.WriteLine(project.Title);
+        Console.WriteLine(project.Description);
+        Console.WriteLine(project.Status);
+        Console.WriteLine(Author.Id);
+        Console.WriteLine(Author.FirstName);
+
+        foreach (var item in AllTags)
         {
             //post user generated tag
             TagCreateDTO newTag = new TagCreateDTO{Name = item};
@@ -129,14 +144,7 @@
             }
         }
 
-        project.UserIDs = new List<int>();
-        project.BucketIDs = new List<int>();
-        project.AuthorID = Author.Id;
-
-        project.MaxStudents = 5;
-        project.Status = project.Status;
-
-        var response = await Http.PostAsJsonAsync("api/Projects", project);
+        var response = await Http.PostAsJsonAsync("api/Projects/Post", project);
 
         if (response.IsSuccessStatusCode)
         {   
@@ -183,7 +191,8 @@
     {
         if(NewTag != "")
         {
-            CreatedTags.Append(NewTag);
+            CreatedTags.Add(NewTag);
+            AllTags.UnionWith(CreatedTags);
             StateHasChanged();
         }
     }

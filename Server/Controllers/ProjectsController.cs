@@ -20,6 +20,13 @@ public class ProjectsController : ControllerBase
     public async Task<IReadOnlyCollection<ProjectDTO>> Get()
         => await _repository.ReadAllAsync();
 
+    [AllowAnonymous]
+    [Route("Count/100/{id}")]
+    [HttpGet]
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetFirstHundred(int id)
+        => await _repository.ReadFirstHundred_PrioritozeAuthored(id);
+
+
 
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -29,11 +36,21 @@ public class ProjectsController : ControllerBase
         => (await _repository.ReadByIDAsync(id)).ToActionResult();
 
     [Authorize]
+    [Route("Post")]
     [ProducesResponseType(typeof(ProjectDTO), 201)]
     [HttpPost]
     public async Task<IActionResult> Post(ProjectCreateDTO project)
     {
-        var created = (await _repository.CreateAsync(project)).Item2;
+        var response = await _repository.CreateAsync(project);
+
+        var created = response.Item2;
+        var status = response.Item1;
+
+        if(status == Core.Response.Conflict)
+        {
+            return BadRequest();
+        }
+
         return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
     }
 
