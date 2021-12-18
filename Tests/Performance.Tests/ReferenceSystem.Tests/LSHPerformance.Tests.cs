@@ -29,7 +29,7 @@ namespace Performance.Tests
         static Institution ITU = new Institution { Id = 1, Title = "ITU", Description = "ITU" };
         static Faculty FacultyComputerScienceITU = new Faculty { Id = 3, Institution = ITU, Title = "FC ITU", Description = "ITU" };
         static Supervisor Supervisor1 = new Supervisor("troe@itu.dk", ITU, "Troels", "Jyde", new List<Project>(), FacultyComputerScienceITU, new List<Project>());
-        public LSHPerformanceTests()
+        /*public LSHPerformanceTests()
         {
             AllTags = GenerateTags(NumOfTags).ToList();
             Projects = GenerateProjects(NumOfProjects).ToList();
@@ -124,7 +124,7 @@ namespace Performance.Tests
 
             Assert.True(TimeSpan.FromSeconds(seconds) >= timer.Elapsed, string.Format("Actual time was {0} milliseconds", timer.ElapsedMilliseconds));
         }
-*/
+
         [Theory]
         [InlineData(0.01)]
         public async void Get_performance(float seconds)
@@ -238,14 +238,13 @@ namespace Performance.Tests
                 /*foreach(Tag tag in projectTags)
                 {
                     tag.Projects.Add(project);
-                }*/
+                }
 
                 yield return project;
             }
             yield break;
-        }
+        }*/
 
     }
-
 }
 
