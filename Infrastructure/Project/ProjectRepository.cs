@@ -65,7 +65,7 @@ public class ProjectRepository : IProjectRepository
                         .AsReadOnly();
     }
 
-    public async Task<IReadOnlyCollection<ProjectDTO>> ReadAllAvailableAsync(int author)
+    public async Task<IReadOnlyCollection<ProjectDTO>> ReadAllAvailableAsync(int author) 
     {
         return (await _dbcontext.Projects
                         .Where(p => p.Status != ProjectStatus.DELETED)
