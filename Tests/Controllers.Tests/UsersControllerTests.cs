@@ -111,4 +111,42 @@ public class UsersControllers
         // Assert
         Assert.Equal(user, response.Value);
     }
+
+    [Fact]
+    public async Task Get_given_email_returns_given()
+    {
+        //Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var user = new StudentDTO(1, "jens@gmail.com", "Jens", "Jensen", "SWU2020", "ITU", new List<int>(), new List<int>());
+        repository.Setup(m => m.ReadByEmail("jens@gmail.com")).ReturnsAsync(user);
+
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var response = await controller.Get("jens@gmail.com");
+
+        // Assert
+        Assert.Equal(user, response.Value);
+    }
+
+    [Fact]
+    public async Task Get_given_email_non_existing_returns_NotFound()
+    {
+        //Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var user = new StudentDTO(1, "jens@gmail.com", "Jens", "Jensen", "SWU2020", "ITU", new List<int>(), new List<int>());
+        repository.Setup(m => m.ReadByEmail("jens@gmail.com")).ReturnsAsync(user);
+
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var response = await controller.Get("bo@gmail.com");
+
+        // Assert
+        Assert.IsType<NotFoundResult>(response.Result);
+    }
 }

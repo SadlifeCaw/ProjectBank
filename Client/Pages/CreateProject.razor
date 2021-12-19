@@ -81,11 +81,18 @@
 </EditForm>
 
 @code{
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+
     private ProjectCreateDTO project = new();
     private TagGenerator tagGenerator = new TagGenerator();
-    private IEnumerable<string> AllTags = new List<string>();
-    private IEnumerable<string> CreatedTags = new List<string>();
+
+    private ISet<string> AllTags = new HashSet<string>();
+    private ISet<string> CreatedTags = new HashSet<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
+    private UserDTO Author;
     private string NewTag = string.Empty;
     private string description = string.Empty;
 
@@ -95,11 +102,14 @@
         try
         {
             this.AllCategories = await GetAllCategories();
+            this.Author = await GetUser();
         }
         catch (Exception exception)
         {
             Console.WriteLine(":((( {0}",exception.Message);
         }
+
+        project.CategoryID = 1;
     }
     string SelectedString = "Choose a category";
 
@@ -107,7 +117,20 @@
     {   
         project.TagIDs = new List<int>();
 
-        foreach (var item in CreatedTags)
+        project.UserIDs = new List<int>();
+        project.BucketIDs = new List<int>();
+        project.AuthorID = Author.Id;
+
+        project.Status = project.Status;
+
+        Console.WriteLine(project.CategoryID);
+        Console.WriteLine(project.Title);
+        Console.WriteLine(project.Description);
+        Console.WriteLine(project.Status);
+        Console.WriteLine(Author.Id);
+        Console.WriteLine(Author.FirstName);
+
+        foreach (var item in AllTags)
         {
             //post user generated tag
             TagCreateDTO newTag = new TagCreateDTO{Name = item};
@@ -121,13 +144,7 @@
             }
         }
 
-        project.UserIDs = new List<int>();
-        project.BucketIDs = new List<int>();
-        project.AuthorID = 1;
-        project.MaxStudents = 5;
-        project.Status = project.Status;
-
-        var response = await Http.PostAsJsonAsync("api/Projects", project);
+        var response = await Http.PostAsJsonAsync("api/Projects/Post", project);
 
         if (response.IsSuccessStatusCode)
         {   
@@ -162,7 +179,7 @@
         tagGenerator.Add(CreatedTags);
         tagGenerator.Build();
 
-        AllTags = tagGenerator.Find(project.Description);
+        AllTags = tagGenerator.Find(project.Description).ToHashSet();
         StateHasChanged();
     }
 
@@ -174,7 +191,8 @@
     {
         if(NewTag != "")
         {
-            CreatedTags.Append(NewTag);
+            CreatedTags.Add(NewTag);
+            AllTags.UnionWith(CreatedTags);
             StateHasChanged();
         }
     }
@@ -184,18 +202,14 @@
     {
         return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
     }
-    
-    /*
-    THIS NEEDS TO BE IMPLEMENTED:
-    private string Tags
+
+    private async Task<UserDTO> GetUser()
     {
-        get => string.Join(Environment.NewLine, project.TagIDs);
-        set => project.TagIDs = value.Split(Environment.NewLine).Select(p => p.Trim()).Where(p => !string.IsNullOrWhiteSpace(p));
-        
-        <div class="form-group">
-        <label for="Powers">Tags</label>
-        <InputTextArea @bind-Value="Tags" class="form-control" rows="5" />
-        </div>
-    } 
-    */
+        var AuthState = await authenticationStateTask;
+        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
+
+        var user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{email}");
+
+        return user;
+    }
 }
