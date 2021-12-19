@@ -13,78 +13,85 @@
 
 <h1>Create Project</h1>
 
-<EditForm Model="@project" OnValidSubmit="@HandleValidSubmit" class="pb-4">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-group">
-        <label for="Title">Title</label>
-        <InputText id="Title" @bind-Value="project.Title" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="project.Description" class="form-control" rows="7"/>
-    </div>
+<AuthorizeView Context="authContext">
+    <Authorized>
 
-    <div class="form-group">
-    <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
-        <div class="TagContainer">
-            <ul>
-                @foreach (var name in AllTags)
-                {
-                    <li>
-                        @name;
-                    </li>
-                }
-            </ul>
-        </div>
-        <div class="NewTagContainer">
-            <div class="row w-50">
-                <div class="col-7">
-                    <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
+        <EditForm Model="@project" OnValidSubmit="@HandleValidSubmit" class="pb-4" Context="formContext">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="Title">Title</label>
+                <InputText id="Title" @bind-Value="project.Title" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <InputTextArea id="Description" @bind-Value="project.Description" class="form-control" rows="7"/>
+            </div>
+
+            <div class="form-group">
+            <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
+                <div class="TagContainer">
+                    <ul>
+                        @foreach (var name in AllTags)
+                        {
+                            <li>
+                                @name;
+                            </li>
+                        }
+                    </ul>
                 </div>
-                
-                <div class="col-4">
-                    <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
+                <div class="NewTagContainer">
+                    <div class="row w-50">
+                        <div class="col-7">
+                            <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
+                        </div>
+                        
+                        <div class="col-4">
+                            <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Code for binding database entries to a selection taken from
-         https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
-     -->
-    <InputSelect id="Categories" class="mt-2 form-control" @bind-Value="project.CategoryID">
-        @foreach (var category in AllCategories)
-        {
-            <option value="@category.Id">@category.Title</option>
-        }
-    </InputSelect>
+            <!-- Code for binding database entries to a selection taken from
+                https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
+            -->
+            <InputSelect id="Categories" class="mt-2 form-control" @bind-Value="project.CategoryID">
+                @foreach (var category in AllCategories)
+                {
+                    <option value="@category.Id">@category.Title</option>
+                }
+            </InputSelect>
 
-    <div class="row">&#8205;</div>
+            <div class="row">&#8205;</div>
 
-    <div class="form-group">
-        <div>Project visibility</div>
-        <InputRadioGroup @bind-Value="project.Status">
-            <InputRadio id="Public" Value="ProjectStatus.PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
-            <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
-        </InputRadioGroup>
-    </div>
-    <div class="form-group">
-        <p>If you choose to create a private project, it will not be visible to other users on their dashboard, unless you invite them as a student or collaborator.</p>
-    </div>
-    <div class="form-group">
-        <br />
-        <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
-        <button type="save" class="btn btn-secondary">Save</button>
-        <button type="submit" class="btn btn-success btn-block">Post</button>
-    </div>
-</EditForm>
+            <div class="form-group">
+                <div>Project visibility</div>
+                <InputRadioGroup @bind-Value="project.Status">
+                    <InputRadio id="Public" Value="ProjectStatus.PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
+                    <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
+                </InputRadioGroup>
+            </div>
+            <div class="form-group">
+                <p>If you choose to create a private project, it will not be visible to other users on their dashboard, unless you invite them as a student or collaborator.</p>
+            </div>
+            <div class="form-group">
+                <br />
+                <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
+                <button type="save" class="btn btn-secondary">Save</button>
+                <button type="submit" class="btn btn-success btn-block">Post</button>
+            </div>
+        </EditForm>
+    </Authorized>
+    <NotAuthorized>
+        You must be logged in to create a project
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-
 
     private ProjectCreateDTO project = new();
     private TagGenerator tagGenerator = new TagGenerator();
@@ -102,7 +109,7 @@
         try
         {
             this.AllCategories = await GetAllCategories();
-            this.Author = await GetUser();
+            this.Author = await GetCurrentUser();
         }
         catch (Exception exception)
         {
@@ -203,7 +210,7 @@
         return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
     }
 
-    private async Task<UserDTO> GetUser()
+    private async Task<UserDTO> GetCurrentUser()
     {
         var AuthState = await authenticationStateTask;
         var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
