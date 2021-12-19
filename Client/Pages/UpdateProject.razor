@@ -151,8 +151,6 @@
         catch (Exception exception)
         {
             Console.WriteLine(":((( {0}",exception.Message);
-            Console.WriteLine("What the fuck?");
-            //exception.Redirect();
         }
         tempProject.Description = project.Description;
         tempProject.Title = project.Title;
@@ -165,7 +163,7 @@
         }
     }
 
-     private async Task HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {   
         ProjectUpdateDTO updateproject = new ProjectUpdateDTO{
             Id = ProjectId,
