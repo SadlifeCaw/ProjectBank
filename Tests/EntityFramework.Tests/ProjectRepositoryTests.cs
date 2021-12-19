@@ -227,6 +227,55 @@ public class ProjectRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async void ReadFirstHundred_PrioritizeAuthored_returns_only_100_project()
+    {
+        for(int i = 0; i < 150; i++){
+            var TestProject = new ProjectCreateDTO{
+            AuthorID = 1,
+            Title = "Test Project Deleted - " + i,
+            Description = "This is a test project",
+            Status = ProjectStatus.PUBLIC,
+            MaxStudents = 3,
+            CategoryID = 1,
+            TagIDs = new List<int>(){1},
+            UserIDs = new List<int>(),
+            BucketIDs = new List<int>()
+            };
+
+            await _repository.CreateAsync(TestProject);
+
+        }
+
+        var TestProjectAuthor2 = new ProjectCreateDTO{
+            AuthorID = 2,
+            Title = "Test Project Author",
+            Description = "This is a test project",
+            Status = ProjectStatus.PUBLIC,
+            MaxStudents = 3,
+            CategoryID = 1,
+            TagIDs = new List<int>(){1},
+            UserIDs = new List<int>(),
+            BucketIDs = new List<int>()
+        };
+
+        await _repository.CreateAsync(TestProjectAuthor2);
+        
+
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
+        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
+        var projects_ID_1 = await _repository.ReadFirstHundred_PrioritozeAuthored(1);
+        var projects_ID_2 = await _repository.ReadFirstHundred_PrioritozeAuthored(2);
+
+        Assert.Equal(100, projects_ID_1.Count());
+        Assert.Equal(100, projects_ID_2.Count());
+        Assert.Equal(TestProjectAuthor2.Description, projects_ID_2.ElementAt(0).Description);   
+        Assert.Equal(TestProjectAuthor2.Status, projects_ID_2.ElementAt(0).Status);
+        Assert.Equal(TestProjectAuthor2.MaxStudents, projects_ID_2.ElementAt(0).MaxStudents);
+        Assert.Equal(TestProjectAuthor2.Title, projects_ID_2.ElementAt(0).Title);     
+    }
+
+
+    [Fact]
     public async void ReadAllAvailableAsync_returns_empty_list_if_provided_authorID_does_not_exist()
     {
         var Emptylist = await _repository.ReadAllAvailableAsync(500);
