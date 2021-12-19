@@ -217,7 +217,7 @@ public class Seeding
                 for(int t = 0; t < TagsInProjectList.Count; t++){
                     string append;
                     if(t == 0) append = string.Format(" {0}", TagsInProjectList[t].Name);
-                    else if (t == TagsInProjectList.Count - 2) append = string.Format(" and {0}.", TagsInProjectList[t].Name);
+                    else if (t == TagsInProjectList.Count - 1) append = string.Format(" and {0}.", TagsInProjectList[t].Name);
                     else append = string.Format(", {0}",TagsInProjectList[t].Name);
                     Description.Append(append);
                 }
