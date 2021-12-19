@@ -65,6 +65,17 @@ public class ProjectRepository : IProjectRepository
                         .AsReadOnly();
     }
 
+    public async Task<IReadOnlyCollection<ProjectDTO>> ReadAllAvailableAsync(int author)
+    {
+        return (await _dbcontext.Projects
+                        .Where(p => p.Status != ProjectStatus.DELETED)
+                        .Where (p => p.Author.Id == author || p.Users.Select(u => u.Id).Contains(author))
+                        .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
+                                                    p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
+                        .ToListAsync())
+                        .AsReadOnly();
+    }
+
     public async Task<IReadOnlyCollection<ProjectDTO>> ReadFirstHundred_PrioritozeAuthored(int author)
     {
         var AuthoredProjects = (await _dbcontext.Projects

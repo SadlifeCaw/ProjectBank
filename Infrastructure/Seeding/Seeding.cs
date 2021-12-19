@@ -221,8 +221,29 @@ public class Seeding
                     else append = string.Format(", {0}",TagsInProjectList[t].Name);
                     Description.Append(append);
                 }
+
+                Random rnd = new Random();
+                var randomStatus = rnd.Next(1,5);
+                var status = new ProjectStatus();
+
+                if (randomStatus == 1)
+                {
+                    status = ProjectStatus.PUBLIC;
+
+                } else if (randomStatus == 2)
+                {
+                    status = ProjectStatus.PRIVATE;
+
+                } else if (randomStatus == 3)
+                {
+                    status = ProjectStatus.DRAFT;
+                    
+                } else 
+                {
+                    status = ProjectStatus.DELETED;
+                }
                 
-                Projects.Add(new Project(supervisor, Title.ToString(), Description.ToString(), ProjectStatus.PUBLIC, supervisor.Faculty, TagsInProjectList.AsReadOnly(), Users, new List<ProjectBucket>(), StudentsPerProject));
+                Projects.Add(new Project(supervisor, Title.ToString(), Description.ToString(), status, supervisor.Faculty, TagsInProjectList.AsReadOnly(), Users, new List<ProjectBucket>(), StudentsPerProject));
                 ProjectNum++;
             }
         }
