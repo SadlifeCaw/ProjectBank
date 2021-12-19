@@ -16,9 +16,10 @@ public class ProjectsController : ControllerBase
     }
 
     [AllowAnonymous]
+    [Route("Own/{id}")]
     [HttpGet]
-    public async Task<IReadOnlyCollection<ProjectDTO>> Get()
-        => await _repository.ReadAllAvailableAsync(1);
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetOwn(int id)
+        => await _repository.ReadAllAvailableAsync(id);
 
     [AllowAnonymous]
     [Route("Count/100/{id}")]
@@ -51,7 +52,7 @@ public class ProjectsController : ControllerBase
             return BadRequest();
         }
 
-        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+        return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
     }
 
     [AllowAnonymous]
@@ -65,7 +66,7 @@ public class ProjectsController : ControllerBase
             return BadRequest("Id mismatch");
         }
 
-        var projectToReturn = await _repository.UpdateAsync(id, project);
+        var projectToReturn = await _repository.UpdateAsync(id, project); 
 
         return projectToReturn.ToActionResult();
     }

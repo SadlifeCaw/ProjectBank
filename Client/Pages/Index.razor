@@ -40,6 +40,15 @@
                     </div>
                     </div>
             }
+            @if (projects.Count() == 0)
+            {
+                <h5>You do not own any projects yet...</h5>
+                <div class="col-2">
+                <p>
+                    <button class="btn btn-primary align-self-center" @onclick="Create">Create New Project</button>
+                </p>
+            </div>
+            }
             
             </div>
         </div>
@@ -123,6 +132,9 @@
 
 @code{
 string more = "View more";
+UserDTO user;
+[CascadingParameter]
+private Task<AuthenticationState> authenticationStateTask { get; set; }
     
     private ICollection<ProjectDTO> projects = new List<ProjectDTO>();
 
@@ -130,11 +142,29 @@ string more = "View more";
     {
         try
         {
-            projects = await Http.GetFromJsonAsync<ProjectDTO[]>($"api/Projects");
+            user = await GetUser();
+            projects = await Http.GetFromJsonAsync<ProjectDTO[]>($"api/Projects/Own/{user.Id}");
          
         } catch(Exception e)
         {
             Console.WriteLine(e.Message);
         }
+    }
+
+    private async Task<UserDTO> GetUser()
+    {
+        var AuthState = await authenticationStateTask;
+        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
+
+        var user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{email}");
+
+        return user;
+    }
+
+    private void Create()
+    {
+        var uri = $"{NavigationManager.BaseUri}projects/create";
+
+        NavigationManager.NavigateTo(uri);
     }
 }
