@@ -35,7 +35,7 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IProjectLSH ,ProjectLSH>();
+//builder.Services.AddScoped<IProjectLSH ,ProjectLSH>();
 
 var app = builder.Build();
 
