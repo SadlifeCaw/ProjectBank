@@ -1,4 +1,5 @@
 using ProjectBank.Infrastructure.Entities;
+using ProjectBank.Infrastructure.ReferenceSystem;
 
 namespace ProjectBank.Infrastructure;
 
@@ -25,6 +26,8 @@ public class ProjectBankContext : DbContext
     public DbSet<Signature> Signatures => Set<Signature>();
     public DbSet<ProjectBucket> Buckets => Set<ProjectBucket>();
 
+    //public ProjectLSH LSH = new ProjectLSH();
+
 
     public ProjectBankContext(DbContextOptions<ProjectBankContext> options) : base(options) { }
 
@@ -33,7 +36,7 @@ public class ProjectBankContext : DbContext
     
         // Create Table-Per-Type for the Category hierarchy
         // This is slower than Table-Per-Hierarchy, but it makes database updates work
-
+        
         modelBuilder.Entity<Category>().ToTable("Categories");
         modelBuilder.Entity<CodedCategory>().ToTable("CodedCategories");
         modelBuilder.Entity<Institution>().ToTable("Institutions");

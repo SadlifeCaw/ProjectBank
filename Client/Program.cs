@@ -20,3 +20,4 @@ builder.Services.AddMsalAuthentication(options =>
 });
 
 await builder.Build().RunAsync();
+

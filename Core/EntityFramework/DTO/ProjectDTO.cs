@@ -2,7 +2,16 @@ namespace ProjectBank.Core.EF.DTO;
 
 public record ProjectKeyDTO(int AuthorID, String Title);
 
-public record ProjectDTO(
+public record ProjectReferenceDTO (
+    int Id,
+
+    int CategoryID,
+    
+    ICollection<int> TagIDs
+);
+
+
+public record ProjectDTO (
     int Id,
 
     [Required]

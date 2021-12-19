@@ -16,3 +16,4 @@ global using Microsoft.Extensions.Logging;
 global using System.Threading.Tasks;
 global using Microsoft.AspNetCore.Mvc;
 global using Moq;
+global using ProjectBank.Infrastructure.ReferenceSystem;

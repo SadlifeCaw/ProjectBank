@@ -3,11 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using ProjectBank.Infrastructure;
 using ProjectBank.Core;
 using ProjectBank.Infrastructure.Entities;
+using ProjectBank.Infrastructure.ReferenceSystem;
+
 
 namespace ProjectBank.Server.Model;
 
 public static class SeedExtensions
 {
+    private static ProjectBankContext _context;
+    public static ProjectLSH LSH = new ProjectLSH(_context);
     public static async Task<IHost> SeedAsync(this IHost host)
     {
         using (var scope = host.Services.CreateScope())
@@ -16,6 +20,8 @@ public static class SeedExtensions
 
           
             await SeedProjectsAsync(context);
+            _context = context;
+            //LSH = new ProjectLSH(context);
         }
         return host;
     }
@@ -46,10 +52,18 @@ public static class SeedExtensions
             //Tags
             context.Tags.AddRange(Seeding.Tags);
             
+            //Buckets
+            //context.LSH.InsertAll();
+            
+            await context.SaveChangesAsync();
+
             //Projects
             context.Projects.AddRange(Seeding.Projects);
 
             await context.SaveChangesAsync();
+            
+            LSH = new ProjectLSH(context);
+            await LSH.InsertAll();
         }
     }
 }

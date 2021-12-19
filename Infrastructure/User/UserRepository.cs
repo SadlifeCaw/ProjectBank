@@ -58,24 +58,6 @@ public class UserRepository : IUserRepository
                                                  entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList(), entity.Courses.Select(c => c.Id).ToList()));
     }
 
-    public async Task<Option<UserDTO>> ReadSupervisor(int userID)
-    {
-        var users = from u in _dbcontext.Users.OfType<Supervisor>()
-                           where u.Id == userID
-                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
-
-        return await users.FirstOrDefaultAsync(); 
-    }
-
-    public async Task<Option<UserDTO>> ReadStudent(int userID)
-    {
-        var users = from u in _dbcontext.Users.OfType<Student>()
-                           where u.Id == userID
-                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
-
-        return await users.FirstOrDefaultAsync(); 
-    }
-
     public async Task<(Response, SupervisorDTO)> CreateAsync(SupervisorCreateDTO user)
     {
         var conflict = await _dbcontext.Users.OfType<Supervisor>()
@@ -95,7 +77,7 @@ public class UserRepository : IUserRepository
                               .FirstOrDefaultAsync();
 
         var faculty = await _dbcontext.Faculties
-                              .Where(f => f.Institution == institution)
+                              .Where(f => f.Institution.Id == institution.Id)
                               .Where(f => f.Title == user.FacultyName)
                               .Select(f => f)
                               .FirstOrDefaultAsync();
@@ -125,6 +107,24 @@ public class UserRepository : IUserRepository
                                                     entity.Institution.Title, entity.Projects.Select(p => p.Id).ToList(), entity.AuthoredProjects.Select(p => p.Id).ToList()));
     }
 
+    public async Task<Option<UserDTO>> ReadSupervisor(int userID)
+    {
+        var users = from u in _dbcontext.Users.OfType<Supervisor>()
+                           where u.Id == userID
+                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
+
+        return await users.FirstOrDefaultAsync(); 
+    }
+
+    public async Task<Option<UserDTO>> ReadStudent(int userID)
+    {
+        var users = from u in _dbcontext.Users.OfType<Student>()
+                           where u.Id == userID
+                           select new UserDTO(u.Id, u.Email, u.FirstName, u.LastName, u.Projects.Select(p => p.Id).ToList());
+
+        return await users.FirstOrDefaultAsync(); 
+    }
+
     public async Task<Option<UserDTO>> ReadByID(int userID)
     {
         var users = from u in _dbcontext.Users
@@ -134,7 +134,7 @@ public class UserRepository : IUserRepository
         return await users.FirstOrDefaultAsync(); 
     }
 
-    public async Task<UserDTO> ReadByEmail(string Email)
+    public async Task<Option<UserDTO>> ReadByEmail(string Email)
     {
         var users = from u in _dbcontext.Users
                            where u.Email == Email

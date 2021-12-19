@@ -5,42 +5,49 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1 class="mb-3">Welcome</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1 class="mb-3">Welcome</h1>
 
-<head>
-    <link rel="stylesheet" href="Index.razor.css">
-</head>
+        <head>
+            <link rel="stylesheet" href="Index.razor.css">
+        </head>
 
-<div class="buffer_20"></div>
+        <div class="buffer_20"></div>
 
-<div>
-    <h2 class="align"> Your Projects </h2>
-    <div class="ProjectListDisplay">
-        @foreach (var project in projects)
-    {
-        <div class="ProjectDisplay">
-            <div class="TitleContainer">
-                <h1 class="Title">@project.Title</h1>
-                 <div class="StudentDisplay">
-                    <p class="StudentContent">@project.UserIDs.Count()/@project.MaxStudents</p>
-                 </div>
+        <div>
+            <h2 class="align"> Your Projects </h2>
+            <div class="ProjectListDisplay">
+                @foreach (var project in projects)
+            {
+                <div class="ProjectDisplay">
+                    <div class="TitleContainer">
+                        <h1 class="Title">@project.Title</h1>
+                        <div class="StudentDisplay">
+                            <p class="StudentContent">@project.UserIDs.Count()/@project.MaxStudents</p>
+                        </div>
+                    </div>
+                    <p class="Description">@project.Description</p>
+                    <div class="TagDisplay">
+                        <ul>
+                            <li> Tag1 Long Name</li>
+                            <li> Tag2</li>
+                            <li> Tag3</li>
+                        </ul>
+                    </div>
+                    <div class="ButtonDisplay">
+                    <a href ="Projects/@project.Id" class="btn btn-primary">View More</a>
+                    </div>
+                    </div>
+            }
+            
             </div>
-            <p class="Description">@project.Description</p>
-            <div class="TagDisplay">
-                <ul>
-                    <li> Tag1 Long Name</li>
-                    <li> Tag2</li>
-                    <li> Tag3</li>
-                </ul>
-            </div>
-            <div class="ButtonDisplay">
-            <a href ="Projects/@project.Id" class="btn btn-primary">View More</a>
-            </div>
-            </div>
-    }
-    
-    </div>
-</div>
+        </div>
+    </Authorized>
+     <NotAuthorized>
+         Please log in to see your page
+     </NotAuthorized>
+</AuthorizeView>
 
 <!--
 <div>
@@ -117,7 +124,7 @@
 @code{
 string more = "View more";
     
-    private ProjectDTO[]? projects;
+    private ICollection<ProjectDTO> projects = new List<ProjectDTO>();
 
     protected override async Task OnInitializedAsync()
     {
