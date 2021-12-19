@@ -78,7 +78,7 @@
             <div class="form-group">
                 <br />
                 <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
-                <button type="save" class="btn btn-secondary">Save</button>
+                <button type="submit" class="btn btn-secondary" @onclick="Save">Save</button>
                 <button type="submit" class="btn btn-success btn-block">Post</button>
             </div>
         </EditForm>
@@ -94,6 +94,7 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     private ProjectCreateDTO project = new();
+    private ProjectStatus newStatus = ProjectStatus.DRAFT;
     private TagGenerator tagGenerator = new TagGenerator();
 
     private ISet<string> AllTags = new HashSet<string>();
@@ -152,7 +153,6 @@
         }
 
         var response = await Http.PostAsJsonAsync("api/Projects/Post", project);
-
         if (response.IsSuccessStatusCode)
         {   
             var created = await response.Content.ReadFromJsonAsync<ProjectDTO>();
@@ -168,6 +168,11 @@
         var uri = $"{NavigationManager.BaseUri}projects";
 
         NavigationManager.NavigateTo(uri);
+    }
+
+    private void Save()
+    {
+        project.Status = ProjectStatus.DRAFT;
     }
 
     void OnDropDownSelect (ChangeEventArgs e)

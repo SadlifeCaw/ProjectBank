@@ -52,7 +52,7 @@ public class ProjectsController : ControllerBase
             return BadRequest();
         }
 
-        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+        return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
     }
 
     [AllowAnonymous]
