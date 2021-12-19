@@ -1,4 +1,4 @@
-@page "/projects/update/{projectID:int}"
+@page "/projects/{projectID:int}/edit"
 @using ProjectBank.Infrastructure.Generator;
 @using ProjectBank.Core;
 @using Microsoft.AspNetCore.Components.Web
@@ -13,115 +13,127 @@
 
 <h1>Update Project</h1>
 
-<EditForm Model="@tempProject" OnValidSubmit="@HandleValidSubmit" class="pb-4">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-group">
-        <label for="Title">Update title</label>
-        <InputText id="Title" @bind-Value="tempProject.Title" class="form-control"/>
 
-       
-    </div>
-    <div class="form-group">
-        <label for="Description">Update description</label>
-        <InputTextArea id="Description" @bind-Value="@tempProject.Description" class="form-control" rows="7"/>
-    </div>
-
-    <div class="form-group">
-    <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
-        <div class="TagContainer">
-            <ul>
-                @foreach (var element in AllTags)
-                {
-                    <li>
-                        @element;
-                    </li>
-                }
-            </ul>
-        </div>
-        <div class="NewTagContainer">
-            <div class="row w-50">
-                <div class="col-7">
-                    <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
-                </div>
-                
-                <div class="col-4">
-                    <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Code for binding database entries to a selection taken from
-         https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
-     -->
-    <InputSelect id="Categories" class="mt-2 form-control" @bind-Value="tempProject.CategoryID">
-        @foreach (var category in AllCategories)
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <!--Are projects properly loaded?-->
+        @if(CurrentUser != null && project != null)
         {
-            <option value="@category.Id">@category.Title</option>
+            //Is current user author or a collaborater?
+            @if(project.AuthorID == CurrentUser.Id || supervisors.Any(s => s.Id == CurrentUser.Id))
+            {
+                <EditForm Model="@tempProject" OnValidSubmit="@HandleValidSubmit" class="pb-4" Context="editContext">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label for="Title">Update title</label>
+                        <InputText id="Title" @bind-Value="tempProject.Title" class="form-control"/>
+
+                    
+                    </div>
+                    <div class="form-group">
+                        <label for="Description">Update description</label>
+                        <InputTextArea id="Description" @bind-Value="@tempProject.Description" class="form-control" rows="7"/>
+                    </div>
+
+                    <div class="form-group">
+                    <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
+                        <div class="TagContainer">
+                            <ul>
+                                @foreach (var element in AllTags)
+                                {
+                                    <li>
+                                        @element;
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="NewTagContainer">
+                            <div class="row w-50">
+                                <div class="col-7">
+                                    <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
+                                </div>
+                                
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code for binding database entries to a selection taken from
+                        https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
+                    -->
+                    <InputSelect id="Categories" class="mt-2 form-control" @bind-Value="tempProject.CategoryID">
+                        @foreach (var category in AllCategories)
+                        {
+                            <option value="@category.Id">@category.Title</option>
+                        }
+                    </InputSelect>
+
+                    <div class="row">&#8205;</div>
+
+                    <div class="form-group">
+                        <div>Project visibility</div>
+                        <InputRadioGroup @bind-Value="tempProject.Status">
+                            <InputRadio id="Public" Value="ProjectStatus.PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
+                            <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
+                        </InputRadioGroup>
+                    </div>
+                    <div class="form-group">
+                        <p>If you choose to create a private project, it will not be visible to other users on their dashboard, unless you invite them as a student or collaborator.</p>
+                    </div>
+                    <div class="form-group">
+                        <br />
+                        <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
+                        <button type="save" class="btn btn-secondary">Save</button>
+                        <button type="submit" class="btn btn-success btn-block">Update</button>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <p>You do not have authorization to edit this project. You must either be its author or added as a collaborator</p>
+            }
+        
         }
-    </InputSelect>
-
-    <div class="row">&#8205;</div>
-
-    <div class="form-group">
-        <div>Project visibility</div>
-        <InputRadioGroup @bind-Value="tempProject.Status">
-            <InputRadio id="Public" Value="ProjectStatus.PUBLIC" class="form-check-input" /><label class="form-check-label" for="Public">Public</label>
-            <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
-        </InputRadioGroup>
-    </div>
-    <div class="form-group">
-        <p>If you choose to create a private project, it will not be visible to other users on their dashboard, unless you invite them as a student or collaborator.</p>
-    </div>
-    <div class="form-group">
-        <br />
-        <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
-        <button type="save" class="btn btn-secondary">Save</button>
-        <button type="submit" class="btn btn-success btn-block">Update</button>
-    </div>
-</EditForm>
+        else
+        {
+            <p>Loading project...</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        You must be logged in to edit a project
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
-
-    //Fra Dashboard
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private UserDTO CurrentUser;
     string title = "Loading title...";
     string empty = string.Empty;
     string description = "Loading description...";
-    string AuthorName = string.Empty;
-
+    string SelectedString = "Choose a category";
     
     [Parameter]
     public int ProjectId {get; set;}
     private ProjectDTO project;
     private ProjectUpdateDTO tempProject = new();
-    private UserDTO author;
     private int MaxStudents;
     private CategoryDTO category;
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
-    private List<UserDTO> students = new List<UserDTO>();
+
 
     private TagGenerator tagGenerator = new TagGenerator();
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
     private string NewTag = string.Empty;
-    private ProjectStatus status;
-    
-    string SelectedString = "Choose a category";
 
-    private Modal inviteModal { get; set; }
 
-    private Modal applyModal { get; set; }
-
-    /*private async void test()
-    {
-        var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
-            
-        Console.WriteLine(test);
-    }*/
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,12 +141,12 @@
         {
             this.project = await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{ProjectId}");
             this.tags = await GetTagsDTOs(project.TagIDs).ToListAsync();
-            this.author = await GetUserDTO(project.AuthorID);
-            this.students = await GetStudentsDTOs(project.UserIDs).ToListAsync();
             this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
             this.category = await GetCategoryDTO(project.CategoryID);
             this.AllCategories = await GetAllCategories();
             this.MaxStudents = project.MaxStudents;
+            
+            this.CurrentUser = await GetCurrentUser();
         }
         catch (Exception exception)
         {
@@ -144,7 +156,7 @@
         }
         tempProject.Description = project.Description;
         tempProject.Title = project.Title;
-        this.AuthorName = author.FirstName + " " + author.LastName;
+        tempProject.AuthorID = project.AuthorID;
         tempProject.CategoryID = project.CategoryID;
 
         foreach (var item in tags)
@@ -238,30 +250,6 @@
     {
         return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
     }
-
-    private async IAsyncEnumerable<UserDTO> GetStudentsDTOs(ICollection<int> userIDs) 
-    {
-        foreach (var userID in userIDs)
-        {
-            //yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
-            UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
-            try 
-            {
-                user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
-            }
-            catch(Exception e) 
-            {
-                //Not a supervisor, skip
-            }
-            yield return user;
-        }
-    }
-
-    private async Task<UserDTO> GetUserDTO(int userID) 
-    {
-        return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
-    }
-
     private async Task<CategoryDTO> GetCategoryDTO(int catID) 
     {
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
@@ -295,6 +283,16 @@
             }
             yield return user;
         }
+    }
+
+    private async Task<UserDTO> GetCurrentUser()
+    {
+        var AuthState = await authenticationStateTask;
+        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
+
+        var user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{email}");
+
+        return user;
     }
 }
 

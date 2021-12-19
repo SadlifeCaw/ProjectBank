@@ -7,149 +7,175 @@
 @attribute [Authorize]
 @inject HttpClient Http
 
-<PageTitle>@title</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>@title</PageTitle>
 
-<head>
-    <link rel="stylesheet" href="Dashboard.razor.css">
-</head>
+        <head>
+            <link rel="stylesheet" href="Dashboard.razor.css">
+        </head>
 
-<div class="ProjectHeader">
-    <h1 class="ProjectTitle">@title</h1>
-    <!--Idea is to only show Status to the author of the project-->
-    <div class="Status Public">
-        <p>Public</p>
-    </div>
-</div>
-
-<div class="Buffer_20"></div>   
-
-
-<div class="row ProjectInfoDisplay">
-  <div class="col-md-8 DescriptionContainer">
-    <div class="DescriptionDisplay">
-        <div class="row">
-            
+        <div class="ProjectHeader">
+            <h1 class="ProjectTitle">@title</h1>
+            <!--Idea is to only show Status to the author of the project-->
+            <div class="Status Public">
+                <p>Public</p>
+            </div>
         </div>
-        <div class="DescriptionTitle">
-            <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
-        </div>  
-        <div class="Description">
-            <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
-            <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
+
+        <div class="Buffer_20"></div>   
+
+
+        <div class="row ProjectInfoDisplay">
+        <div class="col-md-8 DescriptionContainer">
+            <div class="DescriptionDisplay">
+                <div class="row">
+                    
+                </div>
+                <div class="DescriptionTitle">
+                    <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
+                </div>  
+                <div class="Description">
+                    <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
+                    <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
+                </div>
+            </div>
         </div>
-    </div>
-  </div>
-  <div class="col-6 col-md-4 AuxInfoContainer">
-      <div class="row TargetGroup">
-          <h1>Target Group</h1>
-          <div class="TargetGroupContainer">
-              <p>@TargetGroup</p>
-          </div>
-      </div>
-      <div class="row">
-          <div class="row">
-              <div class="col-8">
-                <h1>Collaborators</h1>
-              </div>
-              <div class="col-4">
-                <button type="button" class="btn btn-sm ModalButton" @onclick="() => inviteModal.Open()">Invite</button>  
-              </div>
-          </div>
-          <div class="CardContainer">
-              <ul>
-                @foreach (var element in supervisors)
-                    {
-                        @if(element.FirstName != string.Empty)
+        <div class="col-6 col-md-4 AuxInfoContainer">
+            <div class="row TargetGroup">
+                <h1>Target Group</h1>
+                <div class="TargetGroupContainer">
+                    <p>@TargetGroup</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="row">
+                    <div class="col-8">
+                        <h1>Collaborators</h1>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-sm ModalButton" @onclick="() => inviteModal.Open()">Invite</button>  
+                    </div>
+                </div>
+                <div class="CardContainer">
+                    <ul>
+                        @foreach (var element in supervisors)
+                            {
+                                @if(element.FirstName != string.Empty)
+                                {
+                                    <li>
+                                        @(String.Format("{0} {1}", element.FirstName, element.LastName))
+                                    </li>
+                                }
+                            }
+                        </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="row h-50">
+                    <div class="col-8">
+                        <h1>Students</h1>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-sm ModalButton" @onclick="() => applyModal.Open()">Apply</button>  
+                    </div>
+                </div>
+                <div class="CardContainer">
+                    <ul>
+                        @foreach (var element in students)
+                        {
+                            @if(element.FirstName != string.Empty)
+                            {
+                                <li>
+                                @(String.Format("{0} {1}", element.FirstName, element.LastName))
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <h1>Project Tags</h1>
+                <div class="CardContainer">
+                    <ul>
+                        @foreach (var element in tags)
                         {
                             <li>
-                                @(String.Format("{0} {1}", element.FirstName, element.LastName))
+                                @element.Name;
                             </li>
                         }
-                    }
-                </ul>
-          </div>
-      </div>
-      <div class="row">
-        <div class="row h-50">
-              <div class="col-8">
-                <h1>Students</h1>
-              </div>
-              <div class="col-4">
-                <button type="button" class="btn btn-sm ModalButton" @onclick="() => applyModal.Open()">Apply</button>  
-              </div>
-          </div>
-        <div class="CardContainer">
-            <ul>
-                @foreach (var element in students)
-                {
-                    @if(element.FirstName != string.Empty)
-                    {
-                        <li>
-                        @(String.Format("{0} {1}", element.FirstName, element.LastName))
-                        </li>
-                    }
-                }
-            </ul>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-          <h1>Project Tags</h1>
-          <div class="CardContainer">
-            <ul>
-                @foreach (var element in tags)
-                {
-                    <li>
-                        @element.Name;
-                    </li>
-                }
-            </ul>
-          </div>
-      </div>
-  </div>
-</div>
-
-<Modal @ref="inviteModal">
-    <Title>Invite Supervisor</Title>
-    <Body>
-        <p>
-            Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
-        </p>
-        <div class="form-group">
-            <label for="InviteFormGroup">Email Address: </label>
-            <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com">
         </div>
-    </Body>
-    <Footer>
-        <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
-        <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Invite</button>
-    </Footer>
-</Modal>
 
-<Modal @ref="applyModal">
-    <Title>Apply for project</Title>
-    <Body>
-        <p>
-              Are you absolutely sure about this? If you choose to apply for this course, you'll we committed to attend all lectures, go to the exam etc... You could really regret this.
-        </p>
-    </Body>
-    <Footer>
-        <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
-        <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => applyModal.Close()">Apply</button>
-    </Footer>
-</Modal>
+        <Modal @ref="inviteModal">
+            <Title>Invite Supervisor</Title>
+            <Body>
+                <p>
+                    Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
+                </p>
+                <div class="form-group">
+                    <label for="InviteFormGroup">Email Address: </label>
+                    <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com">
+                </div>
+            </Body>
+            <Footer>
+                <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Invite</button>
+            </Footer>
+        </Modal>
 
-<div class="Buffer_40"></div>
+        <Modal @ref="applyModal">
+            <Title>Apply for project</Title>
+            <Body>
+                <p>
+                    Are you absolutely sure about this? If you choose to apply for this course, you'll we committed to attend all lectures, go to the exam etc... You could really regret this.
+                </p>
+            </Body>
+            <Footer>
+                <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => applyModal.Close()">Apply</button>
+            </Footer>
+        </Modal>
 
-<a href="Projects/Update/@ProjectId" class="btn btn-primary">Edit Project</a>
+        <Modal @ref="confirmDeletion">
+            <Title>Apply for project</Title>
+            <Body>
+                <p>
+                    Please confirm that you want to delete this project
+                </p>
+            </Body>
+            <Footer>
+                <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Cancel</button>
+                <button type="button" class="btn btn-danger" data-dismiss="inviteModal" @onclick="() => applyModal.Close()">Delete</button>
+            </Footer>
+        </Modal>
 
-<div class="Buffer_40"></div>
+        @if(CurrentUser != null && project.AuthorID == CurrentUser.Id)
+        {
+            <div class="Buffer_40"></div>
 
-<div class="RelatedProjectsContainer">
-    <h2>Related projects</h2>
-    <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
-</div>
+            <a href="Projects/@ProjectId/edit" class="btn btn-primary">Edit Project</a>
+            <a class="btn btn-danger" @onclick="() => confirmDeletion.Open()">Delete Project</a>
+        }
+
+        <div class="Buffer_40"></div>
+
+        <div class="RelatedProjectsContainer">
+            <h2>Related projects</h2>
+            <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        Please log in to view project
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
     string title = "Loading title...";
     string empty = string.Empty;
     string Description = "Loading description...";
@@ -164,10 +190,13 @@
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
     private List<UserDTO> students = new List<UserDTO>();
+    private UserDTO CurrentUser;
 
     private Modal inviteModal { get; set; }
 
     private Modal applyModal { get; set; }
+
+    private Modal confirmDeletion { get; set; }
 
     /*private async void test()
     {
@@ -186,6 +215,8 @@
             this.students = await GetStudentsDTOs(project.UserIDs).ToListAsync();
             this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
             this.category = await GetCategoryDTO(project.CategoryID);
+            
+            this.CurrentUser = await GetCurrentUser();
         }
         catch (Exception exception)
         {
@@ -257,5 +288,15 @@
     private async Task<CategoryDTO> GetCategoryDTO(int catID) 
     {
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
+    }
+
+    private async Task<UserDTO> GetCurrentUser()
+    {
+        var AuthState = await authenticationStateTask;
+        var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
+
+        var user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{email}");
+
+        return user;
     }
 }
