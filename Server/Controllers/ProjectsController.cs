@@ -49,11 +49,11 @@ public class ProjectsController : ControllerBase
 
         if(status == Core.Response.Conflict)
         {
-            return Conflict("Project with title already exists");
+            return new ConflictResult();
         }
         if(status == Core.Response.NotFound)
         {
-            return NotFound("Author or category couldn't be found");
+            return new NotFoundResult();
         }
 
         return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}

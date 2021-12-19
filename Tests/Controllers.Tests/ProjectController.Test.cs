@@ -90,7 +90,7 @@ public class ProjectControllersTests
         // Act
         var response = await controller.Post(existing);
 
-        Assert.IsType<ConflictObjectResult>(response);
+        Assert.IsType<ConflictResult>(response);
     }
 
     [Fact]
@@ -107,7 +107,7 @@ public class ProjectControllersTests
         // Act
         var response = await controller.Post(existing);
 
-        Assert.IsType<NotFoundObjectResult>(response);
+        Assert.IsType<NotFoundResult>(response);
     }
 
     [Fact]
