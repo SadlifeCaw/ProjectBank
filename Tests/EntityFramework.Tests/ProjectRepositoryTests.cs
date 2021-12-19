@@ -227,6 +227,14 @@ public class ProjectRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async void ReadAllAvailableAsync_returns_empty_list_if_provided_authorID_does_not_exist()
+    {
+        var Emptylist = await _repository.ReadAllAvailableAsync(500);
+
+        Assert.Equal(new List<ProjectDTO>(), Emptylist);
+    }
+
+    [Fact]
     public async void ReadFirstHundred_PrioritizeAuthored_returns_only_100_project()
     {
         for(int i = 0; i < 150; i++){
@@ -265,22 +273,15 @@ public class ProjectRepositoryTests : IDisposable
         var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
         var projects_ID_1 = await _repository.ReadFirstHundred_PrioritozeAuthored(1);
         var projects_ID_2 = await _repository.ReadFirstHundred_PrioritozeAuthored(2);
+        var projects_ID_not_in_database = await _repository.ReadFirstHundred_PrioritozeAuthored(999);
 
         Assert.Equal(100, projects_ID_1.Count());
         Assert.Equal(100, projects_ID_2.Count());
+        Assert.Equal(100, projects_ID_not_in_database.Count());
         Assert.Equal(TestProjectAuthor2.Description, projects_ID_2.ElementAt(0).Description);   
         Assert.Equal(TestProjectAuthor2.Status, projects_ID_2.ElementAt(0).Status);
         Assert.Equal(TestProjectAuthor2.MaxStudents, projects_ID_2.ElementAt(0).MaxStudents);
         Assert.Equal(TestProjectAuthor2.Title, projects_ID_2.ElementAt(0).Title);     
-    }
-
-
-    [Fact]
-    public async void ReadAllAvailableAsync_returns_empty_list_if_provided_authorID_does_not_exist()
-    {
-        var Emptylist = await _repository.ReadAllAvailableAsync(500);
-
-        Assert.Equal(new List<ProjectDTO>(), Emptylist);
     }
 
    [Fact]
