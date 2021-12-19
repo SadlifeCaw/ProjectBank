@@ -6,7 +6,7 @@ namespace ProjectBank.Infrastructure.Entities
         [Required]
         public int Id {get; set;}
         //public ISet<Tagable> Projects = new HashSet<Tagable>(); 
-        public ISet<int> ProjectIds = new HashSet<int>(); //CHANGES THIS. MIGHT CAUSE PROBLEMS
+        public ISet<Tagable> Projects = new HashSet<Tagable>(); //CHANGES THIS. MIGHT CAUSE PROBLEMS
 
         public Bucket() {}
     }

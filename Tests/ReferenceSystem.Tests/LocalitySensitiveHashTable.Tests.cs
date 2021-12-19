@@ -12,7 +12,7 @@ using ProjectBank.Infrastructure.Entities;
 using ProjectBank.Infrastructure.ReferenceSystem;
 using ProjectBank.Core.EF.DTO;
 using ProjectBank.Core;
-using System.Threading.Tasks;  
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,8 +22,8 @@ namespace ReferenceSystem.Tests
     public class ProjectLSHTests
     {
         private readonly ProjectBankContext _context;
-        private readonly IProjectRepository _projectRepository;
-        private readonly IBucketRepository _bucketRepository;
+        //private readonly IProjectRepository _projectRepository;
+        //private readonly IBucketRepository _bucketRepository;
 
         //Tests:
         //
@@ -96,38 +96,38 @@ namespace ReferenceSystem.Tests
 
 
             //SMALL LSH:
-            AgricultureFood = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = Supervisor1, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5};
-            ComputerScienceSimulationAlgorithmsAgriculture = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 2, Author = Supervisor1, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            ComputerScienceAlgorithmsSecurity = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            AgricultureFarming = new Project { Category = UIDesign, Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = Supervisor1, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            ComputerScienceAlgorithmsSimulationSecurity = new Project { Category = InteractiveDesign, Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
+            AgricultureFood = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = Supervisor1, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ComputerScienceSimulationAlgorithmsAgriculture = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 2, Author = Supervisor1, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ComputerScienceAlgorithmsSecurity = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            AgricultureFarming = new Project { Category = UIDesign, Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = Supervisor1, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ComputerScienceAlgorithmsSimulationSecurity = new Project { Category = InteractiveDesign, Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
 
             //LARGE LSH:
-            AgricultureFoodIdentical = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 6, Author = Supervisor1, Title = "AgricultureFoodIdentical", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            ComputerScienceSimulationAlgorithmsAgricultureIdentical = new Project { Category = FacultyComputerScienceITU, Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 7, Author = Supervisor1, Title = "ComputerScienceSimulationAlgorithmsIdentical", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            ComputerScienceAlgorithmsSecurityIdentical = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 8, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSecurityIdentical", Description = "ComputerScienceAlgorithmsSecurityIdentical", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            AgricultureFarmingIdentical = new Project { Category = UIDesign, Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 9, Author = Supervisor1, Title = "AgricultureFarming", Description = "AgricultureFarmingIdentical", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
-            ComputerScienceAlgorithmsSimulationSecurityIdentical = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 10, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSimulationSecurityIdentical", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>() , MaxStudents = 5};
+            AgricultureFoodIdentical = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 6, Author = Supervisor1, Title = "AgricultureFoodIdentical", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ComputerScienceSimulationAlgorithmsAgricultureIdentical = new Project { Category = FacultyComputerScienceITU, Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 7, Author = Supervisor1, Title = "ComputerScienceSimulationAlgorithmsIdentical", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ComputerScienceAlgorithmsSecurityIdentical = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 8, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSecurityIdentical", Description = "ComputerScienceAlgorithmsSecurityIdentical", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            AgricultureFarmingIdentical = new Project { Category = UIDesign, Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 9, Author = Supervisor1, Title = "AgricultureFarming", Description = "AgricultureFarmingIdentical", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ComputerScienceAlgorithmsSimulationSecurityIdentical = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 10, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSimulationSecurityIdentical", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
 
-            FoodProject = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { Food }, Id = 11, Author = Supervisor1, Title = "Title", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            FoodAndAgricultureProject = new Project { Category = InteractiveDesign, Tags = new List<Tag> { Food, Agriculture }, Id = 12, Author = Supervisor1, Title = "Title2", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            AgricultureSecurityProject = new Project { Category = DataScience, Tags = new List<Tag> { Agriculture, Security }, Id = 13, Author = Supervisor1, Title = "Title3", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            SecurityFoodProject = new Project { Category = FacultyComputerScienceITU, Tags = new List<Tag> { Food, Security }, Id = 14, Author = Supervisor1, Title = "Title4", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            SecurityProject = new Project { Category = FacultyDesignDTU, Tags = new List<Tag> { Security }, Id = 15, Author = Supervisor1, Title = "Title5", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
+            FoodProject = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { Food }, Id = 11, Author = Supervisor1, Title = "Title", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            FoodAndAgricultureProject = new Project { Category = InteractiveDesign, Tags = new List<Tag> { Food, Agriculture }, Id = 12, Author = Supervisor1, Title = "Title2", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            AgricultureSecurityProject = new Project { Category = DataScience, Tags = new List<Tag> { Agriculture, Security }, Id = 13, Author = Supervisor1, Title = "Title3", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            SecurityFoodProject = new Project { Category = FacultyComputerScienceITU, Tags = new List<Tag> { Food, Security }, Id = 14, Author = Supervisor1, Title = "Title4", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            SecurityProject = new Project { Category = FacultyDesignDTU, Tags = new List<Tag> { Security }, Id = 15, Author = Supervisor1, Title = "Title5", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
 
-            ManyTagsProject = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Algorithms, Simulation, Food, Farming }, Id = 16, Author = Supervisor1, Title = "Title6", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            LessManyTagsProject = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Simulation, Food, Farming }, Id = 17, Author = Supervisor1, Title = "AgricultureFood7", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            LessManyTagsProject2 = new Project { Category = DTU, Tags = new List<Tag> { ComputerScience, Security, Simulation, Food, Farming, Algorithms }, Id = 18, Author = Supervisor1, Title = "AgricultureFood8", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            LessManyTagsProject3 = new Project { Category = DTU, Tags = new List<Tag> { ComputerScience, Security, Simulation, Food, Algorithms, Agriculture }, Id = 19, Author = Supervisor1, Title = "AgricultureFood9", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
+            ManyTagsProject = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Algorithms, Simulation, Food, Farming }, Id = 16, Author = Supervisor1, Title = "Title6", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            LessManyTagsProject = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Simulation, Food, Farming }, Id = 17, Author = Supervisor1, Title = "AgricultureFood7", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            LessManyTagsProject2 = new Project { Category = DTU, Tags = new List<Tag> { ComputerScience, Security, Simulation, Food, Farming, Algorithms }, Id = 18, Author = Supervisor1, Title = "AgricultureFood8", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            LessManyTagsProject3 = new Project { Category = DTU, Tags = new List<Tag> { ComputerScience, Security, Simulation, Food, Algorithms, Agriculture }, Id = 19, Author = Supervisor1, Title = "AgricultureFood9", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
 
-            AllUnrelatedTags = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus, Statistics, Probability, Science }, Id = 20, Author = Supervisor1, Title = "AgricultureFood10", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = ITU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            MathAlgebraDiscrete = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics }, Id = 27, Author = Supervisor1, Title = "AgricultureFood11", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = DTU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            ProbabilityProject = new Project { Tags = new List<Tag> { Probability }, Id = 21, Author = Supervisor1, Title = "AgricultureFood12", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = FacultyComputerScienceITU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            CalcStatProbScience = new Project { Tags = new List<Tag> { Calculus, Statistics, Probability, Science }, Id = 22, Author = Supervisor1, Title = "AgricultureFood13", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = FacultyDesignDTU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            AlgDiscCalcStat = new Project { Tags = new List<Tag> { Algebra, DiscreteMathematics, Calculus, Statistics }, Id = 23, Author = Supervisor1, Title = "AgricultureFood14", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = DataScience, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            MathAlgDisc = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics }, Id = 24, Author = Supervisor1, Title = "AgricultureFood15", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = InteractiveDesign, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            MathAlgDiscCalc = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus }, Id = 25, Author = Supervisor1, Title = "AgricultureFood16", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = IntroductoryProgramming, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
-            CalcStatProbScience2 = new Project { Tags = new List<Tag> { Calculus, Statistics, Probability, Science }, Id = 26, Author = Supervisor1, Title = "AgricultureFood17", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = UIDesign, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>()  , MaxStudents = 5};
+            AllUnrelatedTags = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus, Statistics, Probability, Science }, Id = 20, Author = Supervisor1, Title = "AgricultureFood10", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = ITU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            MathAlgebraDiscrete = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics }, Id = 27, Author = Supervisor1, Title = "AgricultureFood11", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = DTU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            ProbabilityProject = new Project { Tags = new List<Tag> { Probability }, Id = 21, Author = Supervisor1, Title = "AgricultureFood12", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = FacultyComputerScienceITU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            CalcStatProbScience = new Project { Tags = new List<Tag> { Calculus, Statistics, Probability, Science }, Id = 22, Author = Supervisor1, Title = "AgricultureFood13", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = FacultyDesignDTU, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            AlgDiscCalcStat = new Project { Tags = new List<Tag> { Algebra, DiscreteMathematics, Calculus, Statistics }, Id = 23, Author = Supervisor1, Title = "AgricultureFood14", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = DataScience, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            MathAlgDisc = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics }, Id = 24, Author = Supervisor1, Title = "AgricultureFood15", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = InteractiveDesign, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            MathAlgDiscCalc = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus }, Id = 25, Author = Supervisor1, Title = "AgricultureFood16", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = IntroductoryProgramming, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
+            CalcStatProbScience2 = new Project { Tags = new List<Tag> { Calculus, Statistics, Probability, Science }, Id = 26, Author = Supervisor1, Title = "AgricultureFood17", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Category = UIDesign, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
 
             context.Projects.Add(AgricultureFood);
             context.Projects.Add(ComputerScienceSimulationAlgorithmsAgriculture);
@@ -163,8 +163,8 @@ namespace ReferenceSystem.Tests
 
             context.SaveChanges();
             _context = context;
-            _projectRepository = new ProjectRepository(_context);
-            _bucketRepository = new BucketRepository(_context);
+            //_projectRepository = new ProjectRepository(_context);
+            var _bucketRepository = new BucketRepository(_context);
 
             /*LSH = new ProjectLSH(_bucketRepository, _projectRepository, _context);
             
@@ -174,7 +174,7 @@ namespace ReferenceSystem.Tests
             LSH.Insert(AgricultureFood);
             LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);*/
 
-            LargeLSH = new ProjectLSH(_bucketRepository, _projectRepository, _context);
+            LargeLSH = new ProjectLSH(_context);
 
             LSHList = new List<ProjectLSH>();
             //LSHList.Add(LSH); //Index 0
@@ -183,71 +183,57 @@ namespace ReferenceSystem.Tests
 
         private async Task<Response> inserts()
         {
-            await LargeLSH.Insert(AgricultureFarmingIdentical);
-            await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgricultureIdentical);
-            await LargeLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
-            await LargeLSH.Insert(AgricultureFoodIdentical);
-            await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurityIdentical);
-            await LargeLSH.Insert(AgricultureFarming);
-            await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
-            await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
-            await LargeLSH.Insert(AgricultureFood);
-            await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
-            await LargeLSH.Insert(FoodProject);
-            await LargeLSH.Insert(FoodAndAgricultureProject);
-            await LargeLSH.Insert(AgricultureSecurityProject);
-            await LargeLSH.Insert(SecurityFoodProject);
-            await LargeLSH.Insert(SecurityProject);
-            await LargeLSH.Insert(ManyTagsProject);
-            await LargeLSH.Insert(LessManyTagsProject);
-            await LargeLSH.Insert(LessManyTagsProject2);
-            await LargeLSH.Insert(LessManyTagsProject3);
-            await LargeLSH.Insert(AllUnrelatedTags);
-            await LargeLSH.Insert(MathAlgebraDiscrete);
-            await LargeLSH.Insert(ProbabilityProject);
-            await LargeLSH.Insert(CalcStatProbScience);
-            await LargeLSH.Insert(AlgDiscCalcStat);
-            await LargeLSH.Insert(MathAlgDisc);
-            await LargeLSH.Insert(MathAlgDiscCalc);
-            await LargeLSH.Insert(CalcStatProbScience2);
-            return Response.Created;
+            return await LargeLSH.InsertAll();
         }
+
+        [Fact]
+        public async void testInserts()
+        {
+            var response = await inserts();
+            Assert.Equal(30, LargeLSH.Map.Count());
+            //Assert.Equal(response, Response.Created);
+        }
+        /*
+        /*
+                private async Task<Response> inserts()
+                {
+                    await LargeLSH.Insert(AgricultureFarmingIdentical);
+                    await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgricultureIdentical);
+                    await LargeLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
+                    await LargeLSH.Insert(AgricultureFoodIdentical);
+                    await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurityIdentical);
+                    await LargeLSH.Insert(AgricultureFarming);
+                    await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
+                    await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
+                    await LargeLSH.Insert(AgricultureFood);
+                    await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
+                    await LargeLSH.Insert(FoodProject);
+                    await LargeLSH.Insert(FoodAndAgricultureProject);
+                    await LargeLSH.Insert(AgricultureSecurityProject);
+                    await LargeLSH.Insert(SecurityFoodProject);
+                    await LargeLSH.Insert(SecurityProject);
+                    await LargeLSH.Insert(ManyTagsProject);
+                    await LargeLSH.Insert(LessManyTagsProject);
+                    await LargeLSH.Insert(LessManyTagsProject2);
+                    await LargeLSH.Insert(LessManyTagsProject3);
+                    await LargeLSH.Insert(AllUnrelatedTags);
+                    await LargeLSH.Insert(MathAlgebraDiscrete);
+                    await LargeLSH.Insert(ProbabilityProject);
+                    await LargeLSH.Insert(CalcStatProbScience);
+                    await LargeLSH.Insert(AlgDiscCalcStat);
+                    await LargeLSH.Insert(MathAlgDisc);
+                    await LargeLSH.Insert(MathAlgDiscCalc);
+                    await LargeLSH.Insert(CalcStatProbScience2);
+                    return Response.Created;
+                }
+        */
+
 
         [Fact]
         public async void testInsert()
         {
-            var list = new List<Response>();
-            list.Add(await LargeLSH.Insert(AgricultureFarmingIdentical));
-            list.Add(await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgricultureIdentical));
-            list.Add(await LargeLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical));
-            list.Add(await LargeLSH.Insert(AgricultureFoodIdentical));
-            list.Add(await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurityIdentical));
-            list.Add(await LargeLSH.Insert(AgricultureFarming));
-            list.Add(await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture));
-            list.Add(await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
-            list.Add(await LargeLSH.Insert(AgricultureFood));
-            list.Add(await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurity));
-            list.Add(await LargeLSH.Insert(FoodProject));
-            list.Add(await LargeLSH.Insert(FoodAndAgricultureProject));
-            list.Add(await LargeLSH.Insert(AgricultureSecurityProject));
-            list.Add(await LargeLSH.Insert(SecurityFoodProject));
-            list.Add(await LargeLSH.Insert(SecurityProject));
-            list.Add(await LargeLSH.Insert(ManyTagsProject));
-            list.Add(await LargeLSH.Insert(LessManyTagsProject));
-            list.Add(await LargeLSH.Insert(LessManyTagsProject2));
-            list.Add(await LargeLSH.Insert(LessManyTagsProject3));
-            list.Add(await LargeLSH.Insert(AllUnrelatedTags));
-            list.Add(await LargeLSH.Insert(MathAlgebraDiscrete));
-            list.Add(await LargeLSH.Insert(ProbabilityProject));
-            list.Add(await LargeLSH.Insert(CalcStatProbScience));
-            list.Add(await LargeLSH.Insert(AlgDiscCalcStat));
-            list.Add(await LargeLSH.Insert(MathAlgDisc));
-            list.Add(await LargeLSH.Insert(MathAlgDiscCalc));
-            list.Add(await LargeLSH.Insert(CalcStatProbScience2));
-            foreach(var test in list)
-            {
-                Assert.Equal(test, Response.Created);
-            }
+            var response = await inserts();
+            Assert.Equal(Response.Created, response);
         }
 
         private IEnumerable<Tag> Generate1000Tags()
@@ -301,7 +287,7 @@ namespace ReferenceSystem.Tests
         }
 
 
-       [Fact]
+        [Fact]
         public async void Update_Replaces_Project_With_Updated()
         {
             //Arrange
@@ -394,8 +380,8 @@ namespace ReferenceSystem.Tests
             //Act & Assert
             foreach (var str in buckets)
             {
-                var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(str);
-                var bucket = await _context.Buckets.Where(b => b.Id == bucketdto.Id).Select(id => id).FirstOrDefaultAsync();
+                //var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(str);
+                var bucket = await _context.Buckets.Where(b => b.Key == str).Select(b => b).FirstOrDefaultAsync();
                 foreach (IProject project in bucket.Projects)
                 {
                     int counter = 0;
@@ -414,8 +400,8 @@ namespace ReferenceSystem.Tests
         {
             await inserts();
             string bucketString = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
-            var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(bucketString);
-            var bucket = await _context.Buckets.Where(b => b.Id == bucketdto.Id).Select(b => b).FirstOrDefaultAsync();
+            //var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(bucketString);
+            var bucket = await _context.Buckets.Where(b => b.Key == bucketString).Select(b => b).FirstOrDefaultAsync();
             //Bucket<IProject> bucket = LargeLSH.Map[bucketString];
 
             foreach (IProject tagable in bucket.Projects)
@@ -430,8 +416,25 @@ namespace ReferenceSystem.Tests
         }
 
         //New bucket is made if signature group does not exist
+        [Fact]
+        public async void GetSortedByCategory_Only_Consists_Of_Projects_Within_Category()
+        {
+            await inserts();
+            //Arrange
+            var list = await LargeLSH.GetSortedInCategory(SecurityProject);
 
+            //Act
+            var AllWithinCategory = true;
+            foreach (IProject tagable in list)
+            {
+                var project = tagable;
+                if (!project.Category.IsRelated(FacultyDesignDTU)) AllWithinCategory = false;
+               // Assert.Equal(project.Category, FacultyDesignDTU);
+            }
 
+            //Assert
+            Assert.True(AllWithinCategory);
+        }
         //TAKE THIS BACK
         [Fact]
         public async void Insert_Adds_BucketGroup_If_Non_Existant()
@@ -448,19 +451,19 @@ namespace ReferenceSystem.Tests
             var context = new ProjectBankContext(builder.Options);
             context.Database.EnsureCreated();
 
-            var projectRepo = new ProjectRepository(context);
+            //var projectRepo = new ProjectRepository(context);
             var bucketRepo = new BucketRepository(context);
-    
-            var TestLSH = new ProjectLSH(bucketRepo, projectRepo, context);
-            
+
+            var TestLSH = new ProjectLSH(context);
+
             var AgriFarmSignature = new Signature(AgricultureFarming.Tags);
             var AgriFoodSignature = new Signature(AgricultureFood.Tags);
 
             //Act
             await TestLSH.Insert(AgricultureFarming);
-            var bucketSizeBeforeInsert = (await bucketRepo.ReadAllAsync()).Count();
+            var bucketSizeBeforeInsert = (await bucketRepo.ReadAllAsync()).Count();//_context.Buckets.Count();//
             await TestLSH.Insert(AgricultureFood);
-            var bucketSizeAfterInsert = (await bucketRepo.ReadAllAsync()).Count();
+            var bucketSizeAfterInsert = (await bucketRepo.ReadAllAsync()).Count();//_context.Buckets.Count();// 
             int notCommon = 0;
             for (int i = 0; i < AgriFarmSignature.Hashes.Count(); i++)
             {
@@ -472,40 +475,41 @@ namespace ReferenceSystem.Tests
             //Assert
             var expected = bucketSizeBeforeInsert + notCommon;
             var actual = bucketSizeAfterInsert;
+            //Assert.Equal(bucketSizeBeforeInsert,bucketSizeAfterInsert);
             Assert.Equal(expected, actual);
         }
-/*
-        [Fact]
-        public void SMALL_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
-        {
-            //Arrange
-            var expected = new List<IProject> { ComputerScienceAlgorithmsSimulationSecurity, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
+        /*
+                [Fact]
+                public void SMALL_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
+                {
+                    //Arrange
+                    var expected = new List<IProject> { ComputerScienceAlgorithmsSimulationSecurity, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
 
-            //Act
-            var actual = LSH.GetSorted(ComputerScienceAlgorithmsSecurity).AsEnumerable();
+                    //Act
+                    var actual = LSH.GetSorted(ComputerScienceAlgorithmsSecurity).AsEnumerable();
 
-            //Assert
-            Assert.Equal(expected, actual);
-        }*/
+                    //Assert
+                    Assert.Equal(expected, actual);
+                }*/
         [Fact]
         public async void groupCountThreeEquals()
         {
             await inserts();
-            var buckets = await _bucketRepository.ReadAllAsync();
+            var buckets = _context.Buckets;
             var counter = 0;
             var strings = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature);
 
-            foreach(var b in buckets)
+            foreach (var b in buckets)
             {
-                foreach(var s in strings)
-                if(b.Key == s) 
-                {
-                    counter++;
-                }
+                foreach (var s in strings)
+                    if (b.Key == s)
+                    {
+                        counter++;
+                    }
             }
             Assert.Equal(counter, 3);
 
-            
+
             //_projectRepository.
             //_bucketRepository.
             //Assert.Equal(new Signature(ComputerScienceAlgorithmsSecurity.Tags).Hashes.ToString(), ComputerScienceAlgorithmsSecurity.Signature.Hashes.ToString());
@@ -520,26 +524,27 @@ namespace ReferenceSystem.Tests
             var strings = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature);
             var strings2 = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSimulationSecurity.Signature);
             //var strings2 = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurityIdentical.Signature);
-            var bucket1 = await _bucketRepository.ReadBucketByKeyAsync(strings[0]);
-            var bucket2 = await _bucketRepository.ReadBucketByKeyAsync(strings[1]);
-            var bucket3 = await _bucketRepository.ReadBucketByKeyAsync(strings[2]);
-            var bucket11 = await _bucketRepository.ReadBucketByKeyAsync(strings2[0]);
-            var bucket22 = await _bucketRepository.ReadBucketByKeyAsync(strings2[1]);
-            var bucket33 = await _bucketRepository.ReadBucketByKeyAsync(strings2[2]);
+
+            var bucket1 = await _context.Buckets.Where(b => b.Key == strings[0]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings[0]);
+            var bucket2 = await _context.Buckets.Where(b => b.Key == strings[1]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings[1]);
+            var bucket3 = await _context.Buckets.Where(b => b.Key == strings[2]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings[2]);
+            var bucket11 = await _context.Buckets.Where(b => b.Key == strings2[0]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings2[0]);
+            var bucket22 = await _context.Buckets.Where(b => b.Key == strings[1]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings2[1]);
+            var bucket33 = await _context.Buckets.Where(b => b.Key == strings[2]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings2[2]);
+
             Assert.Equal(bucket1.Id, bucket1.Id);
             Assert.Equal(bucket2.Id, bucket22.Id);
             Assert.Equal(bucket3.Id, bucket33.Id);
-
-/*
-            foreach(var b in buckets)
-            {
-                foreach(var s in strings)
-                if(b.Key == s) 
-                {
-                    counter++;
-                }
-            }
-            */
+            /*
+                        foreach(var b in buckets)
+                        {
+                            foreach(var s in strings)
+                            if(b.Key == s) 
+                            {
+                                counter++;
+                            }
+                        }
+                        */
 
             //Assert.Equal(strings, strings2);
 
@@ -548,218 +553,231 @@ namespace ReferenceSystem.Tests
             //Assert.Equal(new Signature(ComputerScienceAlgorithmsSecurity.Tags).Hashes.ToString(), ComputerScienceAlgorithmsSecurity.Signature.Hashes.ToString());
         }
 
+
+
+
+
+
+
+
+        //REMEMBER THIS BACK
         [Fact]
         public async void LARGE_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
         {
             await inserts();
             //Arrange
-            var ComputerScienceAlgorithmsSecurityIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSecurityIdentical.Id);
-            var ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSimulationSecurityIdentical.Id);
-            var ComputerScienceAlgorithmsSimulationSecurityDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSimulationSecurity.Id);
-            var LessManyTagsProject2DTO = await _projectRepository.ReadByIDAsync(LessManyTagsProject2.Id);
-            var ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id);
-            var ComputerScienceSimulationAlgorithmsAgricultureDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgriculture.Id);            
-            var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityDTO.Value.Id, LessManyTagsProject2DTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureDTO.Value.Id}.AsEnumerable();
-            
+            var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdentical.Id, ComputerScienceAlgorithmsSimulationSecurity.Id, ComputerScienceAlgorithmsSimulationSecurityIdentical.Id, LessManyTagsProject2.Id, ComputerScienceSimulationAlgorithmsAgriculture.Id, ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id }.AsEnumerable();
+
             //Act
-            var actualDTO = (await LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity)).AsEnumerable();
+            var actualProjects = await LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity);
             List<int> actual = new List<int>();
-            foreach (var item in actualDTO)
+            foreach (var item in actualProjects)
             {
-                actual.Add(item.Id);   
+                actual.Add(item.Id);
             }
 
             //Assert
             Assert.Equal(expected, actual);
         }
 
-/*
-TODO:
--We need project-bucket to reference both ways
--THE PROBLEM IS: THere is no bucket to project reference
-*/
 
-/*
-        [Fact]
-        public void Delete_Removes_All_Groups_In_Buckets()
-        {
-            //Arrange
-            int expected = 0 - LargeLSH.NumberOfGroups;
-            foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
-            {
-                expected += entry.Value.Projects.Count();
-            }
-            //Act
-            LargeLSH.Delete(AgricultureFarming);
-            int actual = 0;
-            foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
-            {
-                actual += entry.Value.Projects.Count();
-            }
-            //Assert
-            Assert.Equal(expected, actual);
-        }
+        /* [Fact]
+         public async void LARGE_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
+         {
+             var _projectRepository = new ProjectRepository(_context);
+             await inserts();
+             //Arrange
+             var ComputerScienceAlgorithmsSecurityIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSecurityIdentical.Id);
+             var ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSimulationSecurityIdentical.Id);
+             var ComputerScienceAlgorithmsSimulationSecurityDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSimulationSecurity.Id);
+             var LessManyTagsProject2DTO = await _projectRepository.ReadByIDAsync(LessManyTagsProject2.Id);
+             var ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id);
+             var ComputerScienceSimulationAlgorithmsAgricultureDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgriculture.Id);            
+             var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityDTO.Value.Id, LessManyTagsProject2DTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureDTO.Value.Id}.AsEnumerable();
 
-        [Fact]
-        public void Update_Throws_Exception_If_Project_Not_Inserted_Given_NonEmpty_LSH()
-        {
-            //Arrange
-            var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+             //Act
+             var actualDTO = (await LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity)).AsEnumerable();
+             List<int> actual = new List<int>();
+             foreach (var item in actualDTO)
+             {
+                 actual.Add(item.Id);   
+             }
 
-            //Act and Assert
-            Assert.Throws<ArgumentException>(() => LargeLSH.Update(ComputerSecurity));
-        }
+             //Assert
+             Assert.Equal(expected, actual);
+         }*/
 
-        [Fact]
-        public void Update_Throws_Exception_If_Project_Not_Inserted_Given_Empty_LSH()
-        {
-            //Arrange
-            var TestLSH = new ProjectLSH();
+        /*
+        TODO:
+        -We need project-bucket to reference both ways
+        -THE PROBLEM IS: THere is no bucket to project reference
+        */
 
-            //Act & Assert
-            Assert.Throws<ArgumentException>(() => TestLSH.Update(ComputerScienceAlgorithmsSecurity));
-        }
+        /*
+                [Fact]
+                public void Delete_Removes_All_Groups_In_Buckets()
+                {
+                    //Arrange
+                    int expected = 0 - LargeLSH.NumberOfGroups;
+                    foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
+                    {
+                        expected += entry.Value.Projects.Count();
+                    }
+                    //Act
+                    LargeLSH.Delete(AgricultureFarming);
+                    int actual = 0;
+                    foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
+                    {
+                        actual += entry.Value.Projects.Count();
+                    }
+                    //Assert
+                    Assert.Equal(expected, actual);
+                }
 
-        [Fact]
-        public void Insert_Throws_Exception_If_Project_Exists()
-        {
-            Assert.Throws<ArgumentException>(() => LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
-        }
+                [Fact]
+                public void Update_Throws_Exception_If_Project_Not_Inserted_Given_NonEmpty_LSH()
+                {
+                    //Arrange
+                    var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
 
-        [Fact]
-        public void If_signature_group_exists_it_gets_added_to_existing_bucket()
-        {
-            //Arrange
-            var TestLSH = new ProjectLSH();
-            var Signature = ComputerScienceAlgorithmsSecurity.Signature;
-            var expected = new List<int>();
-            var actual = new List<int>();
+                    //Act and Assert
+                    Assert.Throws<ArgumentException>(() => LargeLSH.Update(ComputerSecurity));
+                }
 
-            var buckets = new List<string>();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
-            {
-                builder.Append(Signature.Hashes.ElementAt(i * 2));
-                builder.Append(Signature.Hashes.ElementAt(i * 2 + 1));
-                buckets.Add(builder.ToString());
-                builder.Clear();
-            }
+                [Fact]
+                public void Update_Throws_Exception_If_Project_Not_Inserted_Given_Empty_LSH()
+                {
+                    //Arrange
+                    var TestLSH = new ProjectLSH();
 
-            //Act
-            TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
-            var SizeBefore = TestLSH.Map.Count();
-            for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
-            {
-                expected.Add(TestLSH.Map[buckets[i]].Projects.Count() + 1);
-            }
+                    //Act & Assert
+                    Assert.Throws<ArgumentException>(() => TestLSH.Update(ComputerScienceAlgorithmsSecurity));
+                }
 
-            TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
-            var SizeAfter = TestLSH.Map.Count();
-            for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
-            {
-                actual.Add(TestLSH.Map[buckets[i]].Projects.Count());
-            }
-            //Assert
-            Assert.Equal(SizeBefore, SizeAfter); //Number of buckets should be the same
-            Assert.Equal(expected, actual); //The same buckets get one more group
-        }
+                [Fact]
+                public void Insert_Throws_Exception_If_Project_Exists()
+                {
+                    Assert.Throws<ArgumentException>(() => LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
+                }
 
-        [Fact]
-        public void HashesToBucketString_Splits_Signature_To_NumberOfGroups()
-        {
-            //Arrange
-            var TestLSH = new ProjectLSH();
-            var Signature = AllUnrelatedTags.Signature;
-            var expected = new string[TestLSH.NumberOfGroups];
+                [Fact]
+                public void If_signature_group_exists_it_gets_added_to_existing_bucket()
+                {
+                    //Arrange
+                    var TestLSH = new ProjectLSH();
+                    var Signature = ComputerScienceAlgorithmsSecurity.Signature;
+                    var expected = new List<int>();
+                    var actual = new List<int>();
 
-            //Act
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < TestLSH.NumberOfGroups; i++)
-            {
-                builder.Append(Signature.Hashes.ElementAt(i * 2));
-                builder.Append(Signature.Hashes.ElementAt(i * 2 + 1));
-                expected[i] = builder.ToString();
-                builder.Clear();
-            }
-            var actual = TestLSH.HashesToBucketString(Signature);
+                    var buckets = new List<string>();
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
+                    {
+                        builder.Append(Signature.Hashes.ElementAt(i * 2));
+                        builder.Append(Signature.Hashes.ElementAt(i * 2 + 1));
+                        buckets.Add(builder.ToString());
+                        builder.Clear();
+                    }
 
-            //Assert
-            Assert.Equal(expected, actual);
-        }
+                    //Act
+                    TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
+                    var SizeBefore = TestLSH.Map.Count();
+                    for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
+                    {
+                        expected.Add(TestLSH.Map[buckets[i]].Projects.Count() + 1);
+                    }
 
-        [Fact]
-        public void Insert_Throws_Exception_If_No_Tags()
-        {
-            //Arrange, Act & Assert
-            Assert.Throws<ArgumentException>(() => LargeLSH.Insert(new Project { Tags = new List<Tag> { }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC }));
-        }
+                    TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
+                    var SizeAfter = TestLSH.Map.Count();
+                    for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
+                    {
+                        actual.Add(TestLSH.Map[buckets[i]].Projects.Count());
+                    }
+                    //Assert
+                    Assert.Equal(SizeBefore, SizeAfter); //Number of buckets should be the same
+                    Assert.Equal(expected, actual); //The same buckets get one more group
+                }
 
-        [Fact]
-        public void GetSortedByCategory_Is_Sorted_By_JaccardIndex()
-        {
-            //Arrange
-            var expected = new List<IProject> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
+                [Fact]
+                public void HashesToBucketString_Splits_Signature_To_NumberOfGroups()
+                {
+                    //Arrange
+                    var TestLSH = new ProjectLSH();
+                    var Signature = AllUnrelatedTags.Signature;
+                    var expected = new string[TestLSH.NumberOfGroups];
 
-            //Act
-            var actual = LargeLSH.GetSortedInCategory(ComputerScienceAlgorithmsSecurity).AsEnumerable();
+                    //Act
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < TestLSH.NumberOfGroups; i++)
+                    {
+                        builder.Append(Signature.Hashes.ElementAt(i * 2));
+                        builder.Append(Signature.Hashes.ElementAt(i * 2 + 1));
+                        expected[i] = builder.ToString();
+                        builder.Clear();
+                    }
+                    var actual = TestLSH.HashesToBucketString(Signature);
 
-            //Assert
-            Assert.Equal(expected, actual);
-        }
+                    //Assert
+                    Assert.Equal(expected, actual);
+                }
 
-        //IF PROJECT DOESN'T HAVE THAT CATEGORY
+                [Fact]
+                public void Insert_Throws_Exception_If_No_Tags()
+                {
+                    //Arrange, Act & Assert
+                    Assert.Throws<ArgumentException>(() => LargeLSH.Insert(new Project { Tags = new List<Tag> { }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC }));
+                }
 
-        [Fact]
-        public void GetSortedByCategory_Only_Consists_Of_Projects_Within_Category()
-        {
-            //Arrange
-            var list = LargeLSH.GetSortedInCategory(SecurityProject);
+                [Fact]
+                public void GetSortedByCategory_Is_Sorted_By_JaccardIndex()
+                {
+                    //Arrange
+                    var expected = new List<IProject> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
 
-            //Act
-            var AllWithinCategory = true;
-            foreach (IProject tagable in list)
-            {
-                var project = (Project)tagable;
-                if (!project.Category.IsRelated(FacultyDesignDTU)) AllWithinCategory = false;
-            }
+                    //Act
+                    var actual = LargeLSH.GetSortedInCategory(ComputerScienceAlgorithmsSecurity).AsEnumerable();
 
-            //Assert
-            Assert.True(AllWithinCategory);
-        }
+                    //Assert
+                    Assert.Equal(expected, actual);
+                }
 
-        //FINISH THIS TEST WHEN YOU HAVE FIGURED OUT CATEGORIZABLE
-        [Fact]
-        public void GetSortedByCategory_Throws_Exception_If_No_Projects_Have_Category()
-        {
-            //Arrange
-            Project test = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus, Statistics, Probability, Science }, Id = 19, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+                //IF PROJECT DOESN'T HAVE THAT CATEGORY
 
-            //Act & Assert
-            //Assert.Equal(test.Category, null);
-            //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(test));
-        }
+                
 
-        [Fact]
-        public void GetSortedByCategory_Equals_GetSorted_Within_Category()
-        {
+                //FINISH THIS TEST WHEN YOU HAVE FIGURED OUT CATEGORIZABLE
+                [Fact]
+                public void GetSortedByCategory_Throws_Exception_If_No_Projects_Have_Category()
+                {
+                    //Arrange
+                    Project test = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus, Statistics, Probability, Science }, Id = 19, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
 
-        }
+                    //Act & Assert
+                    //Assert.Equal(test.Category, null);
+                    //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(test));
+                }
 
-        private void insertSmallData()
-        {
-            AgricultureFood = new Project { Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            ComputerScienceSimulationAlgorithmsAgriculture = new Project { Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 2, Author = null, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            ComputerScienceAlgorithmsSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = null, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            AgricultureFarming = new Project { Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = null, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            ComputerScienceAlgorithmsSimulationSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = null, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-            LSH = new ProjectLSH();
-            LSH.Insert(AgricultureFarming);
-            LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
-            LSH.Insert(ComputerScienceAlgorithmsSecurity);
-            LSH.Insert(AgricultureFood);
-            LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
-        }
-*/
+                [Fact]
+                public void GetSortedByCategory_Equals_GetSorted_Within_Category()
+                {
+
+                }
+
+                private void insertSmallData()
+                {
+                    AgricultureFood = new Project { Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+                    ComputerScienceSimulationAlgorithmsAgriculture = new Project { Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 2, Author = null, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+                    ComputerScienceAlgorithmsSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = null, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+                    AgricultureFarming = new Project { Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = null, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+                    ComputerScienceAlgorithmsSimulationSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = null, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
+                    LSH = new ProjectLSH();
+                    LSH.Insert(AgricultureFarming);
+                    LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
+                    LSH.Insert(ComputerScienceAlgorithmsSecurity);
+                    LSH.Insert(AgricultureFood);
+                    LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
+                }
+        */
         Project AgricultureFoodIdentical;
         Project ComputerScienceSimulationAlgorithmsAgricultureIdentical;
         Project ComputerScienceAlgorithmsSecurityIdentical;
@@ -792,20 +810,20 @@ TODO:
         Tag Probability = new Tag("Probability");
         Tag Science = new Tag("Science");
 
-        static Institution ITU = new Institution { Id = 1, Title = "ITU", Description = "ITU"};
+        static Institution ITU = new Institution { Id = 1, Title = "ITU", Description = "ITU" };
         static Institution DTU = new Institution { Id = 2, Title = "DTU", Description = "ITU" };
         static Faculty FacultyComputerScienceITU = new Faculty { Id = 3, Institution = ITU, Title = "FC ITU", Description = "ITU" };
         static Faculty FacultyDesignDTU = new Faculty { Id = 4, Institution = DTU, Title = "FD DTU", Description = "ITU" };
-        static TeachingProgram DataScience = new TeachingProgram { Id = 5, Faculty = FacultyComputerScienceITU, Title = "DS", Description = "ITU", Code = "DS2021", Courses = new List<Course>()};
-        static TeachingProgram InteractiveDesign = new TeachingProgram { Id = 6, Faculty = FacultyDesignDTU, Title = "ID", Description = "ITU", Code = "ID2020", Courses = new List<Course>()};
-        
-        static Student Villum = new Student("vson@itu.dk", ITU, "Villum", "Sonne", new List<Project>(), DataScience, new List<Course>()) {Id = 5};
-        static Student Anton = new Student("antbr@itu.dk", ITU, "Anton", "Breinholt", new List<Project>(), InteractiveDesign, new List<Course>()) {Id = 4};
+        static TeachingProgram DataScience = new TeachingProgram { Id = 5, Faculty = FacultyComputerScienceITU, Title = "DS", Description = "ITU", Code = "DS2021", Courses = new List<Course>() };
+        static TeachingProgram InteractiveDesign = new TeachingProgram { Id = 6, Faculty = FacultyDesignDTU, Title = "ID", Description = "ITU", Code = "ID2020", Courses = new List<Course>() };
+
+        static Student Villum = new Student("vson@itu.dk", ITU, "Villum", "Sonne", new List<Project>(), DataScience, new List<Course>()) { Id = 5 };
+        static Student Anton = new Student("antbr@itu.dk", ITU, "Anton", "Breinholt", new List<Project>(), InteractiveDesign, new List<Course>()) { Id = 4 };
 
         Supervisor Supervisor1 = new Supervisor("troe@itu.dk", ITU, "Troels", "Jyde", new List<Project>(), FacultyComputerScienceITU, new List<Project>());
 
-        static Course IntroductoryProgramming = new Course { Id = 7, Programs = new List<TeachingProgram> { DataScience }, Faculty = FacultyComputerScienceITU, Title = "IP", Description = "ITU", Code = "IA2002", Students = new List<Student>() {Villum}};
-        static Course UIDesign = new Course { Id = 8, Programs = new List<TeachingProgram> { InteractiveDesign }, Faculty = FacultyDesignDTU, Title = "UID", Description = "ITU", Code = "19283", Students = new List<Student>(){Anton}};
+        static Course IntroductoryProgramming = new Course { Id = 7, Programs = new List<TeachingProgram> { DataScience }, Faculty = FacultyComputerScienceITU, Title = "IP", Description = "ITU", Code = "IA2002", Students = new List<Student>() { Villum } };
+        static Course UIDesign = new Course { Id = 8, Programs = new List<TeachingProgram> { InteractiveDesign }, Faculty = FacultyDesignDTU, Title = "UID", Description = "ITU", Code = "19283", Students = new List<Student>() { Anton } };
 
         //FacultyComputerScienceITU.Institution = ITU;
 

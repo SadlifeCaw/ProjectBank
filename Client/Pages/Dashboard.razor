@@ -10,10 +10,12 @@
 <AuthorizeView>
     <Authorized>
         <PageTitle>@title</PageTitle>
+<head>
+    <link rel="stylesheet" href="Dashboard.razor.css">
+    <link rel="stylesheet" href="Projects.razor.css">
+</head>
 
-        <head>
-            <link rel="stylesheet" href="Dashboard.razor.css">
-        </head>
+
 
 <div class="ProjectHeader">
     <h1 class="ProjectTitle">@title</h1>
@@ -22,7 +24,6 @@
         <p>@ProjectStatus</p>
     </div>
 </div>
-
         <div class="Buffer_20"></div>   
 
 
@@ -161,17 +162,78 @@
             <a class="btn btn-danger" @onclick="() => confirmDeletion.Open()">Delete Project</a>
         }
 
-        <div class="Buffer_40"></div>
+<a href="Projects/Update/@ProjectId" class="btn btn-primary">Edit Project</a>
 
-        <div class="RelatedProjectsContainer">
-            <h2>Related projects</h2>
-            <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
+<div class="Buffer_40"></div>
+
+<div class="RelatedProjectsContainer">
+    <h2>Related projects</h2>
+    <button type="button" class="btn btn-block CustomButton" @onclick="() => ViewRelatedProjects()">Refresh</button>
+    <label class="RelatedProjectsLabel">max
+        <input class="inputNumber" @bind-value="maxRelatedProjects" type="number" name="points" step="10" min="10">
+    </label>
+    <div id="RelatedProjectsSwitchLineBreak">
+        <br>
+    </div>
+    <span>
+        <label class="RelatedProjectsLabel">Projects from same category:</label>
+        <label class="switch">
+            <input type="checkbox" @bind="sameCategory">
+            <span class="slider round"></span>
+        </label>
+    </span>
+    <div class="container">
+
+        <div class="row my-3">
+
+            @if (!loadingRelatedProjects && !noRelatedProjects)
+            {
+                @for (int i = 0; i < relatedProjects.Count(); i++)
+                {
+                    var relatedProject = relatedProjects[i];
+                    <div class="col-12 col-md-6 col-xl-4 my-3">
+                        <div class="card col project">
+                            <div class="card-body">
+                                <div class="row">
+                                    <h2 class="card-title col-9">@relatedProject.Title</h2>
+                                    <div class="col-2">
+                                        <a href=""
+                                    class=" nrbtn btn">@relatedProject.UserIDs.Count()/@relatedProject.MaxStudents</a>
+                                    </div>
+                                </div>
+                                <p class="card-text mb-5 description">@relatedProject.Description</p>
+                                <div class="tagdiv mb-3">
+                                    <ul>
+                                        @foreach (var tag in relatedProject.TagIDs)
+                                        {
+                                            <li class="tag tagbtn mx-1">@tag</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <a href="Projects/@relatedProject.Id" class="btn btn-primary footer">@more</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            @if (loadingRelatedProjects)
+            {
+                <p><em>Loading...</em></p>
+            }
+            @if (noRelatedProjects)
+            {
+                <p><em>There are no related projects...</em></p>
+            }
+
         </div>
-    </Authorized>
+    </div>
+</div>
+</Authorized>
     <NotAuthorized>
         Please log in to view project
     </NotAuthorized>
 </AuthorizeView>
+
 
 @code {
     [CascadingParameter]
@@ -181,9 +243,10 @@
     string Description = "Loading description...";
     string AuthorName = string.Empty;
     string TargetGroup = "Loading...";
-    
+    string more = "View more";
+
     [Parameter]
-    public int? ProjectId {get; set;}
+    public int? ProjectId { get; set; }
     private ProjectDTO project;
     private UserDTO author;
     private string ProjectStatus;
@@ -191,19 +254,25 @@
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
     private List<UserDTO> students = new List<UserDTO>();
+    private List<ProjectDTO> relatedProjects = new List<ProjectDTO>();
+    private bool loadingRelatedProjects = false;
+    private bool noRelatedProjects = false;
+    private bool sameCategory = true;
+    private int maxRelatedProjects = 10; 
+
     private UserDTO CurrentUser;
 
     private Modal inviteModal { get; set; }
-
     private Modal applyModal { get; set; }
+    private IReadOnlyCollection<ProjectReferenceDTO> related;
+
 
     private Modal confirmDeletion { get; set; }
 
     /*private async void test()
     {
-        var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
-            
-        Console.WriteLine(test);
+    var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
+    Console.WriteLine(test);
     }*/
 
     protected override async Task OnInitializedAsync()
@@ -216,14 +285,13 @@
             this.students = await GetStudentsDTOs(project.UserIDs).ToListAsync();
             this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
             this.category = await GetCategoryDTO(project.CategoryID);
-            
+            ViewRelatedProjects();
             this.CurrentUser = await GetCurrentUser();
+
         }
         catch (Exception exception)
         {
-            Console.WriteLine(":((( {0}",exception.Message);
-            Console.WriteLine("What the fuck?");
-            //exception.Redirect();
+            Console.WriteLine(exception.Message);
         }
         this.Description = project.Description;
         this.title = project.Title;
@@ -231,15 +299,15 @@
         this.AuthorName = author.FirstName + " " + author.LastName;
         this.ProjectStatus = project.Status.ToString();
 
-        foreach (var item in students){Console.WriteLine("Student with ID: " + item.Id + " exists");}
+        foreach (var item in students) { Console.WriteLine("Student with ID: " + item.Id + " exists"); }
     }
 
-    private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds) 
+    private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds)
     {
         foreach (var id in tagIds)
         {
             //It crashes if you ask for id 7... which exists... wtf
-            if(id == 7) 
+            if (id == 7)
             {
                 continue;
             }
@@ -247,16 +315,16 @@
         }
     }
 
-    private async IAsyncEnumerable<UserDTO> GetSupervisorsDTOs(ICollection<int> userIDs) 
+    private async IAsyncEnumerable<UserDTO> GetSupervisorsDTOs(ICollection<int> userIDs)
     {
         foreach (var userID in userIDs)
         {
             UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
-            try 
+            try
             {
                 user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 //Not a supervisor, skip
             }
@@ -264,17 +332,17 @@
         }
     }
 
-    private async IAsyncEnumerable<UserDTO> GetStudentsDTOs(ICollection<int> userIDs) 
+    private async IAsyncEnumerable<UserDTO> GetStudentsDTOs(ICollection<int> userIDs)
     {
         foreach (var userID in userIDs)
         {
             //yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
             UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
-            try 
+            try
             {
                 user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 //Not a supervisor, skip
             }
@@ -282,17 +350,51 @@
         }
     }
 
-    private async Task<UserDTO> GetUserDTO(int userID) 
+    private async Task<UserDTO> GetUserDTO(int userID)
     {
         return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
     }
 
-    private async Task<CategoryDTO> GetCategoryDTO(int catID) 
+    private async Task<CategoryDTO> GetCategoryDTO(int catID)
     {
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
     }
 
-    private async Task<UserDTO> GetCurrentUser()
+    public async void ViewRelatedProjects()
+    {
+        
+        this.noRelatedProjects = false;
+        this.loadingRelatedProjects = true;
+        try
+        {
+            //this.related = await GetRelated(project.Id, this.maxRelatedProjects);
+            //this.relatedProjects = await ReferenceToProject(related);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+            this.noRelatedProjects = true;
+        }
+        this.loadingRelatedProjects = false;
+        if (this.relatedProjects.Count() == 0) this.noRelatedProjects = true;
+        StateHasChanged();
+    }
+
+    private async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetRelated(int projectID, int size) 
+    {
+        return await Http.GetFromJsonAsync<IReadOnlyCollection<ProjectReferenceDTO>>($"api/ProjectReference/{projectID},{size}");
+    }
+
+    private async Task<List<ProjectDTO>> ReferenceToProject(IReadOnlyCollection<ProjectReferenceDTO> dtos)
+        {
+            var list = new List<ProjectDTO>();
+            foreach(var dto in dtos)
+            {
+                list.Add(await Http.GetFromJsonAsync<ProjectDTO>($"api/Projects/{dto.Id}"));
+            }
+            return list;
+        }
+       private async Task<UserDTO> GetCurrentUser()
     {
         var AuthState = await authenticationStateTask;
         var email = AuthState.User.Claims.First(c => c.Type.ToString() == "email").Value; 
