@@ -15,13 +15,13 @@
             <link rel="stylesheet" href="Dashboard.razor.css">
         </head>
 
-        <div class="ProjectHeader">
-            <h1 class="ProjectTitle">@title</h1>
-            <!--Idea is to only show Status to the author of the project-->
-            <div class="Status Public">
-                <p>Public</p>
-            </div>
-        </div>
+<div class="ProjectHeader">
+    <h1 class="ProjectTitle">@title</h1>
+    <!--Idea is to only show Status to the author of the project-->
+    <div class="Status Public">
+        <p>@ProjectStatus</p>
+    </div>
+</div>
 
         <div class="Buffer_20"></div>   
 
@@ -186,6 +186,7 @@
     public int? ProjectId {get; set;}
     private ProjectDTO project;
     private UserDTO author;
+    private string ProjectStatus;
     private CategoryDTO category;
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
@@ -228,6 +229,7 @@
         this.title = project.Title;
         this.TargetGroup = category.Title;
         this.AuthorName = author.FirstName + " " + author.LastName;
+        this.ProjectStatus = project.Status.ToString();
 
         foreach (var item in students){Console.WriteLine("Student with ID: " + item.Id + " exists");}
     }

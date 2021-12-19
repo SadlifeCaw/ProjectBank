@@ -18,7 +18,7 @@ public class ProjectsController : ControllerBase
     [AllowAnonymous]
     [HttpGet]
     public async Task<IReadOnlyCollection<ProjectDTO>> Get()
-        => await _repository.ReadAllAsync();
+        => await _repository.ReadAllAvailableAsync(1);
 
     [AllowAnonymous]
     [Route("Count/100/{id}")]
