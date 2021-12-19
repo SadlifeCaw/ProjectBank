@@ -81,6 +81,7 @@ public class ProjectRepository : IProjectRepository
         var AuthoredProjects = (await _dbcontext.Projects
                                 .Where(p => p.Author.Id == author)
                                 .Where(p => p.Status == ProjectStatus.PUBLIC)
+                                .Take(100)
                                 .Select(p => new ProjectDTO(p.Id, p.Author.Id, p.Title, p.Description, p.Status, p.MaxStudents, p.Category.Id,
                                                             p.Tags.Select(t => t.Id).ToList(), p.Users.Select(u => u.Id).ToList(), p.Buckets.Select(b => b.Id).ToList()))
                                 .ToListAsync());
