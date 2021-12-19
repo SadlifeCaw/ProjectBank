@@ -71,8 +71,26 @@ public class ProjectsController : ControllerBase
         }
 
         var projectToReturn = await _repository.UpdateAsync(id, project); 
-
+        
         return projectToReturn.ToActionResult();
+    }
+
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Route("Delete/{id}")]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Delete(int id, ProjectUpdateDTO project)
+    {
+        if(id != project.Id)
+        {
+            return BadRequest("Id mismatch");
+        }
+
+        var projectToReturn = await _repository.DeleteAsync(id, project); 
+        
+        return projectToReturn.ToActionResult();
+        
     }
 
     
