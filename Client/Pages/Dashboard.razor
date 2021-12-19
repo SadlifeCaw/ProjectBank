@@ -11,6 +11,7 @@
 
 <head>
     <link rel="stylesheet" href="Dashboard.razor.css">
+    <link rel="stylesheet" href="Projects.razor.css">
 </head>
 
 <div class="ProjectHeader">
@@ -21,45 +22,46 @@
     </div>
 </div>
 
-<div class="Buffer_20"></div>   
+<div class="Buffer_20"></div>
 
 
 <div class="row ProjectInfoDisplay">
-  <div class="col-md-8 DescriptionContainer">
-    <div class="DescriptionDisplay">
-        <div class="row">
-            
-        </div>
-        <div class="DescriptionTitle">
-            <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
-        </div>  
-        <div class="Description">
-            <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
-            <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
+    <div class="col-md-8 DescriptionContainer">
+        <div class="DescriptionDisplay">
+            <div class="row">
+
+            </div>
+            <div class="DescriptionTitle">
+                <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
+            </div>
+            <div class="Description">
+                <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
+                <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
+            </div>
         </div>
     </div>
-  </div>
-  <div class="col-6 col-md-4 AuxInfoContainer">
-      <div class="row TargetGroup">
-          <h1>Target Group</h1>
-          <div class="TargetGroupContainer">
-              <p>@TargetGroup</p>
-          </div>
-      </div>
-      <div class="row">
-          <div class="row">
-              <div class="col-8">
-                <h1>Collaborators</h1>
-              </div>
-              <div class="col-4">
-                <button type="button" class="btn btn-sm ModalButton" @onclick="() => inviteModal.Open()">Invite</button>  
-              </div>
-          </div>
-          <div class="CardContainer">
-              <ul>
-                @foreach (var element in supervisors)
+    <div class="col-6 col-md-4 AuxInfoContainer">
+        <div class="row TargetGroup">
+            <h1>Target Group</h1>
+            <div class="TargetGroupContainer">
+                <p>@TargetGroup</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div class="col-8">
+                    <h1>Collaborators</h1>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-sm ModalButton"
+                        @onclick="() => inviteModal.Open()">Invite</button>
+                </div>
+            </div>
+            <div class="CardContainer">
+                <ul>
+                    @foreach (var element in supervisors)
                     {
-                        @if(element.FirstName != string.Empty)
+                        @if (element.FirstName != string.Empty)
                         {
                             <li>
                                 @(String.Format("{0} {1}", element.FirstName, element.LastName))
@@ -67,52 +69,55 @@
                         }
                     }
                 </ul>
-          </div>
-      </div>
-      <div class="row">
-        <div class="row h-50">
-              <div class="col-8">
-                <h1>Students</h1>
-              </div>
-              <div class="col-4">
-                <button type="button" class="btn btn-sm ModalButton" @onclick="() => applyModal.Open()">Apply</button>  
-              </div>
-          </div>
-        <div class="CardContainer">
-            <ul>
-                @foreach (var element in students)
-                {
-                    @if(element.FirstName != string.Empty)
+            </div>
+        </div>
+        <div class="row">
+            <div class="row h-50">
+                <div class="col-8">
+                    <h1>Students</h1>
+                </div>
+                <div class="col-4">
+                    <button type="button" class="btn btn-sm ModalButton"
+                        @onclick="() => applyModal.Open()">Apply</button>
+                </div>
+            </div>
+            <div class="CardContainer">
+                <ul>
+                    @foreach (var element in students)
+                    {
+                        @if (element.FirstName != string.Empty)
+                        {
+                            <li>
+                                @(String.Format("{0} {1}", element.FirstName, element.LastName))
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h1>Project Tags</h1>
+            <div class="CardContainer">
+                <ul>
+                    @foreach (var element in tags)
                     {
                         <li>
-                        @(String.Format("{0} {1}", element.FirstName, element.LastName))
+                            @element.Name;
                         </li>
                     }
-                }
-            </ul>
+                </ul>
+            </div>
         </div>
-      </div>
-      <div class="row">
-          <h1>Project Tags</h1>
-          <div class="CardContainer">
-            <ul>
-                @foreach (var element in tags)
-                {
-                    <li>
-                        @element.Name;
-                    </li>
-                }
-            </ul>
-          </div>
-      </div>
-  </div>
+    </div>
 </div>
 
 <Modal @ref="inviteModal">
     <Title>Invite Supervisor</Title>
+
     <Body>
         <p>
-            Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
+            Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over
+            project details, bar deleting the post.
         </p>
         <div class="form-group">
             <label for="InviteFormGroup">Email Address: </label>
@@ -120,21 +125,27 @@
         </div>
     </Body>
     <Footer>
-        <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
-        <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Invite</button>
+        <button type="button" class="btn btn-primary" data-dismiss="inviteModal"
+            @onclick="() => inviteModal.Close()">Close</button>
+        <button type="button" class="btn btn-success" data-dismiss="inviteModal"
+            @onclick="() => inviteModal.Close()">Invite</button>
     </Footer>
 </Modal>
 
 <Modal @ref="applyModal">
     <Title>Apply for project</Title>
+
     <Body>
         <p>
-              Are you absolutely sure about this? If you choose to apply for this course, you'll we committed to attend all lectures, go to the exam etc... You could really regret this.
+            Are you absolutely sure about this? If you choose to apply for this course, you'll we committed to attend
+            all lectures, go to the exam etc... You could really regret this.
         </p>
     </Body>
     <Footer>
-        <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
-        <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => applyModal.Close()">Apply</button>
+        <button type="button" class="btn btn-primary" data-dismiss="applyModal"
+            @onclick="() => applyModal.Close()">Close</button>
+        <button type="button" class="btn btn-success" data-dismiss="inviteModal"
+            @onclick="() => applyModal.Close()">Apply</button>
     </Footer>
 </Modal>
 
@@ -146,7 +157,65 @@
 
 <div class="RelatedProjectsContainer">
     <h2>Related projects</h2>
-    <button type="button" class="btn btn-block CustomButton">Tap to see within target group</button>
+    <button type="button" class="btn btn-block CustomButton" @onclick="() => ViewRelatedProjects()">Refresh</button>
+    <label class="RelatedProjectsLabel">max
+        <input class="inputNumber" @bind-value="maxRelatedProjects" type="number" name="points" step="10" min="10">
+    </label>
+    <div id="RelatedProjectsSwitchLineBreak">
+        <br>
+    </div>
+    <span>
+        <label class="RelatedProjectsLabel">Projects from same category:</label>
+        <label class="switch">
+            <input type="checkbox" @bind="sameCategory">
+            <span class="slider round"></span>
+        </label>
+    </span>
+    <div class="container">
+
+        <div class="row my-3">
+
+            @if (!loadingRelatedProjects && !noRelatedProjects)
+            {
+                @for (int i = 0; i < relatedProjects.Count(); i++)
+                {
+                    var relatedProject = relatedProjects[i];
+                    <div class="col-12 col-md-6 col-xl-4 my-3">
+                        <div class="card col project">
+                            <div class="card-body">
+                                <div class="row">
+                                    <h2 class="card-title col-9">@relatedProject.Title</h2>
+                                    <div class="col-2">
+                                        <a href=""
+                                    class=" nrbtn btn">@relatedProject.UserIDs.Count()/@relatedProject.MaxStudents</a>
+                                    </div>
+                                </div>
+                                <p class="card-text mb-5 description">@relatedProject.Description</p>
+                                <div class="tagdiv mb-3">
+                                    <ul>
+                                        @foreach (var tag in relatedProject.TagIDs)
+                                        {
+                                            <li class="tag tagbtn mx-1">@tag</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <a href="Projects/@relatedProject.Id" class="btn btn-primary footer">@more</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            @if (loadingRelatedProjects)
+            {
+                <p><em>Loading...</em></p>
+            }
+            @if (noRelatedProjects)
+            {
+                <p><em>There are no related projects...</em></p>
+            }
+
+        </div>
+    </div>
 </div>
 
 @code {
@@ -155,25 +224,29 @@
     string Description = "Loading description...";
     string AuthorName = string.Empty;
     string TargetGroup = "Loading...";
-    
+    string more = "View more";
+
     [Parameter]
-    public int? ProjectId {get; set;}
+    public int? ProjectId { get; set; }
     private ProjectDTO project;
     private UserDTO author;
     private CategoryDTO category;
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
     private List<UserDTO> students = new List<UserDTO>();
-
+    private List<ProjectDTO> relatedProjects = new List<ProjectDTO>();
+    private bool loadingRelatedProjects = false;
+    private bool noRelatedProjects = false;
+    private bool sameCategory = true;
+    private int maxRelatedProjects = 10; 
     private Modal inviteModal { get; set; }
-
     private Modal applyModal { get; set; }
 
     /*private async void test()
     {
-        var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
-            
-        Console.WriteLine(test);
+    var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
+
+    Console.WriteLine(test);
     }*/
 
     protected override async Task OnInitializedAsync()
@@ -186,27 +259,26 @@
             this.students = await GetStudentsDTOs(project.UserIDs).ToListAsync();
             this.supervisors = await GetSupervisorsDTOs(project.UserIDs).ToListAsync();
             this.category = await GetCategoryDTO(project.CategoryID);
+            ViewRelatedProjects();
         }
         catch (Exception exception)
         {
-            Console.WriteLine(":((( {0}",exception.Message);
-            Console.WriteLine("What the fuck?");
-            //exception.Redirect();
+            Console.WriteLine(exception.Message);
         }
         this.Description = project.Description;
         this.title = project.Title;
         this.TargetGroup = category.Title;
         this.AuthorName = author.FirstName + " " + author.LastName;
 
-        foreach (var item in students){Console.WriteLine("Student with ID: " + item.Id + " exists");}
+        foreach (var item in students) { Console.WriteLine("Student with ID: " + item.Id + " exists"); }
     }
 
-    private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds) 
+    private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds)
     {
         foreach (var id in tagIds)
         {
             //It crashes if you ask for id 7... which exists... wtf
-            if(id == 7) 
+            if (id == 7)
             {
                 continue;
             }
@@ -214,16 +286,16 @@
         }
     }
 
-    private async IAsyncEnumerable<UserDTO> GetSupervisorsDTOs(ICollection<int> userIDs) 
+    private async IAsyncEnumerable<UserDTO> GetSupervisorsDTOs(ICollection<int> userIDs)
     {
         foreach (var userID in userIDs)
         {
             UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
-            try 
+            try
             {
                 user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 //Not a supervisor, skip
             }
@@ -231,17 +303,17 @@
         }
     }
 
-    private async IAsyncEnumerable<UserDTO> GetStudentsDTOs(ICollection<int> userIDs) 
+    private async IAsyncEnumerable<UserDTO> GetStudentsDTOs(ICollection<int> userIDs)
     {
         foreach (var userID in userIDs)
         {
             //yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
             UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
-            try 
+            try
             {
                 user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 //Not a supervisor, skip
             }
@@ -249,13 +321,32 @@
         }
     }
 
-    private async Task<UserDTO> GetUserDTO(int userID) 
+    private async Task<UserDTO> GetUserDTO(int userID)
     {
         return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{userID}");
     }
 
-    private async Task<CategoryDTO> GetCategoryDTO(int catID) 
+    private async Task<CategoryDTO> GetCategoryDTO(int catID)
     {
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
+    }
+
+    public async void ViewRelatedProjects()
+    {
+        this.noRelatedProjects = false;
+        this.loadingRelatedProjects = true;
+        try
+        {
+            
+            this.relatedProjects = await Http.GetFromJsonAsync<List<ProjectDTO>>($"api/Projects/Count/100/{this.maxRelatedProjects}");
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception.Message);
+            this.noRelatedProjects = true;
+        }
+        this.loadingRelatedProjects = false;
+        if (this.relatedProjects.Count() == 0) this.noRelatedProjects = true;
+        StateHasChanged();
     }
 }
