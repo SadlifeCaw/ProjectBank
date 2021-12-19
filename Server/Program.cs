@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using ProjectBank.Infrastructure;
 using ProjectBank.Infrastructure.Entities;
+using ProjectBank.Infrastructure.ReferenceSystem;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,7 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProjectLSH ,ProjectLSH>();
 
 var app = builder.Build();
 
@@ -69,7 +72,6 @@ var optionsBuilder = new DbContextOptionsBuilder<ProjectBankContext>().UseNpgsql
 await app.SeedAsync();
 
 app.Run();
-
 
 static IConfiguration LoadConfiguration()
 {

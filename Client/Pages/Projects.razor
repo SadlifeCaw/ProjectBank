@@ -131,4 +131,9 @@
 
         NavigationManager.NavigateTo(uri);
     }
+
+    private async Task<IReadOnlyCollection<ProjectDTO>> GetRelated(int projectID, int size) 
+    {
+        return await Http.GetFromJsonAsync<IReadOnlyCollection<ProjectDTO>>($"api/ProjectReference/{projectID},{size}");
+    }
 }
