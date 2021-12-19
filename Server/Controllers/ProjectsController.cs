@@ -66,7 +66,7 @@ public class ProjectsController : ControllerBase
             return BadRequest("Id mismatch");
         }
 
-        var projectToReturn = await _repository.UpdateAsync(id, project);
+        var projectToReturn = await _repository.UpdateAsync(id, project); 
 
         return projectToReturn.ToActionResult();
     }
