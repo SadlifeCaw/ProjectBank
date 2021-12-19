@@ -105,7 +105,7 @@ public class ProjectRepository : IProjectRepository
 
         return AuthoredProjects.AsReadOnly();
     }
-
+ 
     public async Task<IReadOnlyCollection<ProjectDTO>> ReadAllAuthoredAsync(int authorID)
     {
         return (await _dbcontext.Projects
