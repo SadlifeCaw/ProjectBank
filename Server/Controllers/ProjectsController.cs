@@ -49,7 +49,11 @@ public class ProjectsController : ControllerBase
 
         if(status == Core.Response.Conflict)
         {
-            return BadRequest();
+            return new ConflictResult();
+        }
+        if(status == Core.Response.NotFound)
+        {
+            return new NotFoundResult();
         }
 
         return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
