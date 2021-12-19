@@ -1,4 +1,4 @@
-namespace ProjectBank.Tests.Controller.Tests;
+namespace ProjectBank.Tests.Controllers.Tests;
 
 public class TagControllerTests
 {

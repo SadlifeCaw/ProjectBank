@@ -1,17 +1,5 @@
-using Xunit;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using ProjectBank.Server.Controllers;
-using ProjectBank.Core.EF.DTO;
-using ProjectBank.Core.EF.Repository;
-using ProjectBank.Infrastructure;
-using ProjectBank.Core;
-using System.Collections.Generic;
-
-
 namespace ProjectBank.Tests.Controllers.Tests;
+
 public class ProjectControllersTests
 {
 
@@ -31,22 +19,25 @@ public class ProjectControllersTests
         Assert.IsType<NotFoundResult>(response.Result);
     }
     
+
+    /* Testing code mainly taken from Rasmus Lybæk
+    *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+    */
     [Fact]
-    public async Task Update_given_unknown_id_returns_NotFound()
+    public async Task Put_updates_Project()
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
-        //var project = new ProjectUpdateDTO{Id = 1, };
-        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
+        var project = new ProjectUpdateDTO{Id = 1};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.NotFound);
+        repository.Setup(m => m.UpdateAsync(1, project)).ReturnsAsync(Response.Updated);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Put(project.Id, project);
+        var response = await controller.Put(1, project);
 
         // Assert
-        Assert.IsType<ConflictResult>(response);
+        Assert.IsType<NoContentResult>(response);
     }
 
     /* Testing code mainly taken from Rasmus Lybæk
@@ -68,28 +59,9 @@ public class ProjectControllersTests
         var result = await controller.Post(toCreate) as CreatedAtActionResult;
 
         // Assert
-        //Assert.IsType<CreatedAtActionResult>(response);
-        //Assert.Equal(1, (await controller.Get()).Count);
-        //Assert.Equal(project.ToString(), (await controller.Get()).Count);
-        //Assert.Equal(response.Item2, project); 
-
-    }
-
-    [Fact]
-    public async Task Put_updates_Project()
-    {
-        // Arrange
-        var logger = new Mock<ILogger<ProjectsController>>();
-        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
-        var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.Updated);
-        var controller = new ProjectsController(logger.Object, repository.Object);
-
-        // Act
-        var response = await controller.Put(project.Id, project);
-
-        // Assert
-        Assert.IsType<NoContentResult>(response);
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 
 
@@ -98,20 +70,20 @@ public class ProjectControllersTests
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
-        var project = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Project: ", Description = "Description", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 1, TagIDs = new List<int>{1}, UserIDs = new List<int>{2}, BucketIDs = new List<int>{1, 2, 3}};
+        var project = new ProjectUpdateDTO{Id = 2};
         var repository = new Mock<IProjectRepository>();
-        repository.Setup(m => m.UpdateAsync(project)).ReturnsAsync(Response.NotFound);
+        repository.Setup(m => m.UpdateAsync(2, project)).ReturnsAsync(Response.NotFound);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
         // Act
-        var response = await controller.Put(project.Id, project);
+        var response = await controller.Put(2, project);
 
         // Assert
-        Assert.IsType<NotFoundResult>(response);
+        Assert.IsType<ConflictResult>(response);
     }
+}
 
 
-    
 
     
 
@@ -123,7 +95,6 @@ public class ProjectControllersTests
     public async Task<IActionResult> Put(int id, [FromBody] ProjectUpdateDTO project)
             => (await _repository.UpdateAsync(project)).ToActionResult();
     */
-}
 
 /*
 public class CharactersControllerTests
@@ -241,3 +212,4 @@ public class CharactersControllerTests
         Assert.IsType<NoContentResult>(response);
     }
 }*/
+    

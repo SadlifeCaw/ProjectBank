@@ -7,7 +7,7 @@ public interface IUserRepository
     Task<Option<UserDTO>> ReadByID(int userID);
     Task<Option<UserDTO>> ReadSupervisor(int userID);
     Task<Option<UserDTO>> ReadStudent(int userID);
-    Task<UserDTO> ReadByEmail(string Email);
+    Task<Option<UserDTO>> ReadByEmail(string Email);
     Task<IReadOnlyCollection<UserDTO>> ReadAllAsync();
     Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync();
     Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync();

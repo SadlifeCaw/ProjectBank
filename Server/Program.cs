@@ -18,7 +18,10 @@ builder.Services.Configure<JwtBearerOptions>(
     JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.TokenValidationParameters.NameClaimType = "name";
-    });
+        //options.TokenValidationParameters.
+    }
+);
+
 
 builder.Services.AddRazorPages();
 
