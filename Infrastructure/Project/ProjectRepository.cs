@@ -245,6 +245,11 @@ public class ProjectRepository : IProjectRepository
             return Response.NotFound;
         }
 
+        if(projectEntity.Status == ProjectStatus.DELETED)
+        {
+            return Response.Conflict;
+        }
+
         projectEntity.Status = ProjectStatus.DELETED;
 
         await _dbcontext.SaveChangesAsync();
