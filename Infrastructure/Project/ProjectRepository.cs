@@ -338,9 +338,26 @@ public class ProjectRepository : IProjectRepository
                         .FirstOrDefaultAsync();
     }
 
-    /*public async IAsyncEnumerable<IProject> AllProjectReferenceAsync()
+    public async Task<IReadOnlyCollection<IProject>> ReadAllProjectReferenceAsync()
+    {        
+           return ((await _dbcontext.Projects
+                        .Select(p => new ProjectReference{Id = p.Id, Tags = p.Tags.Select( t => new Tag(t.Name)).ToList(), Category = new Category{Id = p.Category.Id}, Signature = new Signature(p.Tags.Select( t => new Tag(t.Name)).ToList())})
+                        .ToListAsync())
+                        .AsReadOnly());
+    }
+
+    /*public async Task<List<ProjectReference>> AllProjectReferenceAsync()
         {
-            var dtos = await ReadAllAsync();
+            //var dtos = await ReadAllAsync();
+            return await _dbcontext.Projects.Select(project => (new ProjectReference() { Id = project.Id, Tags = project.Tags.Select(t => new Tag(t.Name)).ToList(), Category = project.Category})).ToListAsync();
+            
+           /* await foreach (var project in _dbcontext.Projects)
+            {
+                //var tags = new List<Tag>();  
+                //foreach (var id in dto.TagNames) tags.Add(new Tag(id));
+                //var cat = await GetCategoryAsync(dto.CategoryID);
+                yield return (new ProjectReference() { Id = project.Id, Tags = project.Tags, Category = project.Category});
+            }*/
             //var tagMap = new Dictionary<int, Tag>();
             
             //await foreach (var tag in  _dbcontext.Tags) tagMap.Add(tag.Id, Tag);
@@ -362,6 +379,6 @@ public class ProjectRepository : IProjectRepository
                 var tags = new List<Tag>();  
                 foreach (var id in dto.TagIDs) tags.Add(tagMap[id]);
                 yield return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = categoryMap[dto.Id], Signature = new Signature(tags) });
-            }
-        }*/
+            }*/
+        //}
 }

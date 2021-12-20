@@ -4,20 +4,20 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 {
     public class ProjectLSH : LocalitySensitiveHashTable<IProject>, IProjectLSH
     {
-        private IProjectRepository _projectRepository;
+        private ProjectRepository _projectRepository;
         private ITagRepository _tagRepository;
         private ICategoryRepository _categoryRepository;
 
         public ProjectLSH(IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
         {
-            _projectRepository = projectRepository;
+            _projectRepository = (ProjectRepository) projectRepository;
             _tagRepository = tagRepository;
             _categoryRepository = categoryRepository;
         }
-        public override Response Insert(IProject project)
+        public override async Task<Response> Insert(IProject project)
         {
             if (project.Signature == null || project.Category == null) return Response.Conflict;
-            return base.Insert(project);           
+            return await base.Insert(project);           
         }
 
         public async Task<IReadOnlyCollection<IProject>> GetSortedInCategory(IProject tagable)
@@ -35,41 +35,33 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         public async Task<Response> InsertAll()
         {
-            //var allProjects = AllProjectReference();
-            var allProjects = AllProjectReference();
-            await foreach (var project in allProjects)
+            //var dtos = (await _projectRepository.ReadAllAsync());
+            var allProjects = await _projectRepository.ReadAllProjectReferenceAsync();//AllProjectReference(dtos);//await _projectRepository.ReadAllProjectReferenceAsync();
+            Console.WriteLine("DONE");
+            foreach (var project in allProjects)
             {
-                var response = Insert(project);
+                var response = await Insert(project);
                 if (response != Response.Created) return Response.Conflict;
             }
             return Response.Created;
         }
 
-        private async IAsyncEnumerable<IProject> AllProjectReference()
+/*        private async IAsyncEnumerable<IProject> AllProjectReference(IReadOnlyCollection<ProjectDTO> dtos)
         {
-            var dtos = await _projectRepository.ReadAllAsync();
-            var tagMap = new Dictionary<int, Tag>();
-            
-            foreach (var tag in await _tagRepository.ReadAllAsync()) tagMap.Add(tag.Id, new Tag(tag.Name));
-            var categoryMap = new Dictionary<int, Category>();
-            
-            foreach (var category in await _categoryRepository.Read())
-            {
-                 categoryMap.Add(category.Id, new Category(){Id = category.Id, Description = category.Description, Title = category.Title});
-            }
             var projects = new List<IProject>();
             
             await foreach (var dto in dtos.ToAsyncEnumerable())
             {
                 var tags = new List<Tag>();
-                foreach (var id in dto.TagIDs)
+                foreach (var name in dto.TagNames)
                 {
-                    tags.Add(tagMap[id]);
+                    tags.Add(new Tag(name));
                 }
-                yield return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = categoryMap[dto.CategoryID], Signature = new Signature(tags) });
+                var category = new Category{Id = dto.CategoryID};
+                yield return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = category, Signature = new Signature(tags)});
             }
         }
-
+*/
         public async Task<IReadOnlyCollection<IProject>> GetSorted(IProject tagable)
         {
             var NotSortedTagables = await Get(tagable);
