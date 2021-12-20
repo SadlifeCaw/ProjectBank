@@ -35,6 +35,8 @@ public record ProjectDTO (
     //[Required]
     ICollection<int> TagIDs,
 
+    ICollection<string> TagNames,
+
     //not required to allow value binding in razor
     ICollection<int> UserIDs,
 
@@ -48,10 +50,10 @@ public record ProjectCreateDTO
     [Required]
     public int AuthorID {get; set;}
 
-    [Required, StringLength(50)]
+    [Required, StringLength(100)]
     public string? Title {get; set;}
 
-    [Required,StringLength(1000)]
+    [Required,StringLength(10000)]
     public string? Description {get; set;}
 
     [Required]
@@ -64,6 +66,8 @@ public record ProjectCreateDTO
     public int CategoryID {get; set;}
     
     public ICollection<int>? TagIDs {get; set;}
+
+    public ICollection<string>? TagNames {get; set;}
 
     //[Required]
     public ICollection<int>? UserIDs {get; set;}

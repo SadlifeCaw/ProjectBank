@@ -32,7 +32,6 @@ public class TagController : ControllerBase
     public async Task<ActionResult<TagDTO>> Get(int id) 
         =>(await _repository.ReadTagByIDAsync(id)).ToActionResult();
 
-
     [AllowAnonymous]
     [HttpGet]
     public async Task<IReadOnlyCollection<TagDTO>> Get()
@@ -40,7 +39,7 @@ public class TagController : ControllerBase
 
 
     [AllowAnonymous]
-    [ProducesResponseType(typeof(TagDTO), 201)]
+    [ProducesResponseType(typeof(TagDTO), 201)] 
     [HttpPost]
     public async Task<IActionResult> Post(TagCreateDTO tag)
     {

@@ -4,19 +4,6 @@ public class Course : CodedCategory
 {
     [Required]
     public IEnumerable<TeachingProgram> Programs {get; set;}
-
-   /* public override IReadOnlyCollection<IHierarchy> GetAllRelated()
-    {
-        var related = new List<IHierarchy>();
-        related.Add(this);
-        related.AddRange(Programs);
-        var Faculties = Programs.Select(s => s.Faculty);
-        related.AddRange(Faculties);
-        related.AddRange(Faculties.Select(s => s.Institution));
-        return related.AsReadOnly();
-    }*/
-
-    
     public IEnumerable<Student> Students {get; set;}
 
     public Course(string Title, string? Description, Faculty Faculty, string Code, IEnumerable<TeachingProgram> Programs, IEnumerable<Student> Students) 
@@ -25,7 +12,5 @@ public class Course : CodedCategory
         this.Programs = Programs;
         this.Students = Students;
     }
-
-    // Empty constructor to please the EF Gods
     public Course() {}
 }

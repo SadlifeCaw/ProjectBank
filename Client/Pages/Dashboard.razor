@@ -2,9 +2,6 @@
 @using ProjectBank.Infrastructure
 @using ProjectBank.Core
 @using ProjectBank.Core.EF.DTO
-@using Microsoft.EntityFrameworkCore
-@using System
-@using System.Collections.Generic
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @attribute [Authorize]
@@ -225,6 +222,17 @@
                                         <a @onclick="@(e => ChangePageToProject(relatedProject.Id))" class="btn btn-primary footer">@more</a>
                                     </div>
                                 </div>
+
+                                <p class="card-text mb-5 description">@relatedProject.Description</p>
+                                <div class="tagdiv mb-3">
+                                    <ul>
+                                        @foreach (var tag in relatedProject.TagIDs)
+                                        {
+                                            <li class="tag tagbtn mx-1">@tag</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <a href="Projects/@relatedProject.Id" class="btn btn-primary footer">@more</a>
                             </div>
                         }
                     }
@@ -273,7 +281,7 @@
     private bool loadingRelatedProjects = false;
     private bool noRelatedProjects = false;
     private bool sameCategory = true;
-    private int maxRelatedProjects = 10;
+    private int maxRelatedProjects = 10; 
 
     private UserDTO CurrentUser;
 
@@ -289,6 +297,7 @@
     var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
     Console.WriteLine(test);
     }*/
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -384,9 +393,8 @@
         this.loadingRelatedProjects = true;
         try
         {
-            if (!sameCategory) this.related = await GetRelated(project.Id, this.maxRelatedProjects);
-            else this.related = await GetRelatedInCategory(project.Id, this.maxRelatedProjects);
-            this.relatedProjects = await ReferenceToProject(related);
+            //this.related = await GetRelated(project.Id, this.maxRelatedProjects);
+            //this.relatedProjects = await ReferenceToProject(related);
         }
         catch (Exception exception)
         {
@@ -398,14 +406,9 @@
         StateHasChanged();
     }
 
-    private async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetRelatedInCategory(int projectID, int size) 
-    {
-        return await Http.GetFromJsonAsync<IReadOnlyCollection<ProjectReferenceDTO>>($"api/ProjectReference/{projectID},{size}");
-    }
-
     private async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetRelated(int projectID, int size) 
     {
-        return await Http.GetFromJsonAsync<IReadOnlyCollection<ProjectReferenceDTO>>($"api/ProjectReference/Sorted/{projectID},{size}");
+        return await Http.GetFromJsonAsync<IReadOnlyCollection<ProjectReferenceDTO>>($"api/ProjectReference/{projectID},{size}");
     }
 
     private async Task<List<ProjectDTO>> ReferenceToProject(IReadOnlyCollection<ProjectReferenceDTO> dtos)
