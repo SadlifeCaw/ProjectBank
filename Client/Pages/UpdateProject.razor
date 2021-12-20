@@ -41,34 +41,6 @@
                         <InputNumber id="MaxStudents" class="form-control" min="0" @bind-Value="tempProject.MaxStudents"/>
                     </div>
 
-                    <div class="form-group mt-4">
-                    <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
-
-                        <div class="TagContainer">
-                            <ul>
-                                @foreach (var element in AllTags)
-                                {
-                                    <li>
-                                        @element;
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-
-                        <div class="NewTagContainer">
-                            <div class="row w-50">
-                                <div class="col-7">
-                                    <input type="text" class="form-control" id="TagCreateForm" placeholder="Enter tag" @bind="NewTag">
-                                </div>
-                                
-                                <div class="col-4">
-                                    <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
                     <!-- Code for binding database entries to a selection taken from
                         https://www.pragimtech.com/blog/blazor/blazor-select-bind-database-data/
                     -->
