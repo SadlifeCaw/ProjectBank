@@ -26,7 +26,7 @@ public class ProjectBankContext : DbContext
     public DbSet<Signature> Signatures => Set<Signature>();
     public DbSet<ProjectBucket> Buckets => Set<ProjectBucket>();
 
-    //public ProjectLSH LSH = new ProjectLSH();
+    //public ProjectLSH LSH;
 
 
     public ProjectBankContext(DbContextOptions<ProjectBankContext> options) : base(options) { }
