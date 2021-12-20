@@ -13,55 +13,99 @@ namespace ProjectBank.Server.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 
     public class ProjectReferenceController : ControllerBase
     {
         private readonly ILogger<ProjectReferenceController> _logger;
 
-        //public static readonly IProjectLSH _LSH;
+        private IProjectRepository _projectRepository;
+        private ITagRepository _tagRepository;
+        private ICategoryRepository _categoryRepository;
 
-        public ProjectReferenceController(ILogger<ProjectReferenceController> logger) //IProjectLSH LSH)
+
+
+        public ProjectReferenceController(ILogger<ProjectReferenceController> logger, IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository) //IProjectLSH LSH)
         {
             _logger = logger;
-            //_LSH = new ProjectLSH(context);
-
-            //Task.Run(() => this.FunctionAsync()).Wait();
+            //Console.WriteLine("ProjectReferenceController in tha houuuse");
+            if (ProjectReferenceData._LSH == null)
+            {
+                ProjectReferenceData._LSH = new ProjectLSH(projectRepository, tagRepository, categoryRepository);
+                Task.Run(() => ProjectReferenceData._LSH.InsertAll()).Wait();
+            }
+            _projectRepository = projectRepository;
+            _tagRepository = tagRepository;
+            _categoryRepository = categoryRepository;
         }
 
-      /*  [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
-        [HttpGet("InsertAll")]
-        public async Task<Response> InsertAll()
-        {
-            //return await SeedExtensions.LSH.InsertAll(); 
-            //return await _LSH.GetSorted(projectID, size);
-        }*/
-
-        bool first = true;
+        /*  [AllowAnonymous]
+          [ProducesResponseType(StatusCodes.Status404NotFound)]
+          [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
+          [HttpGet("InsertAll")]
+          public async Task<Response> InsertAll()
+          {
+              //return await SeedExtensions.LSH.InsertAll(); 
+              //return await _LSH.GetSorted(projectID, size);
+          }*/
 
         [Authorize]
+        //[Route("InCategory/{projectID},{size}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
         [HttpGet("{projectID},{size}")]
+        public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedInCategory(int projectID, int size)
+        {
+            //if(first) await _LSH.InsertAll(); 
+            //first = false;
+            var project = await getProjectById(projectID);
+            return await ProjectReferenceData._LSH.GetSortedInCategory(project, size);
+        }
+
+        [Authorize]
+        [Route("Sorted/{projectID},{size}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
+        [HttpGet]
         public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSorted(int projectID, int size)
         {
             //if(first) await _LSH.InsertAll(); 
             //first = false;
-            return await SeedExtensions.LSH.GetSorted(projectID, size);
+            var project = await getProjectById(projectID);
+            return await ProjectReferenceData._LSH.GetSorted(project, size);
         }
 
-       /* [Authorize]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
-        [HttpGet("{projectID},{size}")]
-        public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedByCategory(int projectID, int size)
+        private async Task<IProject> getProjectById(int id)
         {
-            await _LSH.InsertAll(); 
-            return await _LSH.GetSorted(projectID, size);
-        }*/
+            var dto = (await _projectRepository.ReadByIDAsync(id)).Value;
+            var tags = new List<Tag>();
+            //await foreach(var tag in dto.TagIDs.ToAsyncEnumerable()) tags.Add(await _context.Tags.Where(c => c.Id == tag).Select(c => c).FirstOrDefaultAsync());
+            foreach (var tagid in dto.TagIDs)
+            {
+                var tagdto = (await _tagRepository.ReadTagByIDAsync(tagid)).Value;
+                tags.Add(new Tag(tagdto.Name));
+                //tags.Add(await _context.Tags.Where(t => t.Id == tagid).Select(t => t).FirstOrDefaultAsync());
+            }
+            //await foreach(var category in dto.CategoryID.ToAsyncEnumerable()) tags.Add(await _context.Tags.Where(c => c.Id == tag).Select(c => c).FirstOrDefaultAsync());
+            var categoryDTO = (await _categoryRepository.Read(dto.CategoryID));
+            return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = new Category() { Id = categoryDTO.Id, Description = categoryDTO.Description, Title = categoryDTO.Title }, Signature = new Signature(tags) });
+
+            /*return await (_context.Projects
+                        .Where(p => p.Id == id)
+                        .Select(p => p))
+                        .FirstOrDefaultAsync();*/
+        }
+
+        /* [Authorize]
+         [ProducesResponseType(StatusCodes.Status404NotFound)]
+         [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
+         [HttpGet("{projectID},{size}")]
+         public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedByCategory(int projectID, int size)
+         {
+             await _LSH.InsertAll(); 
+             return await _LSH.GetSorted(projectID, size);
+         }*/
 
 
         //Get x most sorted by category

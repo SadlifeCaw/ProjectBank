@@ -16,9 +16,10 @@ public class ProjectsController : ControllerBase
     }
 
     [AllowAnonymous]
+    [Route("Own/{id}")]
     [HttpGet]
-    public async Task<IReadOnlyCollection<ProjectDTO>> Get()
-        => await _repository.ReadAllAvailableAsync(1);
+    public async Task<IReadOnlyCollection<ProjectDTO>> GetOwn(int id)
+        => await _repository.ReadAllAvailableAsync(id);
 
     [AllowAnonymous]
     [Route("Count/100/{id}")]
@@ -48,10 +49,14 @@ public class ProjectsController : ControllerBase
 
         if(status == Core.Response.Conflict)
         {
-            return BadRequest();
+            return new ConflictResult();
+        }
+        if(status == Core.Response.NotFound)
+        {
+            return new NotFoundResult();
         }
 
-        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+        return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
     }
 
     [AllowAnonymous]
@@ -65,9 +70,27 @@ public class ProjectsController : ControllerBase
             return BadRequest("Id mismatch");
         }
 
-        var projectToReturn = await _repository.UpdateAsync(id, project);
-
+        var projectToReturn = await _repository.UpdateAsync(id, project); 
+        
         return projectToReturn.ToActionResult();
+    }
+
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [Route("Delete/{id}")]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Delete(int id, ProjectUpdateDTO project)
+    {
+        if(id != project.Id)
+        {
+            return BadRequest("Id mismatch");
+        }
+
+        var projectToReturn = await _repository.DeleteAsync(id, project); 
+        
+        return projectToReturn.ToActionResult();
+        
     }
 
     

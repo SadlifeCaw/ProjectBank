@@ -6,9 +6,10 @@ public interface IProjectLSH
     Task<Response> Insert(IProject project);
 
     Task<IReadOnlyCollection<IProject>> GetSortedInCategory(IProject tagable);
+    Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedInCategory(IProject project, int size);
     Task<Response> InsertAll();
     Task<IReadOnlyCollection<IProject>> GetSorted(IProject tagable);
-    Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSorted(int id, int size);
+    Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSorted(IProject project, int size);
 
 
 

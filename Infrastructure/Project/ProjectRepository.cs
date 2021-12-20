@@ -232,6 +232,26 @@ public class ProjectRepository : IProjectRepository
         return Response.Updated;
     }
 
+    public async Task<Response> DeleteAsync(int id, ProjectUpdateDTO project)
+    {
+        var projectEntity = await _dbcontext.Projects
+                .Where(p => p.Id == project.Id)
+                .FirstOrDefaultAsync();
+        
+        var category = await GetCategoryAsync(project.CategoryID);
+
+        if(projectEntity == null || category == null)
+        {
+            return Response.NotFound;
+        }
+
+        projectEntity.Status = ProjectStatus.DELETED;
+
+        await _dbcontext.SaveChangesAsync();
+        
+        return Response.Deleted;
+    }
+
     private async Task<Supervisor> GetSupervisorAsync(int authorID)
     {
         var users = from u in _dbcontext.Users.OfType<Supervisor>()

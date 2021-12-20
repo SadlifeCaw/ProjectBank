@@ -149,4 +149,128 @@ public class UsersControllers
         // Assert
         Assert.IsType<NotFoundResult>(response.Result);
     }
+
+    [Fact]
+    public async Task Post_Adds_Student()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var toCreate = new StudentCreateDTO();
+        var created = new StudentDTO(1, "jens@gmail.com", "Jens", "Jensen", "SWU2020", "ITU", new List<int>{}, new List<int>{});
+        
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate) as CreatedAtActionResult;
+
+        // Assert
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
+    }
+
+    [Fact]
+    public async Task Post_Existing_Student_returns_Conflict()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var toCreate = new StudentCreateDTO();
+        var created = new StudentDTO(1, "jens@gmail.com", "Jens", "Jensen", "SWU2020", "ITU", new List<int>{}, new List<int>{});
+        
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Conflict, created));
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate);
+
+        // Assert
+        Assert.IsType<ConflictResult>(result);
+    }
+
+    [Fact]
+    public async Task Post_Student_Institution_non_existing_returns_Conflict()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var toCreate = new StudentCreateDTO();
+        var created = new StudentDTO(1, "jens@gmail.com", "Jens", "Jensen", "SWU2020", "ITU", new List<int>{}, new List<int>{});
+        
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.NotFound, created));
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task Post_Adds_Supervisor()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var toCreate = new SupervisorCreateDTO();
+        var created = new SupervisorDTO(1, "jens@gmail.com", "Jens", "Jensen", "Computer Science", "ITU", new List<int>{}, new List<int>{});
+        
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate) as CreatedAtActionResult;
+
+        // Assert
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
+    }
+
+    [Fact]
+    public async Task Post_Existing_Supervisor_returns_Conflict()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var toCreate = new SupervisorCreateDTO();
+        var created = new SupervisorDTO(1, "jens@gmail.com", "Jens", "Jensen", "Computer Science", "ITU", new List<int>{}, new List<int>{});
+        
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Conflict, created));
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate);
+
+        // Assert
+        Assert.IsType<ConflictResult>(result);
+    }
+
+    [Fact]
+    public async Task Post_Supervisor_Institution_non_existing_returns_Conflict()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<UsersController>>();
+        var repository = new Mock<IUserRepository>();
+
+        var toCreate = new SupervisorCreateDTO();
+        var created = new SupervisorDTO(1, "jens@gmail.com", "Jens", "Jensen", "Computer Science", "ITU", new List<int>{}, new List<int>{});
+        
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.NotFound, created));
+        var controller = new UsersController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(result);
+    }
 }

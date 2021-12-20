@@ -10,8 +10,8 @@ namespace ProjectBank.Server.Model;
 
 public static class SeedExtensions
 {
-    private static ProjectBankContext _context;
-    public static ProjectLSH LSH = new ProjectLSH(_context);
+    //private static ProjectBankContext _context;
+    //public static ProjectLSH LSH = new ProjectLSH(context);
     public static async Task<IHost> SeedAsync(this IHost host)
     {
         using (var scope = host.Services.CreateScope())
@@ -20,7 +20,7 @@ public static class SeedExtensions
 
           
             await SeedProjectsAsync(context);
-            _context = context;
+            //_context = context;
             //LSH = new ProjectLSH(context);
         }
         return host;
@@ -62,8 +62,8 @@ public static class SeedExtensions
 
             await context.SaveChangesAsync();
             
-            LSH = new ProjectLSH(context);
-            await LSH.InsertAll();
+            //LSH = new ProjectLSH(context);
+            //await LSH.InsertAll();
         }
     }
 }

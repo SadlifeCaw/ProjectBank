@@ -1,5 +1,6 @@
 using System.Data;
 using System.Text;
+using System.Linq;
 using ProjectBank.Infrastructure.Entities;
 
 namespace ProjectBank.Infrastructure.ReferenceSystem
@@ -34,7 +35,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             {
                 if (!Map.ContainsKey(bucketString)) AddSignature(bucketString);
                 //!Map[bucketString].
-                if (!Map[bucketString].Projects.Add(tagable)) { return Response.Conflict;; }
+                if (Map[bucketString].Projects.Where(x => x.Id == tagable.Id).ToList().Count != 0 || !Map[bucketString].Projects.Add(tagable)) { return Response.Conflict;; }
             }
             return Response.Created;
         }
@@ -67,10 +68,9 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         public async Task<Response> Update(Tagable tagable)
         {
             var deleted = await Delete(tagable);
-            //tagable.Tags = tags;
+            if(deleted != Response.Deleted) return deleted;
             var inserted = await Insert(tagable);
-            if(deleted == Response.Deleted && inserted == Response.Updated) return inserted;
-            else return Response.Conflict;
+            return inserted;
         }
 
         public async Task<Response> Delete(Tagable tagable)
@@ -79,7 +79,9 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             var bucketStrings = HashesToBucketString(tagable.Signature);
             await foreach (string bucketString in bucketStrings.ToAsyncEnumerable())
             {
-                if (!Map.ContainsKey(bucketString) || !Map[bucketString].Projects.Remove(tagable)) return Response.NotFound;
+                if(!Map.ContainsKey(bucketString)) return Response.NotFound;
+                var toRemove = Map[bucketString].Projects.Where(x => x.Id == tagable.Id).ToList();
+                if (!Map[bucketString].Projects.Remove(toRemove.FirstOrDefault())) return Response.NotFound;
             }
             return Response.Deleted;
         }
@@ -93,7 +95,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             {
                 foreach (Tagable relatedTagable in Map[bucketString].Projects)
                 {
-                    if (!relatedTagable.Equals(tagable))
+                    if (!relatedTagable.Id.Equals(tagable.Id))
                     {
                         set.Add(relatedTagable);
                     }

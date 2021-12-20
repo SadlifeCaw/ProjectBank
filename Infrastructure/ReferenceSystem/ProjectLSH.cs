@@ -4,14 +4,20 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 {
     public class ProjectLSH : LocalitySensitiveHashTable<IProject>, IProjectLSH
     {
-        private readonly ProjectBankContext _context;
+        //private readonly ProjectBankContext _context;
         //private IBucketRepository _bucketRepository;
         private IProjectRepository _projectRepository;
-        public ProjectLSH(ProjectBankContext context)
+        private ITagRepository _tagRepository;
+        private ICategoryRepository _categoryRepository;
+
+
+        public ProjectLSH(IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
         {
-            _context = context;
+            //_context = context;
             //_bucketRepository = new BucketRepository(_context);
-            _projectRepository = new ProjectRepository(_context);
+            _projectRepository = projectRepository;
+            _tagRepository = tagRepository;
+            _categoryRepository = categoryRepository;
         }
 
         protected override void AddSignature(string bucketString)
@@ -26,7 +32,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         public override async Task<Response> Insert(IProject project)
         {
-            if (project.Signature == null) return Response.Conflict;
+            if (project.Signature == null || project.Category == null) return Response.Conflict;
             return await base.Insert(project);
             /*var bucketinserted = await AddBucketAsync(HashesToBucketString(project.Signature), project);
             if (inserted == Response.Created && bucketinserted == Response.Created) return inserted;
@@ -54,14 +60,14 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         public async Task<IReadOnlyCollection<IProject>> GetSortedInCategory(IProject tagable)
         {
-            if (tagable.Category == null) throw new ArgumentException("The object provided does not have a category");
+           //if (tagable.Category == null) return (null, Response.Conflict);
             var category = tagable.Category;
             var allCategories = await GetSorted(tagable);
             var sorted = new List<IProject>();
 
             await foreach (var tag in allCategories.ToAsyncEnumerable())
             {
-                if (tag.Category.IsRelated(category)) sorted.Add(tag);
+                if (tag.Category.Id == category.Id) sorted.Add(tag);
             }
             return sorted.AsReadOnly();
         }
@@ -92,9 +98,12 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
         {
             //var allTags = await _context.Tags;
             var tagMap = new Dictionary<int, Tag>();
-            foreach (var tag in _context.Tags) tagMap.Add(tag.Id, tag);
+            foreach (var tag in await _tagRepository.ReadAllAsync()) tagMap.Add(tag.Id, new Tag(tag.Name));
             var categoryMap = new Dictionary<int, Category>();
-            foreach (var category in _context.Categories) categoryMap.Add(category.Id, category);
+            foreach (var category in await _categoryRepository.Read())
+            {
+                 categoryMap.Add(category.Id, new Category(){Id = category.Id, Description = category.Description, Title = category.Title});
+            }
             var projects = new List<IProject>();
             await foreach (var dto in dtos.ToAsyncEnumerable())
             {
@@ -116,13 +125,15 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             var NotSortedTagables = await Get(tagable);
 
             var jaccardList = new List<(float, ITagable)>();
+            var tagNames = new List<string>();
+            foreach(var tag in tagable.Tags) tagNames.Add(tag.Name);
             foreach (var project in NotSortedTagables)
             {
                 var tags = project.Tags;//new HashSet<int>((await _projectRepository.ReadByIDAsync(project)).Value.TagIDs);
                 int inCommon = 0;
-                foreach (var tag in tagable.Tags)
+                foreach (var tag in tags)
                 {
-                    if (tags.Contains(tag))
+                    if (tagNames.Contains(tag.Name))
                     {
                         inCommon++;
                     }
@@ -142,9 +153,10 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             return SortedTagables.AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSorted(int id, int size)
+        public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSorted(IProject project, int size)
         {
-            var project = await getProjectById(id);
+            
+            //var project = await getProjectById(id);
             var sorted = (await GetSorted(project)).Take(size);
             var limited = new List<ProjectReferenceDTO>();
 
@@ -157,6 +169,16 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         }
 
+        public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedInCategory(IProject project, int size)
+        {
+            var sorted = (await GetSortedInCategory(project)).Take(size);
+            var limited = new List<ProjectReferenceDTO>();
+
+            foreach (var p in sorted) limited.Add(new ProjectReferenceDTO(p.Id, p.Category.Id,
+                                                     p.Tags.Select(t => t.Id).ToList()));
+            return limited.AsReadOnly(); 
+        }
+
         private async Task<IProject> getProjectById(int id)
         {
             var dto = (await _projectRepository.ReadByIDAsync(id)).Value;
@@ -164,10 +186,13 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             //await foreach(var tag in dto.TagIDs.ToAsyncEnumerable()) tags.Add(await _context.Tags.Where(c => c.Id == tag).Select(c => c).FirstOrDefaultAsync());
             foreach (var tagid in dto.TagIDs)
             {
-                tags.Add(await _context.Tags.Where(t => t.Id == tagid).Select(t => t).FirstOrDefaultAsync());
+                var tagdto = (await _tagRepository.ReadTagByIDAsync(tagid)).Value;
+                tags.Add(new Tag(tagdto.Name));
+                //tags.Add(await _context.Tags.Where(t => t.Id == tagid).Select(t => t).FirstOrDefaultAsync());
             }
             //await foreach(var category in dto.CategoryID.ToAsyncEnumerable()) tags.Add(await _context.Tags.Where(c => c.Id == tag).Select(c => c).FirstOrDefaultAsync());
-            return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = await _context.Categories.Where(c => c.Id == dto.CategoryID).Select(c => c).FirstOrDefaultAsync(), Signature = new Signature(tags) });
+            var categoryDTO = (await _categoryRepository.Read(dto.CategoryID));
+            return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = new Category(){Id = categoryDTO.Id, Description = categoryDTO.Description, Title = categoryDTO.Title}, Signature = new Signature(tags) });
 
             /*return await (_context.Projects
                         .Where(p => p.Id == id)
