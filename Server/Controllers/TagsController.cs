@@ -47,7 +47,7 @@ public class TagController : ControllerBase
 
 
     [AllowAnonymous]
-    [ProducesResponseType(typeof(TagDTO), 201)]
+    [ProducesResponseType(typeof(TagDTO), 201)] 
     [HttpPost]
     public async Task<IActionResult> Post(TagCreateDTO tag)
     {
