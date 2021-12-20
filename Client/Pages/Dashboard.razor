@@ -415,7 +415,7 @@
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
     }
 
-    public async void ViewRelatedProjects()
+    private async void ViewRelatedProjects()
     {
         
         this.noRelatedProjects = false;

@@ -201,7 +201,7 @@
         NavigationManager.NavigateTo(uri);
     }
 
-    public async void GetTags()
+    private async void GetTags()
     {
         tagGenerator = new TagGenerator();
 
@@ -216,7 +216,7 @@
         StateHasChanged();
     }
 
-     private void AddTagToList()
+    private void AddTagToList()
     {
         if(NewTag != "")
         {
