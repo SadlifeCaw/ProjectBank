@@ -17,10 +17,10 @@ public record ProjectDTO (
     [Required]
     int AuthorID,
 
-    [Required, StringLength(50)]
+    [Required, StringLength(100)]
     string Title,
 
-    [Required,StringLength(1000)]
+    [Required,StringLength(10000)]
     string Description,
 
     [Required]
