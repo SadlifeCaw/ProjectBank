@@ -123,7 +123,6 @@
     private UserDTO CurrentUser;
 
     string title = "Loading title...";
-    string SelectedString = "Choose a category";
     
     [Parameter]
     public int ProjectId {get; set;}
@@ -256,6 +255,7 @@
             catch(Exception e) 
             {
                 //Not a supervisor, skip
+                Console.WriteLine("Expected error: " + e.Message);
                 continue;
             }
             yield return user;

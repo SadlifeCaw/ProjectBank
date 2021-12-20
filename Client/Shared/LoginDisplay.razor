@@ -29,7 +29,7 @@
     {
         Navigation.NavigateTo("authentication/login");
 
-        Task store = StoreUser();
+        await StoreUser();
     }
 
     private async Task StoreUser()
@@ -96,7 +96,6 @@
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
-            //Console.WriteLine(e.Type());
             Console.WriteLine(e.StackTrace);
         }
     }

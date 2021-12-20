@@ -46,10 +46,10 @@ public record ProjectCreateDTO
     public int AuthorID {get; set;}
 
     [Required, StringLength(100)]
-    public string? Title {get; set;}
+    public string Title {get; set;}
 
     [Required,StringLength(10000)]
-    public string? Description {get; set;}
+    public string Description {get; set;}
 
     [Required]
     public ProjectStatus Status {get; set;}
@@ -58,13 +58,13 @@ public record ProjectCreateDTO
 
     public int CategoryID {get; set;}
     
-    public ICollection<int>? TagIDs {get; set;}
+    public ICollection<int> TagIDs {get; set;}
 
-    public ICollection<string>? TagNames {get; set;}
+    public ICollection<string> TagNames {get; set;}
 
-    public ICollection<int>? UserIDs {get; set;}
+    public ICollection<int> UserIDs {get; set;}
 
-    public ICollection<int>? BucketIDs {get; set;}
+    public ICollection<int> BucketIDs {get; set;}
 };
 
 public record ProjectUpdateDTO : ProjectCreateDTO

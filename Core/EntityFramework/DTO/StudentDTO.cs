@@ -36,11 +36,11 @@ public record StudentCreateDTO
 
     [Required]
     [StringLength(50)]
-    public string? FirstName { get; init; }
+    public string FirstName { get; init; }
 
     [Required]
     [StringLength(50)]
-    public string? LastName { get; init; }
+    public string LastName { get; init; }
 
     public string ProgramCode {get; init; }
     public string InstitutionName {get; init; }

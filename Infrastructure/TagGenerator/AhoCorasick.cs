@@ -123,7 +123,7 @@ namespace AhoCorasick;
     {
             private readonly TNode word;
             private readonly Node<TNode, TNodeValue> parent;
-            private readonly Dictionary<TNode, Node<TNode, TNodeValue>>? children = new Dictionary<TNode, Node<TNode, TNodeValue>>();
+            private readonly Dictionary<TNode, Node<TNode, TNodeValue>> children = new Dictionary<TNode, Node<TNode, TNodeValue>>();
             private readonly List<TNodeValue> values = new List<TNodeValue>();
 
             //Constructer for the root node

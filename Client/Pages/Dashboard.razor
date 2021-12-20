@@ -380,6 +380,7 @@
             catch (Exception e)
             {
                 //Not a supervisor, skip
+                Console.WriteLine("Expected error: " + e.Message);
                 continue;
             }
             yield return user;
@@ -399,6 +400,7 @@
             catch (Exception e)
             {
                 //Not a student, skip
+                Console.WriteLine("Expected error: " + e.Message);
                 continue;
             }
             yield return user;
@@ -415,7 +417,7 @@
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
     }
 
-    private async void ViewRelatedProjects()
+    private void ViewRelatedProjects()
     {
         
         this.noRelatedProjects = false;

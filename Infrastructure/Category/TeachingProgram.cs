@@ -3,7 +3,7 @@ namespace ProjectBank.Infrastructure;
 public class TeachingProgram : CodedCategory
 {
     [Required]
-    public ICollection<Course>? Courses {get; set;}
+    public ICollection<Course> Courses {get; set;}
     /*public override IReadOnlyCollection<IHierarchy> GetAllRelated()
     {
         var related = new List<IHierarchy>();

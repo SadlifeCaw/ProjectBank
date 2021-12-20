@@ -12,13 +12,11 @@ builder.Services.Configure<JwtBearerOptions>(
     }
 );
 
-
 builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<ProjectBankContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("ProjectBank"))
 );
-
 
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
@@ -47,7 +45,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
@@ -55,13 +52,3 @@ app.MapFallbackToFile("index.html");
 await app.SeedAsync();
 
 app.Run();
-
-static IConfiguration LoadConfiguration()
-{
-    var builder = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .AddUserSecrets<Program>();
-
-    return builder.Build();
-}
