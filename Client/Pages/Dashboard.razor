@@ -178,7 +178,7 @@
 
             </Modal>
 
-            <Modal @ref="confirmDeletion">
+            <Modal @ref="confirmDeletionModal">
                 <Title>Delete project</Title>
 
                 <Body>
@@ -188,8 +188,8 @@
                 </Body>
 
                 <Footer>
-                    <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Cancel</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="inviteModal" @onclick="Delete">Delete</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="confirmDeletionModal" @onclick="() => confirmDeletionModal.Close()">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="confirmDeletionModal" @onclick="Delete">Delete</button>
                 </Footer>
 
             </Modal>
@@ -199,7 +199,7 @@
                 <div class="Buffer_40"></div>
 
                 <a href="Projects/@ProjectId/edit" class="btn btn-primary">Edit Project</a>
-                <a class="btn btn-danger" @onclick="() => confirmDeletion.Open()">Delete Project</a>
+                <a class="btn btn-danger" @onclick="() => confirmDeletionModal.Open()">Delete Project</a>
             }
 
         <div class="Buffer_40"></div>
@@ -222,7 +222,6 @@
                     <span class="slider round"></span>
                 </label>
             </span>
-
             <div class="container">
 
                 <div class="row my-3">
@@ -235,7 +234,6 @@
                             <div class="col-12 col-md-6 col-xl-4 my-3">
                                 <div class="card col project">
                                     <div class="card-body">
-
                                         <div class="row">
                                             <h2 class="card-title col-9">@relatedProject.Title</h2>
                                             <div class="col-2">
@@ -248,9 +246,9 @@
 
                                         <div class="tagdiv mb-3">
                                             <ul>
-                                                @foreach (var tag in relatedProject.TagIDs)
+                                                @foreach (var tag in relatedProject.TagNames)
                                                 {
-                                                    <li class="tag tagbtn mx-1">@tag</li>
+                                                    <li class="tag tagbtn mx-1 px-1">@tag</li>
                                                 }
                                             </ul>
                                         </div>
@@ -258,17 +256,6 @@
                                         <a @onclick="@(e => ChangePageToProject(relatedProject.Id))" class="btn btn-primary footer">@more</a>
 
                                     </div>
-                                </div>
-
-                                <p class="card-text mb-5 description">@relatedProject.Description</p>
-
-                                <div class="tagdiv mb-3">
-                                    <ul>
-                                        @foreach (var tag in relatedProject.TagNames)
-                                        {
-                                            <li class="tag tagbtn mx-1">@tag</li>
-                                        }
-                                    </ul>
                                 </div>
 
                                 <a href="Projects/@relatedProject.Id" class="btn btn-primary footer">@more</a>
@@ -286,9 +273,7 @@
                     }
 
                 </div>
-
             </div>
-
         </div>
     </Authorized>
     <NotAuthorized>
@@ -326,7 +311,7 @@
 
     private Modal inviteModal { get; set; }
     private Modal applyModal { get; set; }
-    private Modal confirmDeletion { get; set; }
+    private Modal confirmDeletionModal { get; set; }
     private IReadOnlyCollection<ProjectReferenceDTO> related;
 
     protected override async Task OnInitializedAsync()
@@ -358,9 +343,7 @@
     private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds)
     {
         foreach (var id in tagIds)
-        {
-            //It crashes if you ask for id 7... which exists... wtf
-            
+        {            
             yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{id}");
         }
     }
@@ -416,14 +399,14 @@
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
     }
 
-    private void ViewRelatedProjects()
+    private async void ViewRelatedProjects()
     {
-        
         this.noRelatedProjects = false;
         this.loadingRelatedProjects = true;
         try
         {
-            
+            this.related = await GetRelated(project.Id, this.maxRelatedProjects);
+            this.relatedProjects = await ReferenceToProject(related);
         }
         catch (Exception exception)
         {
@@ -503,11 +486,6 @@
             //make sure user is a supervisor
             var supervisor = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{user.Id}");
 
-            if(project.UserIDs.Contains(supervisor.Id))
-            {
-                throw new Exception("User already added to project");
-            }
-
             var newProject = new ProjectUpdateDTO{
                 Id = project.Id,
                 AuthorID = project.AuthorID,
@@ -522,6 +500,11 @@
             };
 
             newProject.UserIDs.Add(supervisor.Id);
+
+            foreach (var item in newProject.UserIDs)
+            {
+                Console.WriteLine("Added: " + supervisor.Id);
+            }
 
             var response = await Http.PutAsJsonAsync($"api/Projects/{ProjectId}", newProject);
 
@@ -539,9 +522,9 @@
         }
         catch (Exception e)
         {
-            if(e.Message == "User already added to project")
+            if(e.Message == "User already added to project" || e.Message == "You can't add yourself to the project")
             {
-                InviteStatus = "User already added to project";
+                InviteStatus = e.Message;
             }
             else
             {

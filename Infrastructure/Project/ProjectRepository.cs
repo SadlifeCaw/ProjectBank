@@ -338,4 +338,12 @@ public class ProjectRepository : IProjectRepository
                         .Select(c => c)
                         .FirstOrDefaultAsync();
     }
+
+    public async Task<IReadOnlyCollection<IProject>> ReadAllProjectReferenceAsync()
+    {        
+           return ((await _dbcontext.Projects
+                        .Select(p => new ProjectReference{Id = p.Id, Tags = p.Tags.Select( t => new Tag(t.Name)).ToList(), Category = new Category{Id = p.Category.Id}, Signature = new Signature(p.Tags.Select( t => new Tag(t.Name)).ToList())})
+                        .ToListAsync())
+                        .AsReadOnly());
+    }
 }

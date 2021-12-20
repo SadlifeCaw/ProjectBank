@@ -1,7 +1,11 @@
 namespace ProjectBank.Infrastructure.ReferenceSystem;
 public interface IProjectLSH
 {
-    Response Insert(IProject project);
+    Task<Response> Insert(IProject project);
+
+    Task<Response> Update(IProject project);
+
+    Response Delete(IProject project);
 
     Task<IReadOnlyCollection<IProject>> GetSortedInCategory(IProject tagable);
     Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedInCategory(IProject project, int size);

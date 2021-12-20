@@ -4,20 +4,20 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 {
     public class ProjectLSH : LocalitySensitiveHashTable<IProject>, IProjectLSH
     {
-        private readonly IProjectRepository _projectRepository;
+        private readonly ProjectRepository _projectRepository;
         private readonly ITagRepository _tagRepository;
         private readonly ICategoryRepository _categoryRepository;
 
         public ProjectLSH(IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
         {
-            _projectRepository = projectRepository;
+            _projectRepository = (ProjectRepository) projectRepository;
             _tagRepository = tagRepository;
             _categoryRepository = categoryRepository;
         }
-        public override Response Insert(IProject project)
+        public override async Task<Response> Insert(IProject project)
         {
             if (project.Signature == null || project.Category == null) return Response.Conflict;
-            return base.Insert(project);           
+            return await base.Insert(project);           
         }
 
         public async Task<IReadOnlyCollection<IProject>> GetSortedInCategory(IProject tagable)
@@ -35,41 +35,15 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         public async Task<Response> InsertAll()
         {
-            //var allProjects = AllProjectReference();
-            var allProjects = AllProjectReference();
-            await foreach (var project in allProjects)
+            var allProjects = await _projectRepository.ReadAllProjectReferenceAsync();
+            Console.WriteLine("DONE");
+            foreach (var project in allProjects)
             {
-                var response = Insert(project);
+                var response = await Insert(project);
                 if (response != Response.Created) return Response.Conflict;
             }
             return Response.Created;
         }
-
-        private async IAsyncEnumerable<IProject> AllProjectReference()
-        {
-            var dtos = await _projectRepository.ReadAllAsync();
-            var tagMap = new Dictionary<int, Tag>();
-            
-            foreach (var tag in await _tagRepository.ReadAllAsync()) tagMap.Add(tag.Id, new Tag(tag.Name));
-            var categoryMap = new Dictionary<int, Category>();
-            
-            foreach (var category in await _categoryRepository.Read())
-            {
-                 categoryMap.Add(category.Id, new Category(){Id = category.Id, Description = category.Description, Title = category.Title});
-            }
-            var projects = new List<IProject>();
-            
-            await foreach (var dto in dtos.ToAsyncEnumerable())
-            {
-                var tags = new List<Tag>();
-                foreach (var id in dto.TagIDs)
-                {
-                    tags.Add(tagMap[id]);
-                }
-                yield return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = categoryMap[dto.CategoryID], Signature = new Signature(tags) });
-            }
-        }
-
         public async Task<IReadOnlyCollection<IProject>> GetSorted(IProject tagable)
         {
             var NotSortedTagables = await Get(tagable);
@@ -123,19 +97,6 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
                                                      p.Tags.Select(t => t.Id).ToList()));
             return limited.AsReadOnly(); 
         }
-
-        /*private async Task<IProject> getProjectById(int id)
-        {
-            var dto = (await _projectRepository.ReadByIDAsync(id)).Value;
-            var tags = new List<Tag>();
-            foreach (var tagid in dto.TagIDs)
-            {
-                var tagdto = (await _tagRepository.ReadTagByIDAsync(tagid)).Value;
-                tags.Add(new Tag(tagdto.Name));
-            }
-            var categoryDTO = (await _categoryRepository.Read(dto.CategoryID));
-            return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = new Category(){Id = categoryDTO.Id, Description = categoryDTO.Description, Title = categoryDTO.Title}, Signature = new Signature(tags) });
-        }*/
 
     }
 

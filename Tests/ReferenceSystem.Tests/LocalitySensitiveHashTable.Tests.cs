@@ -229,7 +229,7 @@ namespace ReferenceSystem.Tests
             IEnumerable<Tag> expectedTags = new List<Tag> { Agriculture, Farming, Food }.AsEnumerable();
 
             //Act
-            LargeLSH.Update(AgricultureFarming);
+            await LargeLSH.Update(AgricultureFarming);
 
             IEnumerable<Tag> actualTags = new List<Tag> { };
 
@@ -334,7 +334,7 @@ namespace ReferenceSystem.Tests
         }
 
         [Fact]
-        public void Insert_Adds_BucketGroup_If_Non_Existant()
+        public async void Insert_Adds_BucketGroup_If_Non_Existant()
         {
             //Arrange
             var connection = new SqliteConnection("Filename=:memory:");
@@ -385,7 +385,7 @@ namespace ReferenceSystem.Tests
             var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
 
             //Act
-            var actual = LargeLSH.Update(ComputerSecurity);
+            var actual = await LargeLSH.Update(ComputerSecurity);
 
             //Assert
             Assert.Equal(Response.NotFound, actual);
@@ -395,7 +395,7 @@ namespace ReferenceSystem.Tests
         public async void Insert_Returns_Conflict_If_Project_Exists()
         {
             await LargeLSH.InsertAll();
-            var actual = LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
+            var actual = await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
             Assert.Equal(Response.Conflict, actual);
         }
 
@@ -404,7 +404,7 @@ namespace ReferenceSystem.Tests
 
         
         [Fact]
-        public void If_signature_group_exists_it_gets_added_to_existing_bucket()
+        public async void If_signature_group_exists_it_gets_added_to_existing_bucket()
         {
             //Arrange
             var connection = new SqliteConnection("Filename=:memory:");
@@ -438,14 +438,14 @@ namespace ReferenceSystem.Tests
             }
 
             //Act
-            TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
+            await TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
             var SizeBefore = TestLSH.Map.Count();
             for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
             {
                 expected.Add(TestLSH.Map[buckets[i]].Projects.Count() + 1);
             }
 
-            TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
+            await TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
             var SizeAfter = TestLSH.Map.Count();
             for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
             {
@@ -516,8 +516,7 @@ namespace ReferenceSystem.Tests
             await inserts();
             
             var example = new Project { Category = null, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Algorithms, Simulation, Food, Farming }, Id = 500, Author = Supervisor1, Title = "Title6", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
-            var actual =LargeLSH.Insert(example);
-
+            var actual = await LargeLSH.Insert(example);
             Assert.Equal(Response.Conflict, actual);
         }
 

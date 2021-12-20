@@ -132,7 +132,6 @@
     private CategoryDTO category;
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
-
     private TagGenerator tagGenerator = new TagGenerator();
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
@@ -180,8 +179,9 @@
             MaxStudents = tempProject.MaxStudents,
             CategoryID = tempProject.CategoryID, 
             BucketIDs = project.BucketIDs,
-            UserIDs = project.UserIDs,
+            UserIDs = new List<int>(),
             TagIDs = project.TagIDs,
+            TagNames = project.TagNames,
         };
 
         var response = await Http.PutAsJsonAsync($"api/Projects/{ProjectId}", updateproject);

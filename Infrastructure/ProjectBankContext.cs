@@ -53,6 +53,7 @@ public class ProjectBankContext : DbContext
         //manually determine Project-User relationship, including unique for Supervisor
         modelBuilder.Entity<Project>().HasOne(p => p.Author).WithMany(u => u.AuthoredProjects);
         modelBuilder.Entity<Project>().HasMany(p => p.Users).WithMany(u => u.Projects);
+        modelBuilder.Entity<Supervisor>().HasMany(s => s.Projects);
 
         //manually determine Student-Course relationship
         modelBuilder.Entity<Course>().HasMany(c => c.Students).WithMany(s => s.Courses);
