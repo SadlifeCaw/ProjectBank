@@ -50,10 +50,10 @@ public record ProjectCreateDTO
     [Required]
     public int AuthorID {get; set;}
 
-    [Required, StringLength(50)]
+    [Required, StringLength(100)]
     public string? Title {get; set;}
 
-    [Required,StringLength(1000)]
+    [Required,StringLength(10000)]
     public string? Description {get; set;}
 
     [Required]
