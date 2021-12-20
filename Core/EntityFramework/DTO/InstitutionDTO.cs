@@ -10,10 +10,6 @@ public record InstitutionDTO(
     [StringLength(1000)]
     string Description
 
-   /* [Required]
-   ICollection<string> Faculties */
-
-
 ) : CategoryDTO(Id, Title, Description);
 
 public record InstitutionCreateDTO
@@ -23,8 +19,4 @@ public record InstitutionCreateDTO
 
     [StringLength(1000)]
     public string Description {get; init;}
-/* 
-    [Required]
-    public ICollection<string> Faculties {get; init;} */
-
 }

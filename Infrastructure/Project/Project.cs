@@ -10,11 +10,11 @@ public class Project : ITagable, IProject
 
     [Required]
     [StringLength(100)]
-    public string? Title { get; set; }
+    public string Title { get; set; }
 
     [Required]
     [StringLength(10000)]
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     [Required]
     public ProjectStatus Status { get; set; }
@@ -45,7 +45,7 @@ public class Project : ITagable, IProject
     public ICollection<ProjectBucket> Buckets {get; set;}  = null!;
 
     [Required]
-    public Supervisor? Author {get; set;}
+    public Supervisor Author {get; set;}
 
     [Required]
     public ICollection<Supervisor> Collaborators { get; set; } = null!;

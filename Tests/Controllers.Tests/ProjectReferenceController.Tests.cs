@@ -82,7 +82,6 @@ public class ProjectReferenceControllerTests
     public async Task GetSorted_Returns_Sorted()
     {
        // Arrange
-
         var logger = new Mock<ILogger<ProjectReferenceController>>();
         var controller = new ProjectReferenceController(logger.Object, _projectRepository, _tagRepository, _categoryRepository);
 

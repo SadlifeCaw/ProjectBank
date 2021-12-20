@@ -168,31 +168,6 @@ public class UserRepository : IUserRepository
                         .AsReadOnly();
     }
 
-    public async Task<Response> UpdateUserProjects(int userID, ProjectKeyDTO projectKey)
-    {
-        var user = await _dbcontext.Users
-                        .Where(u => u.Id == userID)
-                        .Select(u => u)
-                        .FirstOrDefaultAsync();
-
-        var project = await _dbcontext.Projects
-                        .Where(p => p.Author.Id == projectKey.AuthorID)
-                        .Where(p => p.Title == projectKey.Title)
-                        .Select(p => p)
-                        .FirstOrDefaultAsync();
-        
-        if(user == null || project == null)
-        {
-            return Response.NotFound;
-        }
-
-        user.Projects.Add(project);
-
-        await _dbcontext.SaveChangesAsync();
-
-        return Response.Updated;
-    }
-
     private async IAsyncEnumerable<Project> GetProjectsAsync(ICollection<int> inProjects) 
     {
         var existing = await _dbcontext.Projects

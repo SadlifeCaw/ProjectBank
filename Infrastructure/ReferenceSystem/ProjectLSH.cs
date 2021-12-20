@@ -4,9 +4,9 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 {
     public class ProjectLSH : LocalitySensitiveHashTable<IProject>, IProjectLSH
     {
-        private ProjectRepository _projectRepository;
-        private ITagRepository _tagRepository;
-        private ICategoryRepository _categoryRepository;
+        private readonly ProjectRepository _projectRepository;
+        private readonly ITagRepository _tagRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public ProjectLSH(IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
         {
@@ -35,8 +35,7 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 
         public async Task<Response> InsertAll()
         {
-            //var dtos = (await _projectRepository.ReadAllAsync());
-            var allProjects = await _projectRepository.ReadAllProjectReferenceAsync();//AllProjectReference(dtos);//await _projectRepository.ReadAllProjectReferenceAsync();
+            var allProjects = await _projectRepository.ReadAllProjectReferenceAsync();
             Console.WriteLine("DONE");
             foreach (var project in allProjects)
             {
@@ -45,23 +44,6 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             }
             return Response.Created;
         }
-
-/*        private async IAsyncEnumerable<IProject> AllProjectReference(IReadOnlyCollection<ProjectDTO> dtos)
-        {
-            var projects = new List<IProject>();
-            
-            await foreach (var dto in dtos.ToAsyncEnumerable())
-            {
-                var tags = new List<Tag>();
-                foreach (var name in dto.TagNames)
-                {
-                    tags.Add(new Tag(name));
-                }
-                var category = new Category{Id = dto.CategoryID};
-                yield return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = category, Signature = new Signature(tags)});
-            }
-        }
-*/
         public async Task<IReadOnlyCollection<IProject>> GetSorted(IProject tagable)
         {
             var NotSortedTagables = await Get(tagable);
@@ -115,19 +97,6 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
                                                      p.Tags.Select(t => t.Id).ToList()));
             return limited.AsReadOnly(); 
         }
-
-        /*private async Task<IProject> getProjectById(int id)
-        {
-            var dto = (await _projectRepository.ReadByIDAsync(id)).Value;
-            var tags = new List<Tag>();
-            foreach (var tagid in dto.TagIDs)
-            {
-                var tagdto = (await _tagRepository.ReadTagByIDAsync(tagid)).Value;
-                tags.Add(new Tag(tagdto.Name));
-            }
-            var categoryDTO = (await _categoryRepository.Read(dto.CategoryID));
-            return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = new Category(){Id = categoryDTO.Id, Description = categoryDTO.Description, Title = categoryDTO.Title}, Signature = new Signature(tags) });
-        }*/
 
     }
 

@@ -26,21 +26,16 @@ public record ProjectDTO (
     [Required]
     ProjectStatus Status,
 
-    //[Required]
     int MaxStudents,
 
-    //[Required]
     int CategoryID,
 
-    //[Required]
     ICollection<int> TagIDs,
 
     ICollection<string> TagNames,
 
-    //not required to allow value binding in razor
     ICollection<int> UserIDs,
 
-    //[Required] 
     ICollection<int> BucketIDs
 
 ) : ProjectKeyDTO(AuthorID, Title);
@@ -51,34 +46,28 @@ public record ProjectCreateDTO
     public int AuthorID {get; set;}
 
     [Required, StringLength(100)]
-    public string? Title {get; set;}
+    public string Title {get; set;}
 
     [Required,StringLength(10000)]
-    public string? Description {get; set;}
+    public string Description {get; set;}
 
     [Required]
     public ProjectStatus Status {get; set;}
-
-    //[Required]
+    
     public int MaxStudents {get; set;}
 
-    //[Required]
     public int CategoryID {get; set;}
     
-    public ICollection<int>? TagIDs {get; set;}
+    public ICollection<int> TagIDs {get; set;}
 
-    public ICollection<string>? TagNames {get; set;}
+    public ICollection<string> TagNames {get; set;}
 
-    //[Required]
-    public ICollection<int>? UserIDs {get; set;}
+    public ICollection<int> UserIDs {get; set;}
 
-    //[Required]
-    public ICollection<int>? BucketIDs {get; set;}
+    public ICollection<int> BucketIDs {get; set;}
 };
 
 public record ProjectUpdateDTO : ProjectCreateDTO
 {
      public int Id { get; init; }
 }
-
-

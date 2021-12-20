@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using System;
 using System.Linq;
 using System.Text;
@@ -7,14 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using ProjectBank.Infrastructure;
-using ProjectBank.Core.EF.Repository;
 using ProjectBank.Infrastructure.Entities;
 using ProjectBank.Infrastructure.ReferenceSystem;
-using ProjectBank.Core.EF.DTO;
 using ProjectBank.Core;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System.ComponentModel.DataAnnotations;
 
 
 namespace ReferenceSystem.Tests
@@ -22,16 +17,6 @@ namespace ReferenceSystem.Tests
     public class ProjectLSHTests
     {
         private readonly ProjectBankContext _context;
-        //private readonly IProjectRepository _projectRepository;
-        //private readonly IBucketRepository _bucketRepository;
-
-        //Tests:
-        //
-        //HashestobucketString splits up a signature correctly
-        //Insert throws exception for project with no tags
-        //Insert works for projects with a lot of tags
-        //Delete and update won't work, if project doesn't exist
-        //Test insert into empty map
 
         Tag Agriculture = new Tag("Agriculture");
         Tag ComputerScience = new Tag("Computer Science");
@@ -46,8 +31,6 @@ namespace ReferenceSystem.Tests
         Project ComputerScienceAlgorithmsSecurity;
         Project AgricultureFarming;
         Project ComputerScienceAlgorithmsSimulationSecurity;
-
-        //ProjectLSH LSH;
         ProjectLSH LargeLSH;
 
         IList<ProjectLSH> LSHList;
@@ -178,44 +161,8 @@ namespace ReferenceSystem.Tests
         {
             var response = await inserts();
             Assert.Equal(30, LargeLSH.Map.Count());
-            //Assert.Equal(response, Response.Created);
         }
-        /*
-        /*
-                private async Task<Response> inserts()
-                {
-                    await LargeLSH.Insert(AgricultureFarmingIdentical);
-                    await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgricultureIdentical);
-                    await LargeLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
-                    await LargeLSH.Insert(AgricultureFoodIdentical);
-                    await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurityIdentical);
-                    await LargeLSH.Insert(AgricultureFarming);
-                    await LargeLSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
-                    await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
-                    await LargeLSH.Insert(AgricultureFood);
-                    await LargeLSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
-                    await LargeLSH.Insert(FoodProject);
-                    await LargeLSH.Insert(FoodAndAgricultureProject);
-                    await LargeLSH.Insert(AgricultureSecurityProject);
-                    await LargeLSH.Insert(SecurityFoodProject);
-                    await LargeLSH.Insert(SecurityProject);
-                    await LargeLSH.Insert(ManyTagsProject);
-                    await LargeLSH.Insert(LessManyTagsProject);
-                    await LargeLSH.Insert(LessManyTagsProject2);
-                    await LargeLSH.Insert(LessManyTagsProject3);
-                    await LargeLSH.Insert(AllUnrelatedTags);
-                    await LargeLSH.Insert(MathAlgebraDiscrete);
-                    await LargeLSH.Insert(ProbabilityProject);
-                    await LargeLSH.Insert(CalcStatProbScience);
-                    await LargeLSH.Insert(AlgDiscCalcStat);
-                    await LargeLSH.Insert(MathAlgDisc);
-                    await LargeLSH.Insert(MathAlgDiscCalc);
-                    await LargeLSH.Insert(CalcStatProbScience2);
-                    return Response.Created;
-                }
-        */
-
-
+        
         [Fact]
         public async void testInsert()
         {
@@ -225,7 +172,6 @@ namespace ReferenceSystem.Tests
 
         private IEnumerable<Tag> Generate1000Tags()
         {
-            //Generate tags
             char limit = 'z';
             int id = 0;
             char[] characters = new char[] { 'a', 'a', 'a' };
@@ -278,7 +224,6 @@ namespace ReferenceSystem.Tests
         public async void Update_Replaces_Project_With_Updated()
         {
             //Arrange
-            //var tagable = AgricultureFarming;
             await LargeLSH.InsertAll();
             AgricultureFarming.Tags.Append(Food);
             IEnumerable<Tag> expectedTags = new List<Tag> { Agriculture, Farming, Food }.AsEnumerable();
@@ -311,49 +256,11 @@ namespace ReferenceSystem.Tests
             Assert.Equal(expectedTags, actualTags);
         }
 
-        //When calling Get, all projects have at least two simular tags
-        //Only works for k = 6
-        /*[Fact]
-        public void SMALL_Get_Returns_Tagables_With_One_Or_More_Common_Tags()
-        {
-            //Arrange
-            var Singature = ComputerScienceAlgorithmsSecurity.Signature;
-            var buckets = new List<string>();
-            StringBuilder builder = new StringBuilder();
-            builder.Append(Singature.Hashes.ElementAt(0));
-            builder.Append(Singature.Hashes.ElementAt(1));
-            buckets.Add(builder.ToString());
-            builder.Clear();
-            builder.Append(Singature.Hashes.ElementAt(2));
-            builder.Append(Singature.Hashes.ElementAt(3));
-            buckets.Add(builder.ToString());
-            builder.Clear();
-            builder.Append(Singature.Hashes.ElementAt(4));
-            builder.Append(Singature.Hashes.ElementAt(5));
-            buckets.Add(builder.ToString());
-
-            foreach (var str in buckets)
-            {
-                var bucketdto = _bucketRepository.ReadBucketByKeyAsync(str);
-                var bucket = _context.Buckets.ElementAt(bucketdto.Result.Id);
-                //var bucket = LSH.Map[str];
-                foreach (IProject project in bucket.Projects)
-                {
-                    int counter = 0;
-                    var tags = project.Tags;
-                    foreach (var tag in tags)
-                    {
-                        counter++;
-                    }
-                    Assert.True(counter > 0);
-                }
-            }
-        }
-*/
         [Fact]
         public async void Get_Returns_Tagables_With_One_Or_More_Common_Tags()
         {
             await inserts();
+
             //Arrange
             var Singature = ComputerScienceAlgorithmsSecurity.Signature;
             var buckets = new List<string>();
@@ -366,13 +273,11 @@ namespace ReferenceSystem.Tests
                 builder.Clear();
             }
 
-            //Act & Assert
+            //Act
             foreach (var str in buckets)
             {
 
                 var bucket = LargeLSH.Map[str];
-                //var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(str);
-                //var bucket = await _context.Buckets.Where(b => b.Key == str).Select(b => b).FirstOrDefaultAsync();
                 foreach (IProject project in bucket.Projects)
                 {
                     int counter = 0;
@@ -381,6 +286,8 @@ namespace ReferenceSystem.Tests
                     {
                         counter++;
                     }
+
+                    //Assert
                     Assert.True(counter > 0);
                 }
             }
@@ -391,9 +298,7 @@ namespace ReferenceSystem.Tests
         {
             await inserts();
             string bucketString = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature)[0];
-            //var bucketdto = await _bucketRepository.ReadBucketByKeyAsync(bucketString);
-            var bucket = LargeLSH.Map[bucketString];//await _context.Buckets.Where(b => b.Key == bucketString).Select(b => b).FirstOrDefaultAsync();
-            //Bucket<IProject> bucket = LargeLSH.Map[bucketString];
+            var bucket = LargeLSH.Map[bucketString];
 
             foreach (IProject tagable in bucket.Projects)
             {
@@ -408,11 +313,11 @@ namespace ReferenceSystem.Tests
             }
         }
 
-        //New bucket is made if signature group does not exist
         [Fact]
         public async void GetSortedByCategory_Only_Consists_Of_Projects_Within_Category()
         {
             await inserts();
+
             //Arrange
             var list = await LargeLSH.GetSortedInCategory(SecurityProject);
 
@@ -422,18 +327,16 @@ namespace ReferenceSystem.Tests
             {
                 var project = tagable;
                 if (project.Category.Id != FacultyDesignDTU.Id) AllWithinCategory = false;
-                // Assert.Equal(project.Category, FacultyDesignDTU);
             }
 
             //Assert
             Assert.True(AllWithinCategory);
         }
-        //TAKE THIS BACK
+
         [Fact]
         public async void Insert_Adds_BucketGroup_If_Non_Existant()
         {
             //Arrange
-            //_context.Users.;
             var connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
 
@@ -447,7 +350,6 @@ namespace ReferenceSystem.Tests
             var projectRepo = new ProjectRepository(context);
             var tagRepo = new TagRepository(context);
             var categoryRepo = new CategoryRepository(context);
-            //var bucketRepo = new BucketRepository(context);
 
             var TestLSH = new ProjectLSH(projectRepo, tagRepo, categoryRepo);
 
@@ -455,10 +357,10 @@ namespace ReferenceSystem.Tests
             var AgriFoodSignature = new Signature(AgricultureFood.Tags);
 
             //Act
-            await TestLSH.Insert(AgricultureFarming);
-            var bucketSizeBeforeInsert = TestLSH.Map.Count();//(await bucketRepo.ReadAllAsync()).Count();//_context.Buckets.Count();//
-            await TestLSH.Insert(AgricultureFood);
-            var bucketSizeAfterInsert = TestLSH.Map.Count();//(await bucketRepo.ReadAllAsync()).Count();//_context.Buckets.Count();// 
+            TestLSH.Insert(AgricultureFarming);
+            var bucketSizeBeforeInsert = TestLSH.Map.Count();
+            TestLSH.Insert(AgricultureFood);
+            var bucketSizeAfterInsert = TestLSH.Map.Count();
             int notCommon = 0;
             for (int i = 0; i < AgriFarmSignature.Hashes.Count(); i++)
             {
@@ -467,10 +369,10 @@ namespace ReferenceSystem.Tests
                     notCommon++;
                 }
             }
+
             //Assert
             var expected = bucketSizeBeforeInsert + notCommon;
             var actual = bucketSizeAfterInsert;
-            //Assert.Equal(bucketSizeBeforeInsert,bucketSizeAfterInsert);
             Assert.Equal(expected, actual);
         }
 
@@ -478,6 +380,7 @@ namespace ReferenceSystem.Tests
         public async void Update_Returns_NotFound_If_Inserted()
         {
             await inserts();
+
             //Arrange
             var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
 
@@ -494,7 +397,6 @@ namespace ReferenceSystem.Tests
             await LargeLSH.InsertAll();
             var actual = await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
             Assert.Equal(Response.Conflict, actual);
-            //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
         }
 
 
@@ -505,8 +407,7 @@ namespace ReferenceSystem.Tests
         public async void If_signature_group_exists_it_gets_added_to_existing_bucket()
         {
             //Arrange
-
-             var connection = new SqliteConnection("Filename=:memory:");
+            var connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
 
             var builder = new DbContextOptionsBuilder<ProjectBankContext>();
@@ -519,7 +420,6 @@ namespace ReferenceSystem.Tests
             var projectRepo = new ProjectRepository(context);
             var tagRepo = new TagRepository(context);
             var categoryRepo = new CategoryRepository(context);
-            //var bucketRepo = new BucketRepository(context);
 
             var TestLSH = new ProjectLSH(projectRepo, tagRepo, categoryRepo);
 
@@ -552,15 +452,15 @@ namespace ReferenceSystem.Tests
                 actual.Add(TestLSH.Map[buckets[i]].Projects.Count());
             }
             //Assert
-            Assert.Equal(SizeBefore, SizeAfter); //Number of buckets should be the same
-            Assert.Equal(expected, actual); //The same buckets get one more group
+            Assert.Equal(SizeBefore, SizeAfter);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void HashesToBucketString_Splits_Signature_To_NumberOfGroups()
         {
             //Arrange
-             var connection = new SqliteConnection("Filename=:memory:");
+            var connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
 
             var builder = new DbContextOptionsBuilder<ProjectBankContext>();
@@ -573,7 +473,6 @@ namespace ReferenceSystem.Tests
             var projectRepo = new ProjectRepository(context);
             var tagRepo = new TagRepository(context);
             var categoryRepo = new CategoryRepository(context);
-            //var bucketRepo = new BucketRepository(context);
 
             var TestLSH = new ProjectLSH(projectRepo, tagRepo, categoryRepo);
 
@@ -602,7 +501,7 @@ namespace ReferenceSystem.Tests
             //Arrange
             var expected = new List<int> {ComputerScienceAlgorithmsSimulationSecurityIdentical.Id, ComputerScienceSimulationAlgorithmsAgriculture.Id, ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id }.AsEnumerable();
     
-            //
+            //Act
             var actualList = await LargeLSH.GetSortedInCategory(ComputerScienceAlgorithmsSecurity);
             var actual = new List<int>();
             foreach(var project in actualList) actual.Add(project.Id);
@@ -611,124 +510,21 @@ namespace ReferenceSystem.Tests
             Assert.Equal(expected, actual);           
         }
 
-        //IF PROJECT DOESN'T HAVE THAT CATEGORY
-
-       
-        //FINISH THIS TEST WHEN YOU HAVE FIGURED OUT CATEGORIZABLE
         [Fact]
         public async void GetSortedByCategory_Returns_Conflict_If_No_Category()
         {
             await inserts();
-            //Arrange
+            
             var example = new Project { Category = null, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Algorithms, Simulation, Food, Farming }, Id = 500, Author = Supervisor1, Title = "Title6", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
-            var actual =await LargeLSH.Insert(example);
+            var actual = await LargeLSH.Insert(example);
             Assert.Equal(Response.Conflict, actual);
-            //Act & Assert
-            //Assert.Equal(test.Category, null);
-            //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(test));
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-                [Fact]
-                public void SMALL_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
-                {
-                    //Arrange
-                    var expected = new List<IProject> { ComputerScienceAlgorithmsSimulationSecurity, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
-
-                    //Act
-                    var actual = LSH.GetSorted(ComputerScienceAlgorithmsSecurity).AsEnumerable();
-
-                    //Assert
-                    Assert.Equal(expected, actual);
-                }*/
-        /*[Fact]
-        public async void groupCountThreeEquals()
-        {
-            await inserts();
-            var buckets = _context.Buckets;
-            var counter = 0;
-            var strings = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature);
-
-            foreach (var b in buckets)
-            {
-                foreach (var s in strings)
-                    if (b.Key == s)
-                    {
-                        counter++;
-                    }
-            }
-            Assert.Equal(counter, 3);
-
-
-            //_projectRepository.
-            //_bucketRepository.
-            //Assert.Equal(new Signature(ComputerScienceAlgorithmsSecurity.Tags).Hashes.ToString(), ComputerScienceAlgorithmsSecurity.Signature.Hashes.ToString());
-        }*/
-        /*
-                [Fact]
-                public async void signatureCount()
-                {
-                    await inserts();
-                    //var buckets = await _bucketRepository.ReadAllAsync();
-                    //var counter = 0;
-                    var strings = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurity.Signature);
-                    var strings2 = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSimulationSecurity.Signature);
-                    //var strings2 = LargeLSH.HashesToBucketString(ComputerScienceAlgorithmsSecurityIdentical.Signature);
-
-                    var bucket1 = await _context.Buckets.Where(b => b.Key == strings[0]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings[0]);
-                    var bucket2 = await _context.Buckets.Where(b => b.Key == strings[1]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings[1]);
-                    var bucket3 = await _context.Buckets.Where(b => b.Key == strings[2]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings[2]);
-                    var bucket11 = await _context.Buckets.Where(b => b.Key == strings2[0]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings2[0]);
-                    var bucket22 = await _context.Buckets.Where(b => b.Key == strings[1]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings2[1]);
-                    var bucket33 = await _context.Buckets.Where(b => b.Key == strings[2]).Select(b => b).FirstOrDefaultAsync();//await _bucketRepository.ReadBucketByKeyAsync(strings2[2]);
-
-                    Assert.Equal(bucket1.Id, bucket1.Id);
-                    Assert.Equal(bucket2.Id, bucket22.Id);
-                    Assert.Equal(bucket3.Id, bucket33.Id);
-                    /*
-                                foreach(var b in buckets)
-                                {
-                                    foreach(var s in strings)
-                                    if(b.Key == s) 
-                                    {
-                                        counter++;
-                                    }
-                                }
-
-
-                    //Assert.Equal(strings, strings2);
-
-                    //_projectRepository.
-                    //_bucketRepository.
-                    //Assert.Equal(new Signature(ComputerScienceAlgorithmsSecurity.Tags).Hashes.ToString(), ComputerScienceAlgorithmsSecurity.Signature.Hashes.ToString());
-                }*/
-
-
-
-
-
-
-
-        //REMEMBER THIS BACK
         [Fact]
         public async void LARGE_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
         {
             await LargeLSH.InsertAll();
+
             //Arrange
             var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdentical.Id, ComputerScienceAlgorithmsSimulationSecurity.Id, ComputerScienceAlgorithmsSimulationSecurityIdentical.Id, LessManyTagsProject2.Id, ComputerScienceSimulationAlgorithmsAgriculture.Id, ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id }.AsEnumerable();
 
@@ -744,215 +540,18 @@ namespace ReferenceSystem.Tests
             Assert.Equal(expected, actual);
         }
 
-
-        /* [Fact]
-         public async void LARGE_GetSorted_returns_similar_projects_sorted_by_highest_jaccardindex()
-         {
-             var _projectRepository = new ProjectRepository(_context);
-             await inserts();
-             //Arrange
-             var ComputerScienceAlgorithmsSecurityIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSecurityIdentical.Id);
-             var ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSimulationSecurityIdentical.Id);
-             var ComputerScienceAlgorithmsSimulationSecurityDTO = await _projectRepository.ReadByIDAsync(ComputerScienceAlgorithmsSimulationSecurity.Id);
-             var LessManyTagsProject2DTO = await _projectRepository.ReadByIDAsync(LessManyTagsProject2.Id);
-             var ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgricultureIdentical.Id);
-             var ComputerScienceSimulationAlgorithmsAgricultureDTO = await _projectRepository.ReadByIDAsync(ComputerScienceSimulationAlgorithmsAgriculture.Id);            
-             var expected = new List<int> { ComputerScienceAlgorithmsSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityIdenticalDTO.Value.Id, ComputerScienceAlgorithmsSimulationSecurityDTO.Value.Id, LessManyTagsProject2DTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureIdenticalDTO.Value.Id, ComputerScienceSimulationAlgorithmsAgricultureDTO.Value.Id}.AsEnumerable();
-
-             //Act
-             var actualDTO = (await LargeLSH.GetSorted(ComputerScienceAlgorithmsSecurity)).AsEnumerable();
-             List<int> actual = new List<int>();
-             foreach (var item in actualDTO)
-             {
-                 actual.Add(item.Id);   
-             }
-
-             //Assert
-             Assert.Equal(expected, actual);
-         }*/
-
-        /*
-        TODO:
-        -We need project-bucket to reference both ways
-        -THE PROBLEM IS: THere is no bucket to project reference
-        */
-
-        /*
-                [Fact]
-                public void Delete_Removes_All_Groups_In_Buckets()
-                {
-                    //Arrange
-                    int expected = 0 - LargeLSH.NumberOfGroups;
-                    foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
-                    {
-                        expected += entry.Value.Projects.Count();
-                    }
-                    //Act
-                    LargeLSH.Delete(AgricultureFarming);
-                    int actual = 0;
-                    foreach (KeyValuePair<string, Bucket<IProject>> entry in LargeLSH.Map)
-                    {
-                        actual += entry.Value.Projects.Count();
-                    }
-                    //Assert
-                    Assert.Equal(expected, actual);
-                }
-
-                [Fact]
-                public void Update_Throws_Exception_If_Project_Not_Inserted_Given_NonEmpty_LSH()
-                {
-                    //Arrange
-                    var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-
-                    //Act and Assert
-                    Assert.Throws<ArgumentException>(() => LargeLSH.Update(ComputerSecurity));
-                }
-
-                [Fact]
-                public void Update_Throws_Exception_If_Project_Not_Inserted_Given_Empty_LSH()
-                {
-                    //Arrange
-                    var TestLSH = new ProjectLSH();
-
-                    //Act & Assert
-                    Assert.Throws<ArgumentException>(() => TestLSH.Update(ComputerScienceAlgorithmsSecurity));
-                }
-
-                [Fact]
-                public void Insert_Throws_Exception_If_Project_Exists()
-                {
-                    Assert.Throws<ArgumentException>(() => LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
-                }
-
-                [Fact]
-                public void If_signature_group_exists_it_gets_added_to_existing_bucket()
-                {
-                    //Arrange
-                    var TestLSH = new ProjectLSH();
-                    var Signature = ComputerScienceAlgorithmsSecurity.Signature;
-                    var expected = new List<int>();
-                    var actual = new List<int>();
-
-                    var buckets = new List<string>();
-                    StringBuilder builder = new StringBuilder();
-                    for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
-                    {
-                        builder.Append(Signature.Hashes.ElementAt(i * 2));
-                        builder.Append(Signature.Hashes.ElementAt(i * 2 + 1));
-                        buckets.Add(builder.ToString());
-                        builder.Clear();
-                    }
-
-                    //Act
-                    TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
-                    var SizeBefore = TestLSH.Map.Count();
-                    for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
-                    {
-                        expected.Add(TestLSH.Map[buckets[i]].Projects.Count() + 1);
-                    }
-
-                    TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
-                    var SizeAfter = TestLSH.Map.Count();
-                    for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
-                    {
-                        actual.Add(TestLSH.Map[buckets[i]].Projects.Count());
-                    }
-                    //Assert
-                    Assert.Equal(SizeBefore, SizeAfter); //Number of buckets should be the same
-                    Assert.Equal(expected, actual); //The same buckets get one more group
-                }
-
-                [Fact]
-                public void HashesToBucketString_Splits_Signature_To_NumberOfGroups()
-                {
-                    //Arrange
-                    var TestLSH = new ProjectLSH();
-                    var Signature = AllUnrelatedTags.Signature;
-                    var expected = new string[TestLSH.NumberOfGroups];
-
-                    //Act
-                    StringBuilder builder = new StringBuilder();
-                    for (int i = 0; i < TestLSH.NumberOfGroups; i++)
-                    {
-                        builder.Append(Signature.Hashes.ElementAt(i * 2));
-                        builder.Append(Signature.Hashes.ElementAt(i * 2 + 1));
-                        expected[i] = builder.ToString();
-                        builder.Clear();
-                    }
-                    var actual = TestLSH.HashesToBucketString(Signature);
-
-                    //Assert
-                    Assert.Equal(expected, actual);
-                }
-
-                [Fact]
-                public void Insert_Throws_Exception_If_No_Tags()
-                {
-                    //Arrange, Act & Assert
-                    Assert.Throws<ArgumentException>(() => LargeLSH.Insert(new Project { Tags = new List<Tag> { }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC }));
-                }
-
-                [Fact]
-                public void GetSortedByCategory_Is_Sorted_By_JaccardIndex()
-                {
-                    //Arrange
-                    var expected = new List<IProject> { ComputerScienceAlgorithmsSecurityIdentical, ComputerScienceAlgorithmsSimulationSecurityIdentical, ComputerScienceSimulationAlgorithmsAgricultureIdentical, ComputerScienceSimulationAlgorithmsAgriculture }.AsEnumerable();
-
-                    //Act
-                    var actual = LargeLSH.GetSortedInCategory(ComputerScienceAlgorithmsSecurity).AsEnumerable();
-
-                    //Assert
-                    Assert.Equal(expected, actual);
-                }
-
-                //IF PROJECT DOESN'T HAVE THAT CATEGORY
-
-                
-
-                //FINISH THIS TEST WHEN YOU HAVE FIGURED OUT CATEGORIZABLE
-                [Fact]
-                public void GetSortedByCategory_Throws_Exception_If_No_Projects_Have_Category()
-                {
-                    //Arrange
-                    Project test = new Project { Tags = new List<Tag> { Mathematics, Algebra, DiscreteMathematics, Calculus, Statistics, Probability, Science }, Id = 19, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-
-                    //Act & Assert
-                    //Assert.Equal(test.Category, null);
-                    //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(test));
-                }
-
-                [Fact]
-                public void GetSortedByCategory_Equals_GetSorted_Within_Category()
-                {
-
-                }
-
-                private void insertSmallData()
-                {
-                    AgricultureFood = new Project { Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = null, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-                    ComputerScienceSimulationAlgorithmsAgriculture = new Project { Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 2, Author = null, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-                    ComputerScienceAlgorithmsSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = null, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-                    AgricultureFarming = new Project { Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = null, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-                    ComputerScienceAlgorithmsSimulationSecurity = new Project { Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = null, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
-                    LSH = new ProjectLSH();
-                    LSH.Insert(AgricultureFarming);
-                    LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
-                    LSH.Insert(ComputerScienceAlgorithmsSecurity);
-                    LSH.Insert(AgricultureFood);
-                    LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);
-                }
-        */
-
         [Fact]
         public async void Delete_Removes_All_Groups_In_Buckets()
         {
             await inserts();
+
             //Arrange
             int expected = 0 - LargeLSH.NumberOfGroups;
             foreach (var entry in LargeLSH.Map)
             {
                 expected += entry.Value.Projects.Count();
             }
+
             //Act
             LargeLSH.Delete(AgricultureFarming);
 
@@ -961,6 +560,7 @@ namespace ReferenceSystem.Tests
             {
                 actual += entry.Value.Projects.Count();
             }
+
             //Assert
             Assert.Equal(expected, actual);
         }
@@ -1011,8 +611,5 @@ namespace ReferenceSystem.Tests
 
         static Course IntroductoryProgramming = new Course { Id = 7, Programs = new List<TeachingProgram> { DataScience }, Faculty = FacultyComputerScienceITU, Title = "IP", Description = "ITU", Code = "IA2002", Students = new List<Student>() { Villum } };
         static Course UIDesign = new Course { Id = 8, Programs = new List<TeachingProgram> { InteractiveDesign }, Faculty = FacultyDesignDTU, Title = "UID", Description = "ITU", Code = "19283", Students = new List<Student>() { Anton } };
-
-        //FacultyComputerScienceITU.Institution = ITU;
-
     }
 }

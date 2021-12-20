@@ -73,7 +73,6 @@ public class ProjectControllersTests
         // Assert
         Assert.Equal(created, result?.Value);
         Assert.Equal("Get", result?.ActionName);
-        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 
     [Fact]
@@ -90,6 +89,7 @@ public class ProjectControllersTests
         // Act
         var response = await controller.Post(existing);
 
+        // Assert
         Assert.IsType<ConflictResult>(response);
     }
 
@@ -107,6 +107,7 @@ public class ProjectControllersTests
         // Act
         var response = await controller.Post(existing);
 
+        // Assert
         Assert.IsType<NotFoundResult>(response);
     }
 
@@ -128,6 +129,7 @@ public class ProjectControllersTests
         // Act
         var response = await controller.GetFirstHundred(1);
 
+        // Assert
         Assert.Equal(100, response.Count());
     }
 
@@ -167,7 +169,6 @@ public class ProjectControllersTests
     [Fact]
     public async Task Delete_deletes_project()
     {
-        //Arrange 
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
         var project = new ProjectUpdateDTO { Id = 1 };
@@ -175,10 +176,10 @@ public class ProjectControllersTests
         repository.Setup(m => m.DeleteAsync(1, project)).ReturnsAsync(Response.Deleted);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
-        //Act
+        // Act
         var response = await controller.Delete(1, project);
 
-        //Assert
+        // Assert
         Assert.IsType<NoContentResult>(response);
     }
 
@@ -192,10 +193,10 @@ public class ProjectControllersTests
         repository.Setup(m => m.DeleteAsync(1, project)).ReturnsAsync(Response.Conflict);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
-        //Act
+        // Act
         var response = await controller.Delete(1, project);
 
-        //Assert
+        // Assert
         Assert.IsType<ConflictResult>(response);
     }
 }

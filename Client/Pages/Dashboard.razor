@@ -12,39 +12,42 @@
     <Authorized>
         <PageTitle>@title</PageTitle>
 
-        <div class="ProjectHeader">
-            <h1 class="ProjectTitle">@title</h1>
-            <!--Idea is to only show Status to the author of the project-->
-            <div class="Status Public">
-                <p>@ProjectStatus</p>
+            <div class="ProjectHeader">
+                <h1 class="ProjectTitle">@title</h1>
+                <!--Idea is to only show Status to the author of the project-->
+                <div class="Status Public">
+                    <p>@ProjectStatus</p>
+                </div>
             </div>
-        </div>
-                <div class="Buffer_20"></div>   
+            <div class="Buffer_20"></div>   
 
+            <div class="row ProjectInfoDisplay">
 
-                <div class="row ProjectInfoDisplay">
                 <div class="col-md-8 DescriptionContainer">
                     <div class="DescriptionDisplay">
-                        <div class="row">
-                            
-                        </div>
+
                         <div class="DescriptionTitle">
                             <p>Published by <span id="AuthorContainer">@AuthorName</span></p>
                         </div>  
+
                         <div class="Description">
                             <textarea readonly id="ProjectDescription" class="overflow-auto">@Description</textarea>
-                            <!--<button class="btn btn-info ContractButton" @onclick="@(() => ExpandedDescription())">@ExpandDescription</button>-->
                         </div>
+
                     </div>
                 </div>
+
                 <div class="col-6 col-md-4 AuxInfoContainer">
+
                     <div class="row TargetGroup">
                         <h1>Target Group</h1>
                         <div class="TargetGroupContainer">
                             <p>@TargetGroup</p>
                         </div>
                     </div>
+
                     <div class="row">
+
                         <div class="row">
                             <div class="col-8">
                                 <h1>Collaborators</h1>
@@ -55,8 +58,8 @@
                                 <button type="button" class="btn btn-sm ModalButton" @onclick="() => inviteModal.Open()">Invite</button>  
                             </div>
                             }
-
                         </div>
+
                         <div class="CardContainer">
                             <ul>
                                 @foreach (var element in supervisors)
@@ -70,16 +73,23 @@
                                     }
                                 </ul>
                         </div>
+
                     </div>
+
                     <div class="row">
+
                         <div class="row h-50">
+
                             <div class="col-8">
                                 <h1>Students</h1>
                             </div>
+
                             <div class="col-4">
                                 <button type="button" class="btn btn-sm ModalButton" @onclick="() => applyModal.Open()">Apply</button>  
                             </div>
+
                         </div>
+
                         <div class="CardContainer">
                             <ul>
                                 @foreach (var element in students)
@@ -93,9 +103,12 @@
                                 }
                             </ul>
                         </div>
+
                     </div>
+        
                     <div class="row">
                         <h1>Project Tags</h1>
+
                         <div class="CardContainer">
                             <ul>
                                 @foreach (var element in tags)
@@ -106,72 +119,88 @@
                                 }
                             </ul>
                         </div>
-                    </div>
-                </div>
-                </div>
 
-                <Modal @ref="inviteModal">
-                    <Title>Invite Supervisor</Title>
-                    <Body>
-                        <p>
-                            Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
-                        </p>
-                        <div class="form-group">
-                            <label for="InviteFormGroup">Email Address: </label>
-                            <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com" @bind="InviteEmail" @onkeypress="ClearInviteStatus">
-                        </div>
-                        @if(InviteStatus == "Error while inviting user. Please make sure the email is correct.")
+                    </div>
+
+                </div>
+            </div>
+
+            <Modal @ref="inviteModal">
+                <Title>Invite Supervisor</Title>
+
+                <Body>
+                    <p>
+                        Invite a fellow supervisor to collaborate on this project. Note: Collaborators will have full authority over project details, bar deleting the post.
+                    </p>
+                    <div class="form-group">
+                        <label for="InviteFormGroup">Email Address: </label>
+                        <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com" @bind="InviteEmail" @onkeypress="ClearInviteStatus">
+                    </div>
+                    @if(InviteStatus != string.Empty)
+                    {
+                        //success
+                        @if(InviteStatus == "Supervisor has been added to the project.")
+                        {
+                            <div class="alert alert-success mt-2" role="alert">
+                                @InviteStatus
+                            </div>
+                        } 
+                        //failure
+                        else
                         {
                             <div class="alert alert-danger mt-2" role="alert">
                                 @InviteStatus
                             </div>
                         }
-                        else if(InviteStatus == "Supervisor has been added to the project.")
-                        {
-                            <div class="alert alert-success mt-2" role="alert">
-                                @InviteStatus
-                            </div>
-                        }
-                    </Body>
-                    <Footer>
-                        <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
-                        <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => InviteSupervisorAsync()">Invite</button>
-                    </Footer>
-                </Modal>
+                    }
+                </Body>
 
-                <Modal @ref="applyModal">
-                    <Title>Apply for project (not implemented)</Title>
-                    <Body>
-                        <p>
-                            Are you absolutely sure about this? If you choose to apply for this course, you'll we committed to attend all lectures, go to the exam etc... You could really regret this.
-                        </p>
-                    </Body>
-                    <Footer>
-                        <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
-                        <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => applyModal.Close()">Apply</button>
-                    </Footer>
-                </Modal>
+                <Footer>
+                    <button type="button" class="btn btn-primary" data-dismiss="inviteModal" @onclick="() => inviteModal.Close()">Close</button>
+                    <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => InviteSupervisorAsync()">Invite</button>
+                </Footer>
 
-                <Modal @ref="confirmDeletion">
-                    <Title>Delete project</Title>
-                    <Body>
-                        <p>
-                            Please confirm that you want to delete this project
-                        </p>
-                    </Body>
-                    <Footer>
-                        <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Cancel</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="inviteModal" @onclick="Delete">Delete</button>
-                    </Footer>
-                </Modal>
+            </Modal>
 
-                @if(CurrentUser != null && project.AuthorID == CurrentUser.Id)
-                {
-                    <div class="Buffer_40"></div>
+            <Modal @ref="applyModal">
+                <Title>Apply for project (not implemented)</Title>
 
-                    <a href="Projects/@ProjectId/edit" class="btn btn-primary">Edit Project</a>
-                    <a class="btn btn-danger" @onclick="() => confirmDeletion.Open()">Delete Project</a>
-                }
+                <Body>
+                    <p>
+                        Are you absolutely sure about this? If you choose to apply for this course, you'll we committed to attend all lectures, go to the exam etc... You could really regret this.
+                    </p>
+                </Body>
+
+                <Footer>
+                    <button type="button" class="btn btn-primary" data-dismiss="applyModal" @onclick="() => applyModal.Close()">Close</button>
+                    <button type="button" class="btn btn-success" data-dismiss="inviteModal" @onclick="() => applyModal.Close()">Apply</button>
+                </Footer>
+
+            </Modal>
+
+            <Modal @ref="confirmDeletionModal">
+                <Title>Delete project</Title>
+
+                <Body>
+                    <p>
+                        Please confirm that you want to delete this project
+                    </p>
+                </Body>
+
+                <Footer>
+                    <button type="button" class="btn btn-primary" data-dismiss="confirmDeletionModal" @onclick="() => confirmDeletionModal.Close()">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="confirmDeletionModal" @onclick="Delete">Delete</button>
+                </Footer>
+
+            </Modal>
+
+            @if(CurrentUser != null && project.AuthorID == CurrentUser.Id)
+            {
+                <div class="Buffer_40"></div>
+
+                <a href="Projects/@ProjectId/edit" class="btn btn-primary">Edit Project</a>
+                <a class="btn btn-danger" @onclick="() => confirmDeletionModal.Open()">Delete Project</a>
+            }
 
         <div class="Buffer_40"></div>
 
@@ -181,9 +210,11 @@
             <label class="RelatedProjectsLabel">max
                 <input class="inputNumber" @bind-value="maxRelatedProjects" type="number" name="points" step="10" min="10">
             </label>
+
             <div id="RelatedProjectsSwitchLineBreak">
                 <br>
             </div>
+
             <span>
                 <label class="RelatedProjectsLabel">Projects from same category:</label>
                 <label class="switch">
@@ -210,29 +241,22 @@
                                             class=" nrbtn btn">@relatedProject.UserIDs.Count()/@relatedProject.MaxStudents</a>
                                             </div>
                                         </div>
+
                                         <p class="card-text mb-5 description">@relatedProject.Description</p>
+
                                         <div class="tagdiv mb-3">
                                             <ul>
-                                                @foreach (var tag in relatedProject.TagIDs)
+                                                @foreach (var tag in relatedProject.TagNames)
                                                 {
-                                                    <li class="tag tagbtn mx-1">@tag</li>
+                                                    <li class="tag tagbtn mx-1 px-1">@tag</li>
                                                 }
                                             </ul>
                                         </div>
+
                                         <a @onclick="@(e => ChangePageToProject(relatedProject.Id))" class="btn btn-primary footer">@more</a>
+
                                     </div>
                                 </div>
-
-                                <p class="card-text mb-5 description">@relatedProject.Description</p>
-                                <div class="tagdiv mb-3">
-                                    <ul>
-                                        @foreach (var tag in relatedProject.TagNames)
-                                        {
-                                            <li class="tag tagbtn mx-1">@tag</li>
-                                        }
-                                    </ul>
-                                </div>
-                                <a href="Projects/@relatedProject.Id" class="btn btn-primary footer">@more</a>
                             </div>
                         }
                     }
@@ -254,18 +278,15 @@
     </NotAuthorized>
 </AuthorizeView>
 
-
 @code {
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     string title = "Loading title...";
-    string empty = string.Empty;
     string Description = "Loading description...";
     string AuthorName = string.Empty;
     string TargetGroup = "Loading...";
     string more = "View more";
     string InviteStatus = string.Empty;
-
     string InviteEmail = string.Empty;
 
     [Parameter]
@@ -287,16 +308,8 @@
 
     private Modal inviteModal { get; set; }
     private Modal applyModal { get; set; }
+    private Modal confirmDeletionModal { get; set; }
     private IReadOnlyCollection<ProjectReferenceDTO> related;
-
-
-    private Modal confirmDeletion { get; set; }
-
-    /*private async void test()
-    {
-    var test = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/2");
-    Console.WriteLine(test);
-    }*/
 
     protected override async Task OnInitializedAsync()
     {
@@ -316,24 +329,18 @@
         {
             Console.WriteLine(exception.Message);
         }
+
         this.Description = project.Description;
         this.title = project.Title;
         this.TargetGroup = category.Title;
         this.AuthorName = author.FirstName + " " + author.LastName;
         this.ProjectStatus = project.Status.ToString();
-
-        foreach (var item in students) { Console.WriteLine("Student with ID: " + item.Id + " exists"); }
     }
 
     private async IAsyncEnumerable<TagDTO> GetTagsDTOs(ICollection<int> tagIds)
     {
         foreach (var id in tagIds)
-        {
-            //It crashes if you ask for id 7... which exists... wtf
-            if (id == 7)
-            {
-                continue;
-            }
+        {            
             yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{id}");
         }
     }
@@ -353,6 +360,8 @@
             catch (Exception e)
             {
                 //Not a supervisor, skip
+                Console.WriteLine("Expected error: " + e.Message);
+                continue;
             }
             yield return user;
         }
@@ -362,7 +371,6 @@
     {
         foreach (var userID in userIDs)
         {
-            //yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
             UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
             try
             {
@@ -370,7 +378,9 @@
             }
             catch (Exception e)
             {
-                //Not a supervisor, skip
+                //Not a student, skip
+                Console.WriteLine("Expected error: " + e.Message);
+                continue;
             }
             yield return user;
         }
@@ -386,9 +396,8 @@
         return await Http.GetFromJsonAsync<CategoryDTO>($"api/Categories/{catID}");
     }
 
-    public async void ViewRelatedProjects()
+    private async void ViewRelatedProjects()
     {
-        
         this.noRelatedProjects = false;
         this.loadingRelatedProjects = true;
         try
@@ -430,6 +439,7 @@
         return user;
     }
 
+    //Tags cannot be updated. Project.Tags set to ReadOnlyCollection, requires changes to LSH...
     private async Task Delete()
     {
         ProjectUpdateDTO updateproject = new ProjectUpdateDTO{
@@ -444,23 +454,6 @@
             UserIDs = project.UserIDs,
             TagIDs = project.TagIDs,
         };
-
-        Console.WriteLine("The category id is: " + updateproject.CategoryID);
-        Console.WriteLine("The title: " + updateproject.Title);
-        Console.WriteLine("The description: " + updateproject.Description);
-        Console.WriteLine("The status: " + updateproject.Status);
-        Console.WriteLine("Max students are: " + updateproject.MaxStudents);
-        Console.WriteLine("The id is: " + updateproject.Id);
-        Console.WriteLine("The author id: " + updateproject.AuthorID);
-
-        
-
-        /* Changing a project's tags makes the ProjectRepository crash.
-        *  No idea why. Omit feature, for now...
-        */
-
-        //var testtest = await Http.GetFromJsonAsync<TagDTO>("api/Tag/1");
-       // updateproject.TagIDs.Add(testtest.Id);
 
         var response = await Http.PutAsJsonAsync($"api/Projects/Delete/{ProjectId}", updateproject);
 
@@ -526,7 +519,14 @@
         }
         catch (Exception e)
         {
-            InviteStatus = "Error while inviting user. Please make sure the email is correct.";
+            if(e.Message == "User already added to project" || e.Message == "You can't add yourself to the project")
+            {
+                InviteStatus = e.Message;
+            }
+            else
+            {
+                InviteStatus = "Error while inviting user. Please make sure the email is correct.";
+            }
             StateHasChanged();
         }
     }

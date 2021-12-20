@@ -1,5 +1,3 @@
-using ProjectBank.Infrastructure.Entities;
-
 namespace ProjectBank.Infrastructure.ReferenceSystem;
 public interface IProjectLSH
 {

@@ -1,4 +1,6 @@
-using Microsoft.EntityFrameworkCore.Internal;
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Infrastructure.Tests/CharacterRepositoryTests.cs
+*/
 
 namespace EntityFramework.Tests;
 
@@ -24,7 +26,6 @@ public class ProjectRepositoryTests : IDisposable
         var context = new ProjectBankContext(builder.Options);
         context.Database.EnsureCreated();
 
-        //ADDING PROJECTS TO REPOSITORY
         var ituInst = new Institution("ITU", "IT-Universitetet i København");
         var ituFaculty = new Faculty("Computer Science", "Computers and Science", ituInst);
         var Supervisor1 = new Supervisor("troe@itu.dk", ituInst, "Troels", "Jyde", new List<Project>(), ituFaculty, new List<Project>());
@@ -48,7 +49,6 @@ public class ProjectRepositoryTests : IDisposable
         _context = context;
         _repository = new ProjectRepository(_context);
 
-        //Creating a CreateProjectDTO() to use for test
         var TestInstitution = new Institution("ITU", "IT-Universitetet i København");
         var TestFaculty = new Faculty("Computer Science", "Computers and Science", TestInstitution);
         var TestSupervisor = new Supervisor("troe@itu.dk", TestInstitution, "Troels", "Jyde", new List<Project>(), TestFaculty, new List<Project>());
@@ -68,9 +68,6 @@ public class ProjectRepositoryTests : IDisposable
      [Fact]
     public async void CreateAsync_adds_a_the_new_project_to_the_repository() 
     {
-        //Arrange
-
-        //Act
         var created = await _repository.CreateAsync(TestProject);
 
         if(created.Item1 == Response.Conflict) 
@@ -83,9 +80,6 @@ public class ProjectRepositoryTests : IDisposable
         var option = await _repository.ReadByIDAsync(4);
         var created2 = option.Value;
 
-        //Assert
-
-        //For response
         Assert.Equal(Response.Created, created.Item1);
         Assert.Equal(1, i.AuthorID);
         Assert.Equal(4, i.Id);
@@ -98,7 +92,6 @@ public class ProjectRepositoryTests : IDisposable
         Assert.Equal(new List<int>(), i.UserIDs);
         Assert.Equal(new List<int>(), i.BucketIDs);
 
-        //For database
         Assert.Equal(1, created2.AuthorID);
         Assert.Equal(4, created2.Id);
         Assert.Equal("Test Project", created2.Title);
@@ -114,16 +107,11 @@ public class ProjectRepositoryTests : IDisposable
     [Fact]
     public async void CreateAsync_adding_exisisting_project_returns_Conflict() 
     {
-        //Arrange
-
-        //Act
         await _repository.CreateAsync(TestProject);
-        var created = await _repository.CreateAsync(TestProject);
-        
+        var created = await _repository.CreateAsync(TestProject); 
 
         var i = created.Item2;
 
-        //Assert
         Assert.Equal(Response.Conflict, created.Item1); 
     }
     
@@ -133,7 +121,6 @@ public class ProjectRepositoryTests : IDisposable
         var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
         var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
-        //var project3 = new Project{3,"Deleted Project", Description = "It's deleted.", Status = ProjectStatus.DELETED, Category = ituInst, Tags = new List<Tag>(){Tag2}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5};
         var projects = await _repository.ReadAllAsync();
 
         Assert.Collection(projects,
@@ -604,7 +591,7 @@ public class ProjectRepositoryTests : IDisposable
         var option = await _repository.ReadByIDAsync(1);
         var actual = option.Value;
 
-        //Assert.Equa
+        //Assert.Equal
         Assert.Equal(Response.Updated, updated);
         Assert.Equal("Best Updated Project", actual.Title);
         Assert.Equal("Simply the updated project", actual.Description);
@@ -615,7 +602,6 @@ public class ProjectRepositoryTests : IDisposable
     public async void UpdateAsync_returns_NotFound_if_project_does_not_exist()
     {
         var NonExistingID = new ProjectUpdateDTO{Id = 999, AuthorID = 1, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
-        //var NonExistingAuthor = new ProjectUpdateDTO{Id = 1, AuthorID = 999, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
 
         var CreatedNonExistingID = await _repository.UpdateAsync(-1,NonExistingID);
 
@@ -663,8 +649,10 @@ public class ProjectRepositoryTests : IDisposable
     {
         //Arrange
         var Deletedproject = new ProjectUpdateDTO{Id = 3, AuthorID = 1, Title = "Deleted Project", Description = "It's deleted.", Status = ProjectStatus.DELETED, MaxStudents = 5, CategoryID = 1, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+        
         //Act
         var response = await _repository.DeleteAsync(3, Deletedproject);
+        
         //Assert
         Assert.Equal(Response.Conflict, response);
     }
@@ -686,8 +674,10 @@ public class ProjectRepositoryTests : IDisposable
            UserIDs = new List<int>(),
            BucketIDs = new List<int>()
         };
+        
         //Act
         var response = await _repository.DeleteAsync(1, DeletedProject);
+        
         //Assert
         Assert.Equal(Response.Deleted, response);
     }
@@ -707,7 +697,6 @@ public class ProjectRepositoryTests : IDisposable
 
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

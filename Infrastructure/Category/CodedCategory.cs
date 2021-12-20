@@ -16,6 +16,5 @@ public abstract class CodedCategory : Category
         this.Code = Code;
     }
 
-    // Empty constructor to please the EF Gods
     protected CodedCategory() {}
 }

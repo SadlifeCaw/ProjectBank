@@ -6,7 +6,6 @@ namespace ProjectBank.Infrastructure;
 public class ProjectBankContext : DbContext
 {
     //User directory
-
     public DbSet<User> Users => Set<User>();
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Supervisor> Supervisors => Set<Supervisor>();
@@ -54,6 +53,7 @@ public class ProjectBankContext : DbContext
         //manually determine Project-User relationship, including unique for Supervisor
         modelBuilder.Entity<Project>().HasOne(p => p.Author).WithMany(u => u.AuthoredProjects);
         modelBuilder.Entity<Project>().HasMany(p => p.Users).WithMany(u => u.Projects);
+        modelBuilder.Entity<Supervisor>().HasMany(s => s.Projects);
 
         //manually determine Student-Course relationship
         modelBuilder.Entity<Course>().HasMany(c => c.Students).WithMany(s => s.Courses);
@@ -80,12 +80,6 @@ public class ProjectBankContext : DbContext
         modelBuilder.Entity<Project>()
             .HasOne(p => p.Author)
             .WithMany(a => a.AuthoredProjects)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        //does not compile for some reason. hopefully works without. tests
-        /*modelBuilder.Entity<User>()
-            .HasMany(u => u.Projects)
-            .WithMany(p => p.Users)
-            .OnDelete(DeleteBehavior.NoAction);*/        
+            .OnDelete(DeleteBehavior.Restrict);      
     }
 }

@@ -74,6 +74,7 @@ public class SeedingTests
 
         //Act
         var Actual = Seeding.TeachingPrograms;
+
         //Assert
         for (int i = 0; i < Expected.Count; i++)
         {
@@ -113,10 +114,12 @@ public class SeedingTests
     [Fact]
     public void GenerateStudents_generates_students()
     {
+        //Arrange
         var TeachingPrograms = Seeding.TeachingPrograms;
 
         var ExpectedFirst = new Student("annechristensen@itu.dk", TeachingPrograms[0].Faculty.Institution, "Anne", "Christensen", new List<Project>(), TeachingPrograms[0], new List<Course>());
         var ExpectedLast = new Student("olemortensen@ku.dk", TeachingPrograms[7].Faculty.Institution, "Ole", "Mortensen", new List<Project>(), TeachingPrograms[7], new List<Course>());
+        
         //Act
         var Students = Seeding.Students;
         var ActualFirst = Students[0];
@@ -168,7 +171,7 @@ public class SeedingTests
         new Tag("Dotnet"),
         new Tag("Network"),
         new Tag("Heuristic"),
-        new Tag("Uml"),
+        new Tag("UML"),
         new Tag("Docker"),
         new Tag("C#"),
         new Tag("Golang"),
@@ -181,11 +184,13 @@ public class SeedingTests
         new Tag("Surveillance"),
         new Tag("Logistics"),
         new Tag("Military"),
-        new Tag("Agriculture")
+        new Tag("Agriculture"),
+        new Tag("Mink")
     };
         
         //Act
         var Actual = Seeding.Tags;
+
         //Assert
         Assert.Equal(Expected.Count, Actual.Count);
         for(int i = 0; i < Expected.Count; i++)
@@ -199,6 +204,7 @@ public class SeedingTests
     {
         //Arrange
         var Expected = 2000;
+        
         //Act
         List<Project> Projects = Seeding.Projects;
         var Actual = Projects.Count;

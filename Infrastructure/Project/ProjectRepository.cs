@@ -224,6 +224,7 @@ public class ProjectRepository : IProjectRepository
         projectEntity.MaxStudents = project.MaxStudents;
         projectEntity.Status = project.Status;
         projectEntity.Category = category;
+        //changing project crashes readonly
         //projectEntity.Tags = (await GetTagsAsync(new List<int>() {1, 2, 3}).ToListAsync()).AsReadOnly();
         projectEntity.Buckets = await GetBucketsAsync(project.BucketIDs).ToListAsync();
         projectEntity.Users = await GetUsersAsync(project.UserIDs).ToListAsync();
@@ -345,40 +346,4 @@ public class ProjectRepository : IProjectRepository
                         .ToListAsync())
                         .AsReadOnly());
     }
-
-    /*public async Task<List<ProjectReference>> AllProjectReferenceAsync()
-        {
-            //var dtos = await ReadAllAsync();
-            return await _dbcontext.Projects.Select(project => (new ProjectReference() { Id = project.Id, Tags = project.Tags.Select(t => new Tag(t.Name)).ToList(), Category = project.Category})).ToListAsync();
-            
-           /* await foreach (var project in _dbcontext.Projects)
-            {
-                //var tags = new List<Tag>();  
-                //foreach (var id in dto.TagNames) tags.Add(new Tag(id));
-                //var cat = await GetCategoryAsync(dto.CategoryID);
-                yield return (new ProjectReference() { Id = project.Id, Tags = project.Tags, Category = project.Category});
-            }*/
-            //var tagMap = new Dictionary<int, Tag>();
-            
-            //await foreach (var tag in  _dbcontext.Tags) tagMap.Add(tag.Id, Tag);
-            //var categoryMap = new Dictionary<int, Category>();
-            
-            /*foreach (var category in await _categoryRepository.Read())
-            {
-                 categoryMap.Add(category.Id, new Category(){Id = category.Id, Description = category.Description, Title = category.Title});
-            }
-            var projects = new List<IProject>();
-            
-            var tagMap = new ConcurrentDictionary<int, Tag>();
-            foreach (var tag in _dbcontext.Tags) tagMap[tag.Id] = tag;
-            var categoryMap = new ConcurrentDictionary<int, Category>();
-            foreach (var category in _dbcontext.Categories) categoryMap[category.Id] = category;
-            
-            await foreach (var dto in dtos.ToAsyncEnumerable())
-            {
-                var tags = new List<Tag>();  
-                foreach (var id in dto.TagIDs) tags.Add(tagMap[id]);
-                yield return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = categoryMap[dto.Id], Signature = new Signature(tags) });
-            }*/
-        //}
 }
