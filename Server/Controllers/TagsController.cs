@@ -33,14 +33,6 @@ public class TagController : ControllerBase
         =>(await _repository.ReadTagByIDAsync(id)).ToActionResult();
 
     [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(TagDTO), StatusCodes.Status200OK)]
-    [Route("Tagnames")]
-    [HttpGet]
-    public async Task<ICollection<TagDTO>> GetTagNames(List<int> ids) 
-        =>(await _repository.ReadCollectionAsync(ids));
-
-    [AllowAnonymous]
     [HttpGet]
     public async Task<IReadOnlyCollection<TagDTO>> Get()
         => await _repository.ReadAllAsync();
