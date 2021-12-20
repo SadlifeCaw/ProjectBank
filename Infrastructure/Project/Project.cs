@@ -9,11 +9,11 @@ public class Project : ITagable, IProject
     public int Id { get; set; }
 
     [Required]
-    [StringLength(50)]
+    [StringLength(100)]
     public string? Title { get; set; }
 
     [Required]
-    [StringLength(1000)]
+    [StringLength(10000)]
     public string? Description { get; set; }
 
     [Required]
