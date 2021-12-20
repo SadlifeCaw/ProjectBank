@@ -1,3 +1,4 @@
+using System.Net.Http;
 using ProjectBank.Infrastructure.Entities;
 
 namespace ProjectBank.Infrastructure.ReferenceSystem

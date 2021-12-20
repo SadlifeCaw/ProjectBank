@@ -24,3 +24,6 @@ Once this is done you can run the program with:
 ```
 dotnet run 
 ```
+
+## Tips
+If no data is showing you try logging out and in again.

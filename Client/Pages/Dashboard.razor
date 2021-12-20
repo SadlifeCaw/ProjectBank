@@ -456,6 +456,7 @@
         };
 
         var response = await Http.PutAsJsonAsync($"api/Projects/Delete/{ProjectId}", updateproject);
+        var responseLSH = await Http.PutAsJsonAsync($"api/ProjectReference/Delete/{ProjectId}", updateproject);
 
         Console.WriteLine(response.ReasonPhrase);
 

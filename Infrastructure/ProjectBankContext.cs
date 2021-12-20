@@ -80,6 +80,11 @@ public class ProjectBankContext : DbContext
         modelBuilder.Entity<Project>()
             .HasOne(p => p.Author)
             .WithMany(a => a.AuthoredProjects)
-            .OnDelete(DeleteBehavior.Restrict);      
+            .OnDelete(DeleteBehavior.Restrict);
+
+        //do not delete bucket when project is deleted
+        modelBuilder.Entity<ProjectBucket>()
+            .HasMany(b => b.Projects)
+            .WithMany(p => p.Buckets);
     }
 }

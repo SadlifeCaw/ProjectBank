@@ -41,6 +41,17 @@ namespace ProjectBank.Server.Controllers
         }
 
         [Authorize]
+        [Route("Delete/{projectID}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPut]
+        public async Task<Response> Delete(int projectID)
+        {
+            var project = await getProjectById(projectID);
+            return ProjectReferenceData._LSH.Delete(project);
+        }
+
+        [Authorize]
         [Route("Sorted/{projectID},{size}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(IReadOnlyCollection<ProjectReferenceDTO>), StatusCodes.Status200OK)]
