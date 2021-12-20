@@ -321,7 +321,7 @@ public class ProjectRepositoryTests : IDisposable
         var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
         var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
-        var project4 = new ProjectDTO(3, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
+        var project4 = new ProjectDTO(4, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         
         var projects = await _repository.ReadAllAuthoredAsync(1);
 
