@@ -130,12 +130,10 @@ public class ProjectRepositoryTests : IDisposable
     [Fact]
     public async void ReadAllAsync_returns_all_projects()
     {
-
-        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
-        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
-        var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
+        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
+        var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
         //var project3 = new Project{3,"Deleted Project", Description = "It's deleted.", Status = ProjectStatus.DELETED, Category = ituInst, Tags = new List<Tag>(){Tag2}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5};
-        
         var projects = await _repository.ReadAllAsync();
 
         Assert.Collection(projects,
@@ -211,8 +209,8 @@ public class ProjectRepositoryTests : IDisposable
         await _repository.CreateAsync(TestProjectDeleted);
         await _repository.CreateAsync(TestProjectAuthor);
 
-        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
-        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
+        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
         var projects = await _repository.ReadAllAvailableAsync(1);
 
         Assert.Collection(projects,
@@ -288,8 +286,8 @@ public class ProjectRepositoryTests : IDisposable
         await _repository.CreateAsync(TestProjectAuthor2);
         
 
-        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
-        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
+        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
         var projects_ID_1 = await _repository.ReadFirstHundred_PrioritozeAuthored(1);
         var projects_ID_2 = await _repository.ReadFirstHundred_PrioritozeAuthored(2);
         var projects_ID_not_in_database = await _repository.ReadFirstHundred_PrioritozeAuthored(999);
@@ -320,10 +318,10 @@ public class ProjectRepositoryTests : IDisposable
         
         await _repository.CreateAsync(TestProjectAuthor);
 
-        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<int>(), new List<int>());
-        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
-        var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<int>(), new List<int>());
-        var project4 = new ProjectDTO(4, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<int>(), new List<int>());
+        var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
+        var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
+        var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
+        var project4 = new ProjectDTO(3, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         
         var projects = await _repository.ReadAllAuthoredAsync(1);
 
