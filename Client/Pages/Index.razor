@@ -5,6 +5,8 @@
 
 <PageTitle>Index</PageTitle>
 
+<link href="ProjectBank.Client.Projects.razor.css" rel="stylesheet" />
+
 <AuthorizeView>
     <Authorized>
         <h1 class="mb-3">Welcome</h1>
@@ -22,13 +24,16 @@
                         <div class="col-12 col-md-6 col-xl-4 my-3">
                             <div class="card col project">
                                 <div class="card-body">
+
                                     <div class="row">
                                         <h2 class="card-title col-9">@project.Title</h2>
                                         <div class="col-2">
                                             <a href="" class=" nrbtn btn">@project.UserIDs.Count()/@project.MaxStudents</a>
                                         </div>
                                     </div>
+
                                     <p class="card-text mb-5 description">@project.Description</p>
+
                                     <div class="tagdiv mb-3">
                                         <ul>
                                             @foreach (var tag in project.TagNames)
@@ -37,7 +42,9 @@
                                             }
                                         </ul>
                                     </div>
+
                                     <a href="Projects/@project.Id" class="btn btn-primary footer">@more</a>
+
                                 </div>
                             </div>
                         </div>
@@ -45,11 +52,13 @@
                     @if (projects.Count() == 0)
                     {
                         <h5>You do not own any projects yet...</h5>
+
                         <div class="col-2">
                             <p>
                                 <button class="btn btn-primary align-self-center" @onclick="Create">Create New Project</button>
                             </p>
                         </div>
+
                     }
                 </div>
             </div>
@@ -60,10 +69,10 @@
 </AuthorizeView>
 
 @code{
-string more = "View more";
-UserDTO user;
-[CascadingParameter]
-private Task<AuthenticationState> authenticationStateTask { get; set; }
+    string more = "View more";
+    UserDTO user;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
     
     private ICollection<ProjectDTO> projects = new List<ProjectDTO>();
 

@@ -25,25 +25,25 @@
                 <EditForm Model="@tempProject" OnValidSubmit="@HandleValidSubmit" class="pb-4" Context="editContext">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
+
                     <div class="form-group">
                         <label for="Title">Update title</label>
                         <InputText id="Title" @bind-Value="tempProject.Title" class="form-control"/>
-
-                    
                     </div>
+
                     <div class="form-group">
                         <label for="Description">Update description</label>
                         <InputTextArea id="Description" @bind-Value="tempProject.Description" class="form-control" rows="7"/>
                     </div>
 
                      <div class="form-group">
-                <label for="MaxStudents">Max Students</label>
-                <InputNumber id="MaxStudents" class="form-control" min="0" @bind-Value="tempProject.MaxStudents"/>
-            </div>
-
+                        <label for="MaxStudents">Max Students</label>
+                        <InputNumber id="MaxStudents" class="form-control" min="0" @bind-Value="tempProject.MaxStudents"/>
+                    </div>
 
                     <div class="form-group mt-4">
                     <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
+
                         <div class="TagContainer">
                             <ul>
                                 @foreach (var element in AllTags)
@@ -54,6 +54,7 @@
                                 }
                             </ul>
                         </div>
+
                         <div class="NewTagContainer">
                             <div class="row w-50">
                                 <div class="col-7">
@@ -65,6 +66,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- Code for binding database entries to a selection taken from
@@ -86,22 +88,24 @@
                             <InputRadio id="Private" Value="ProjectStatus.PRIVATE" class="form-check-input" /><label class="form-check-label" for="Private">Private</label>
                         </InputRadioGroup>
                     </div>
+
                     <div class="form-group">
                         <p>If you choose to create a private project, it will not be visible to other users on their dashboard, unless you invite them as a student or collaborator.</p>
                     </div>
+
                     <div class="form-group">
                         <br />
                         <button type="button" class="btn btn-primary" @onclick="Cancel">Return</button>
                         <button type="save" class="btn btn-secondary">Save</button>
                         <button type="submit" class="btn btn-success btn-block">Update</button>
                     </div>
+
                 </EditForm>
             }
             else
             {
                 <p>You do not have authorization to edit this project. You must either be its author or added as a collaborator</p>
             }
-        
         }
         else
         {
@@ -113,15 +117,12 @@
     </NotAuthorized>
 </AuthorizeView>
 
-
 @code {
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private UserDTO CurrentUser;
 
     string title = "Loading title...";
-    string empty = string.Empty;
-    string description = "Loading description...";
     string SelectedString = "Choose a category";
     
     [Parameter]
@@ -132,7 +133,6 @@
     private CategoryDTO category;
     private List<TagDTO> tags = new List<TagDTO>();
     private List<UserDTO> supervisors = new List<UserDTO>();
-
 
     private TagGenerator tagGenerator = new TagGenerator();
     private ISet<string> AllTags = new HashSet<string>();
@@ -185,26 +185,7 @@
             TagIDs = project.TagIDs,
         };
 
-        Console.WriteLine("The category id is: " + updateproject.CategoryID);
-        Console.WriteLine("The title: " + updateproject.Title);
-        Console.WriteLine("The description: " + updateproject.Description);
-        Console.WriteLine("The status: " + updateproject.Status);
-        Console.WriteLine("Max students are: " + updateproject.MaxStudents);
-        Console.WriteLine("The id is: " + updateproject.Id);
-        Console.WriteLine("The author id: " + updateproject.AuthorID);
-
-        
-
-        /* Changing a project's tags makes the ProjectRepository crash.
-        *  No idea why. Omit feature, for now...
-        */
-
-        //var testtest = await Http.GetFromJsonAsync<TagDTO>("api/Tag/1");
-       // updateproject.TagIDs.Add(testtest.Id);
-
         var response = await Http.PutAsJsonAsync($"api/Projects/{ProjectId}", updateproject);
-
-        Console.WriteLine(response.ReasonPhrase);
 
         if (response.IsSuccessStatusCode)
         {   
@@ -218,11 +199,6 @@
         var uri = $"{NavigationManager.BaseUri}projects";
 
         NavigationManager.NavigateTo(uri);
-    }
-
-    void OnDropDownSelect (ChangeEventArgs e)
-    {
-            SelectedString = e.Value.ToString();
     }
 
     public async void GetTags()
@@ -264,11 +240,6 @@
     {
         foreach (var id in tagIds)
         {
-            //It crashes if you ask for id 7... which exists... wtf
-            if(id == 7) 
-            {
-                continue;
-            }
             yield return await Http.GetFromJsonAsync<TagDTO>($"api/Tag/{id}");
         }
     }
