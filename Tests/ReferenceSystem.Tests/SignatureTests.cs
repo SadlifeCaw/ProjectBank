@@ -29,13 +29,12 @@ namespace ReferenceSystem.Tests
         static readonly string expectedDatabasesSHA512 = "11ab34ebc30b79bfbc551909d52ff311e59acd88766ee9ee9b625fd0660bde0501b23a5abd7bc1f378fbb61b315771095c56e9329cee27ac186041c27352882c";
         static readonly List<string> expectedAgricultureComputerScience = new List<string> { expectedDatabaseseSHA1, expectedComputerScienceSHA256, expectedAlgorithmsMD5, expectedComputerScienceSHA384, expectedDatabasesSHA512, expectedAgricultureNoHash };
 
+
         [Fact]
         public void Constructor_Throws_Exception_Given_No_Tags()
         {
-            //Arrange
             var tags = new List<Tag>{}.AsReadOnly();
 
-            //Act & Assert
             Assert.Throws<ArgumentException>(() => new Signature(tags));   
         }
         
@@ -45,6 +44,7 @@ namespace ReferenceSystem.Tests
             //Arrange
             var expected = expectedAgriculture.AsReadOnly();
             var tags = new List<Tag> { new Tag ("agriculture") }.AsReadOnly();
+            
             //Act
             var actual = new Signature(tags);
 

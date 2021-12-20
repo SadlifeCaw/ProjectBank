@@ -1,3 +1,7 @@
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Infrastructure.Tests/CharacterRepositoryTests.cs
+*/
+
 namespace EntityFramework.Tests;
 
 public class TagRepositoryTests: IDisposable
@@ -107,7 +111,6 @@ public class TagRepositoryTests: IDisposable
 
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

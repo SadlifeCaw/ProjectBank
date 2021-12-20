@@ -33,7 +33,6 @@ public record CourseCreateDTO{
     [Required]
     public string FacultyName {get; init;}
 
-    //normally this information is stored in thr faculty, but in the DTO faculty is just a string
     [Required]
     public string InstitutionName {get; init;}
 

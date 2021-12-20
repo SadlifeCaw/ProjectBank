@@ -93,18 +93,13 @@
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-
     private ProjectCreateDTO project = new();
-    private ProjectStatus newStatus = ProjectStatus.DRAFT;
     private TagGenerator tagGenerator = new TagGenerator();
-    private int MaxStudents;
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
     private UserDTO Author;
     private string NewTag = string.Empty;
-    private string description = string.Empty;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -120,8 +115,6 @@
 
         project.CategoryID = 1;
     }
-    string SelectedString = "Choose a category";
-
     private async Task HandleValidSubmit()
     {   
         project.TagIDs = new List<int>();
@@ -129,16 +122,7 @@
         project.UserIDs = new List<int>();
         project.BucketIDs = new List<int>();
         project.AuthorID = Author.Id;
-
         project.Status = project.Status;
-
-        Console.WriteLine(project.CategoryID);
-        Console.WriteLine(project.Title);
-        Console.WriteLine(project.Description);
-        Console.WriteLine(project.Status);
-        Console.WriteLine(Author.Id);
-        Console.WriteLine(Author.FirstName);
-        Console.WriteLine(project.MaxStudents);
 
         foreach (var item in AllTags)
         {
@@ -177,12 +161,7 @@
         project.Status = ProjectStatus.DRAFT;
     }
 
-    void OnDropDownSelect (ChangeEventArgs e)
-    {
-            SelectedString = e.Value.ToString();
-    }
-
-    public async void GetTags()
+    private async void GetTags()
     {
         tagGenerator = new TagGenerator();
 
@@ -197,10 +176,6 @@
         StateHasChanged();
     }
 
-    public ICollection<int>? ConvertToTagIDs(IEnumerable<string> TagNames){
-        return new List<int>();
-    }
-
     private void AddTagToList()
     {
         if(NewTag != "")
@@ -211,7 +186,7 @@
         }
     }
 
-    //this will probably not be very smart in case of a lot of categories. Limit to a small number? Optimal would be to add search method
+    //this will probably not be very smart in case of a lot of categories existing. Limit to a small number? Optimal would be to add search method
     private async Task<ICollection<CategoryDTO>> GetAllCategories()
     {
         return await Http.GetFromJsonAsync<ICollection<CategoryDTO>>($"api/Categories");
