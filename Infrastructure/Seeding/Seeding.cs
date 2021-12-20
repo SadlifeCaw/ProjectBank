@@ -4,7 +4,7 @@ using ProjectBank.Infrastructure.Entities;
 namespace ProjectBank.Infrastructure;
 public class Seeding
 {
-    private static List<string> FirstNames = new List<string>(){
+    private static readonly List<string> FirstNames = new List<string>(){
         "Anne",
         "Kirsten",
         "Mette",
@@ -47,7 +47,7 @@ public class Seeding
         "Ole"
     };
 
-    private static List<string> LastNames = new List<string>(){
+    private static readonly List<string> LastNames = new List<string>(){
        "Nielsen",
        "Jensen",
        "Hansen",
@@ -70,7 +70,7 @@ public class Seeding
        "Mortensen"
     };
 
-    public static List<Tag> Tags = new List<Tag>(){
+    public static readonly List<Tag> Tags = new List<Tag>(){
         new Tag("Language"),
         new Tag("Mathematics"),
         new Tag("Science"),
@@ -117,13 +117,13 @@ public class Seeding
     };
 
 
-    public static List<Institution> Institutions =
+    public static readonly List<Institution> Institutions =
         new List<Institution>(){
             new Institution("ITU", "IT-Universitetet i København"),
             new Institution("KU", "Københavns Universitet")
         };
 
-    public static IList<Faculty> Faculties = new List<Faculty>(){
+    public static readonly IList<Faculty> Faculties = new List<Faculty>(){
         new Faculty("Computer Science", "Computers and Science", Institutions[0]),
         new Faculty("Digital Business","Business and digital stuff", Institutions[0]),
         new Faculty("Digital Design","Design and its digital!", Institutions[0]),
@@ -133,7 +133,7 @@ public class Seeding
         new Faculty("History", "Past time is old times", Institutions[1])
     };
 
-    public static List<TeachingProgram> TeachingPrograms = new List<TeachingProgram>(){
+    public static readonly List<TeachingProgram> TeachingPrograms = new List<TeachingProgram>(){
             new TeachingProgram("Software Development", "The development of software", Faculties[0], "SWU2021", new List<Course>()),
             new TeachingProgram("Data Science", "The science of data", Faculties[0],"DATA2021",new List<Course>()),
             new TeachingProgram("Global Business Informatics","The Link between businesses and software", Faculties[1],"GBI2021",new List<Course>()),
@@ -144,7 +144,7 @@ public class Seeding
             new TeachingProgram("Medicine", "Study of medicin and the human body", Faculties[4], "WAR2021", new List<Course>())
         };
 
-    public static List<Supervisor> Supervisors = GenerateSupervisors();
+    public static readonly List<Supervisor> Supervisors = GenerateSupervisors();
 
     private static List<Supervisor> GenerateSupervisors()
     {
@@ -166,7 +166,7 @@ public class Seeding
         return newSupervisors;
     }
 
-    public static List<Student> Students = GenerateStudents();
+    public static readonly List<Student> Students = GenerateStudents();
 
     private static List<Student> GenerateStudents()
     {
@@ -177,7 +177,7 @@ public class Seeding
         {
             string FirstName = FirstNames[i % FirstNames.Count];
             string LastName = LastNames[i / FirstNames.Count];
-            TeachingProgramIndex = TeachingProgramIndex % TeachingPrograms.Count;
+            TeachingProgramIndex %= TeachingPrograms.Count;
 
             StringBuilder email = new StringBuilder();
             email.Append(FirstName.ToLower());
@@ -188,7 +188,7 @@ public class Seeding
         return Students;
     }
 
-    public static List<Project> Projects = GenerateProjects(10, 10, 10);
+    public static readonly List<Project> Projects = GenerateProjects(10, 10, 10);
     private static List<Project> GenerateProjects(int ProjectsPerSupervisor, int TagsPerProject, int StudentsPerProject)
     {
         Random random = new Random();
