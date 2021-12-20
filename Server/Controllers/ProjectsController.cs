@@ -27,8 +27,6 @@ public class ProjectsController : ControllerBase
     public async Task<IReadOnlyCollection<ProjectDTO>> GetFirstHundred(int id)
         => await _repository.ReadFirstHundred_PrioritozeAuthored(id);
 
-
-
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProjectDTO), StatusCodes.Status200OK)]
@@ -56,7 +54,7 @@ public class ProjectsController : ControllerBase
             return new NotFoundResult();
         }
 
-        return CreatedAtAction(nameof(Get), created, created); //Changed: new {created.Item2.Id}
+        return CreatedAtAction(nameof(Get), created, created);
     }
 
     [AllowAnonymous]
@@ -94,12 +92,4 @@ public class ProjectsController : ControllerBase
         return projectToReturn.ToActionResult();
         
     }
-
-    
-    /*[Authorize(Roles = Administrator)]
-    [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(int id)
-        => (await _repository.DeleteAsync(id)).ToActionResult();*/
 }

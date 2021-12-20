@@ -1,14 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
-using System.Collections.Generic;
-using ProjectBank.Core;
-using ProjectBank.Infrastructure.ReferenceSystem;
-using ProjectBank.Infrastructure.Entities;
-using ProjectBank.Infrastructure;
-using ProjectBank.Core.EF.DTO;
-using ProjectBank.Server.Model;
-
 namespace ProjectBank.Server.Controllers
 {
     [Authorize]

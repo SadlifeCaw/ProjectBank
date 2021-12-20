@@ -1,5 +1,6 @@
-using Xunit;
-
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Infrastructure.Tests/CharacterRepositoryTests.cs
+*/
 
 namespace EntityFramework.Tests;
 
@@ -168,11 +169,6 @@ public class UserRepositoryTest : IDisposable
 
         var users = await _repository.ReadAllAsync();
 
-        /* Assert.Collection(users,
-            user => Assert.Equal(new UserDTO(1, "bob@email.com", "Bob", "Smith", P1), user),
-            user => Assert.Equal(new UserDTO(2, "alice@email.com", "Alice", "Williams", P1), user)
-        ); */
-
         Assert.Collection(users,
             user =>
             {
@@ -237,9 +233,6 @@ public class UserRepositoryTest : IDisposable
         );
     }
 
-    //Add tests regarding updating student/supervisor. Requires implementation of UpdateDTO's.
-    //Add tests regarding a user's projects. Requires basic implementation of Project.
-
     protected virtual void Dispose(bool disposing)
     {
         if (!disposed)
@@ -255,7 +248,6 @@ public class UserRepositoryTest : IDisposable
 
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

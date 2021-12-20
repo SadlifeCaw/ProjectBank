@@ -12,16 +12,13 @@ public class UsersController : ControllerBase
     public UsersController(ILogger<UsersController> logger, IUserRepository repository)
     {
         _logger = logger;
-        //_repository = new TestProjectRepository().TestRepository;
         _repository = repository;
-
     }
 
     [AllowAnonymous]
     [HttpGet]
     public async Task<IReadOnlyCollection<UserDTO>> Get()
         => await _repository.ReadAllAsync();
-
 
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,7 +51,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserDTO>> GetStudent(int id)
         => (await _repository.ReadStudent(id)).ToActionResult();
 
-
     [Authorize]
     [Route("Students")]
     [ProducesResponseType(typeof(StudentDTO), 201)]
@@ -75,7 +71,7 @@ public class UsersController : ControllerBase
             return new ConflictResult();
         }
 
-        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+        return CreatedAtAction(nameof(Get), created.Id, created);
     }
 
     [Authorize]
@@ -98,6 +94,6 @@ public class UsersController : ControllerBase
             return new ConflictResult();
         }
 
-        return CreatedAtAction(nameof(Get), created.Id, created); //Changed: new {created.Item2.Id}
+        return CreatedAtAction(nameof(Get), created.Id, created);
     }
 }

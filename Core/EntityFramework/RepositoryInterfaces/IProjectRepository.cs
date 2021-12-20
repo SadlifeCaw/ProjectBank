@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace ProjectBank.Core.EF.Repository;
 
 public interface IProjectRepository 
