@@ -62,6 +62,7 @@ public class ProjectsController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, [FromBody] ProjectUpdateDTO project)
     {
@@ -70,7 +71,7 @@ public class ProjectsController : ControllerBase
             return BadRequest("Id mismatch");
         }
 
-        var projectToReturn = await _repository.UpdateAsync(id, project); 
+        var projectToReturn = await _repository.UpdateAsync(id, project);
         
         return projectToReturn.ToActionResult();
     }
@@ -78,8 +79,9 @@ public class ProjectsController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [Route("Delete/{id}")]
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<IActionResult> Delete(int id, ProjectUpdateDTO project)
     {
         if(id != project.Id)

@@ -8,5 +8,5 @@ public interface ITagRepository
     Task<TagDTO> ReadTagByNameAsync(string TagName);
     Task<IReadOnlyCollection<TagDTO>> ReadAllAsync();
 
-    Task<IReadOnlyCollection<TagDTO>> ReadCollectionAsync(ICollection<int> tagIDs);
+    Task<ICollection<TagDTO>> ReadCollectionAsync(ICollection<int> tagIDs);
 }
