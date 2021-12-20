@@ -38,7 +38,7 @@
 
                      <div class="form-group">
                 <label for="MaxStudents">Max Students</label>
-                <InputNumber id="MaxStudents" class="form-control" @bind-Value="tempProject.MaxStudents"/>
+                <InputNumber id="MaxStudents" class="form-control" min="0" @bind-Value="tempProject.MaxStudents"/>
             </div>
 
 
@@ -285,6 +285,7 @@
             catch(Exception e) 
             {
                 //Not a supervisor, skip
+                continue;
             }
             yield return user;
         }

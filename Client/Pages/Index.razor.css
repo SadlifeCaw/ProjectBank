@@ -1,132 +1,72 @@
-.ProjectListDisplay{
-    width: 90%;
-    margin: 0 auto 0 auto;
-    min-height: 350px;
-    height: 10px;
-    
-    /*display:inline-block;
-    flex-wrap: nowrap;
-    overflow-y: hidden;
-    overflow-x: scroll;*/
-}
-
-.ProjectListDisplay .ProjectDisplay{
-    float: left;
-    min-width: 300px;
-    height: 100%;
-    width: 47%;
-    padding: 10px 20px 10px 20px;
-    margin: 20px 10px 0 10px;
-    background-color: #153243;
-    color: #B4B8AB;
+.project{
+    background-color:  #153243;
+    color:#B4B8AB;
+    height: 28rem;
+    width: 35rem;
+    width: 100%;
     border-radius: 10px;
-    flex: 0 0 auto;
-}
-
-.ProjectDisplay .TitleContainer {
-    height: 50px;
-    width: 100%;
-    position: relative;
-}
-
-.ProjectDisplay .TitleContainer .Title{
-    float: left;
-}
-
-.ProjectDisplay .TitleContainer .StudentDisplay{
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 30px;
-    background-color: #284B63;
-    border-radius: 1cm;
-}
-
-.StudentDisplay .StudentContent {
-    margin: 0 auto 0 auto;
-}
-
-.StudentDisplay{
-   display: flex;
-   justify-content: center;
-   align-items: center;
-}
-
-
-.Description {
-    margin-top: 10px;
-    font-style: italic;
-    height: 140px;
-}
-
-.TagDisplay {
-    width: 100%;
-    height: 50px;
-
-    overflow-y: hidden;
-    overflow-x: auto;
-}
-
-.TagDisplay ul {
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-
-    overflow-y: hidden;
-    overflow-x: auto;
-
-    display: flex;
-    flex-wrap: nowrap;
-
-    height: auto;
-}
-
-.TagDisplay ul li {
-    margin-right: 20px;
-    margin-bottom: 10px;
-    min-width: 60px;
-    text-align: center;
-    float: left;
-    display: block;
-
-    flex: 0 0 auto;
-
-    background-color: #F4F9E9;
-    color: black;
-    border-radius: 5mm;
-
-    padding: 5px 10px 5px 10px;
-}
-
-.buffer_20 {
-    height: 20px;
-}
-
-.buffer_10 {
-    height: 20px;
-}
-
-.align {
-    margin-left: 5%;
-}
-
+    display: inline-block;
+ }
+ 
+ .tagbtn{
+     background-color: #F4F9E9;
+ }
+ 
+ 
+ .nrbtn{
+     background-color: #284B63;
+     color:#B4B8AB;
+     cursor: default;
+     border-radius: 10px;
+ }
+ 
+ .tagdiv{
+   overflow: auto;
+   white-space: nowrap;
+ }
+ 
+ .tagdiv ul li{
+   display: inline-block;
+   text-align: center;
+   text-decoration: none;
+   min-width: 120px;
+   min-height: 30px;
+   border-radius: 5mm;
+   align-self: center;
+   color: black;
+ }
+ 
+ .description {
+   height: 100px;
+   overflow-x: auto;
+ }
+ 
+ .footer {
+   position: absolute;
+   bottom: 15px;
+ }
+ 
  /* width */
  ::-webkit-scrollbar {
-    width: 20px;
-    height: 10px;
-
-    border-radius: 2cm;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey;
-    border-radius: 10px;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #B4B8AB;
-    border-radius: 10px;
-  } 
+     width: 20px;
+     height: 10px;
+     border-radius: 2cm;
+   }
+   
+   /* Track */
+   ::-webkit-scrollbar-track {
+     box-shadow: inset 0 0 5px grey;
+     border-radius: 10px;
+   }
+   
+   /* Handle */
+   ::-webkit-scrollbar-thumb {
+     background: #B4B8AB;
+     border-radius: 10px;
+   } 
+ 
+   @media(max-width: 600px){
+       .project{
+           margin-bottom: 30px;
+       }
+   }

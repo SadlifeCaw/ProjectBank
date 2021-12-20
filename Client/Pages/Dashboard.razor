@@ -120,17 +120,22 @@
                             <label for="InviteFormGroup">Email Address: </label>
                             <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com" @bind="InviteEmail" @onkeypress="ClearInviteStatus">
                         </div>
-                        @if(InviteStatus == "Error while inviting user. Please make sure the email is correct.")
+                        @if(InviteStatus != string.Empty)
                         {
-                            <div class="alert alert-danger mt-2" role="alert">
-                                @InviteStatus
-                            </div>
-                        }
-                        else if(InviteStatus == "Supervisor has been added to the project.")
-                        {
-                            <div class="alert alert-success mt-2" role="alert">
-                                @InviteStatus
-                            </div>
+                            //success
+                            @if(InviteStatus == "Supervisor has been added to the project.")
+                            {
+                                <div class="alert alert-success mt-2" role="alert">
+                                    @InviteStatus
+                                </div>
+                            } 
+                            //failure
+                            else
+                            {
+                                <div class="alert alert-danger mt-2" role="alert">
+                                    @InviteStatus
+                                </div>
+                            }
                         }
                     </Body>
                     <Footer>
@@ -353,6 +358,7 @@
             catch (Exception e)
             {
                 //Not a supervisor, skip
+                continue;
             }
             yield return user;
         }
@@ -370,7 +376,8 @@
             }
             catch (Exception e)
             {
-                //Not a supervisor, skip
+                //Not a student, skip
+                continue;
             }
             yield return user;
         }
@@ -490,6 +497,11 @@
             //make sure user is a supervisor
             var supervisor = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{user.Id}");
 
+            if(project.UserIDs.Contains(supervisor.Id))
+            {
+                throw new Exception("User already added to project");
+            }
+
             var newProject = new ProjectUpdateDTO{
                 Id = project.Id,
                 AuthorID = project.AuthorID,
@@ -504,11 +516,6 @@
             };
 
             newProject.UserIDs.Add(supervisor.Id);
-
-            foreach (var item in newProject.UserIDs)
-            {
-                Console.WriteLine("Added: " + supervisor.Id);
-            }
 
             var response = await Http.PutAsJsonAsync($"api/Projects/{ProjectId}", newProject);
 
@@ -526,7 +533,14 @@
         }
         catch (Exception e)
         {
-            InviteStatus = "Error while inviting user. Please make sure the email is correct.";
+            if(e.Message == "User already added to project")
+            {
+                InviteStatus = "User already added to project";
+            }
+            else
+            {
+                InviteStatus = "Error while inviting user. Please make sure the email is correct.";
+            }
             StateHasChanged();
         }
     }

@@ -168,7 +168,7 @@ public class SeedingTests
         new Tag("Dotnet"),
         new Tag("Network"),
         new Tag("Heuristic"),
-        new Tag("Uml"),
+        new Tag("UML"),
         new Tag("Docker"),
         new Tag("C#"),
         new Tag("Golang"),
@@ -181,7 +181,8 @@ public class SeedingTests
         new Tag("Surveillance"),
         new Tag("Logistics"),
         new Tag("Military"),
-        new Tag("Agriculture")
+        new Tag("Agriculture"),
+        new Tag("Mink")
     };
         
         //Act
