@@ -145,14 +145,14 @@ public class ProjectControllersTests
         var response = await controller.Put(1, project);
 
         // Assert
-        Assert.IsType<NoContentResult>(response);
+        Assert.IsType<OkResult>(response);
     }
     [Fact]
     public async Task Put_given_unknown_id_returns_NotFound()
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
-        var project = new ProjectUpdateDTO{Id = 2};
+        var project = new ProjectUpdateDTO { Id = 2 };
         var repository = new Mock<IProjectRepository>();
         repository.Setup(m => m.UpdateAsync(2, project)).ReturnsAsync(Response.NotFound);
         var controller = new ProjectsController(logger.Object, repository.Object);
@@ -161,6 +161,41 @@ public class ProjectControllersTests
         var response = await controller.Put(2, project);
 
         // Assert
+        Assert.IsType<NotFoundResult>(response);
+    }
+
+    [Fact]
+    public async Task Delete_deletes_project()
+    {
+        //Arrange 
+        // Arrange
+        var logger = new Mock<ILogger<ProjectsController>>();
+        var project = new ProjectUpdateDTO { Id = 1 };
+        var repository = new Mock<IProjectRepository>();
+        repository.Setup(m => m.DeleteAsync(1, project)).ReturnsAsync(Response.Deleted);
+        var controller = new ProjectsController(logger.Object, repository.Object);
+
+        //Act
+        var response = await controller.Delete(1, project);
+
+        //Assert
+        Assert.IsType<NoContentResult>(response);
+    }
+
+    [Fact]
+    public async Task Delete_given_already_deleted_project_returns_conflict()
+    { 
+        // Arrange
+        var logger = new Mock<ILogger<ProjectsController>>();
+        var project = new ProjectUpdateDTO { Id = 1 };
+        var repository = new Mock<IProjectRepository>();
+        repository.Setup(m => m.DeleteAsync(1, project)).ReturnsAsync(Response.Conflict);
+        var controller = new ProjectsController(logger.Object, repository.Object);
+
+        //Act
+        var response = await controller.Delete(1, project);
+
+        //Assert
         Assert.IsType<ConflictResult>(response);
     }
 }

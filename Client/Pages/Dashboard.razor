@@ -206,7 +206,7 @@
                                         }
                                     </ul>
                                 </div>
-                                <a href="Projects/@relatedProject.Id" class="btn btn-primary footer">@more</a>
+                                <a @onclick="@(e => ChangePageToProject(relatedProject.Id))" class="btn btn-primary footer">@more</a>
                             </div>
                         </div>
                     </div>
@@ -254,7 +254,7 @@
     private bool loadingRelatedProjects = false;
     private bool noRelatedProjects = false;
     private bool sameCategory = true;
-    private int maxRelatedProjects = 10; 
+    private int maxRelatedProjects = 10;
 
     private UserDTO CurrentUser;
 
@@ -447,5 +447,12 @@
 
             NavigationManager.NavigateTo(uri);
         }
+    }
+
+    private void ChangePageToProject(int projectID)
+    {
+        var uri = $"{NavigationManager.BaseUri}Projects/{projectID}";
+        NavigationManager.NavigateTo($"{NavigationManager.BaseUri}Projects");
+        NavigationManager.NavigateTo(uri);
     }
 }

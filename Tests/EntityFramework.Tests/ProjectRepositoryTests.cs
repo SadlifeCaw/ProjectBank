@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Internal;
+
 namespace EntityFramework.Tests;
 
 public class ProjectRepositoryTests : IDisposable
@@ -37,7 +39,9 @@ public class ProjectRepositoryTests : IDisposable
         
         context.Projects.AddRange(
             new Project{Id = 1, Title = "Best Project", Description = "Simply the best project to be a part of.", Status = ProjectStatus.PUBLIC, Category = ituInst, Tags = new List<Tag>(){Tag1}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5},
-            new Project{Id = 2, Title = "Worst Project", Description = "Don't join this project.", Status = ProjectStatus.PUBLIC, Category = ituInst, Tags = new List<Tag>(){Tag2}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5}
+            new Project{Id = 2, Title = "Worst Project", Description = "Don't join this project.", Status = ProjectStatus.PUBLIC, Category = ituInst, Tags = new List<Tag>(){Tag2}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5},
+            new Project{Id = 3, Title = "Deleted Project", Description = "It's deleted.", Status = ProjectStatus.DELETED, Category = ituInst, Tags = new List<Tag>(){Tag2}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5}
+        
         );
 
         context.SaveChanges();
@@ -76,7 +80,7 @@ public class ProjectRepositoryTests : IDisposable
 
         var i = created.Item2;
         
-        var option = await _repository.ReadByIDAsync(3);
+        var option = await _repository.ReadByIDAsync(4);
         var created2 = option.Value;
 
         //Assert
@@ -84,7 +88,7 @@ public class ProjectRepositoryTests : IDisposable
         //For response
         Assert.Equal(Response.Created, created.Item1);
         Assert.Equal(1, i.AuthorID);
-        Assert.Equal(3, i.Id);
+        Assert.Equal(4, i.Id);
         Assert.Equal("Test Project", i.Title);
         Assert.Equal("This is a test project",i.Description);
         Assert.Equal(ProjectStatus.PUBLIC, i.Status);
@@ -96,7 +100,7 @@ public class ProjectRepositoryTests : IDisposable
 
         //For database
         Assert.Equal(1, created2.AuthorID);
-        Assert.Equal(3, created2.Id);
+        Assert.Equal(4, created2.Id);
         Assert.Equal("Test Project", created2.Title);
         Assert.Equal("This is a test project",created2.Description);
         Assert.Equal(ProjectStatus.PUBLIC, created2.Status);
@@ -126,10 +130,10 @@ public class ProjectRepositoryTests : IDisposable
     [Fact]
     public async void ReadAllAsync_returns_all_projects()
     {
-
         var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
-
+        var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
+        //var project3 = new Project{3,"Deleted Project", Description = "It's deleted.", Status = ProjectStatus.DELETED, Category = ituInst, Tags = new List<Tag>(){Tag2}, Users = new List<User>(), Buckets = new List<ProjectBucket>(), Author = Supervisor1, MaxStudents = 5};
         var projects = await _repository.ReadAllAsync();
 
         Assert.Collection(projects,
@@ -158,6 +162,19 @@ public class ProjectRepositoryTests : IDisposable
                 Assert.Equal(project2.TagIDs, project.TagIDs);
                 Assert.Equal(project2.UserIDs, project.UserIDs);
                 Assert.Equal(project2.BucketIDs, project.BucketIDs);
+           },
+           project => 
+           {
+                Assert.Equal(project3.Id, project.Id);
+                Assert.Equal(project3.AuthorID, project.AuthorID);
+                Assert.Equal(project3.Title, project.Title);
+                Assert.Equal(project3.Description, project.Description);
+                Assert.Equal(project3.Status, project.Status);
+                Assert.Equal(project3.MaxStudents, project.MaxStudents);
+                Assert.Equal(project3.CategoryID, project.CategoryID);
+                Assert.Equal(project3.TagIDs, project.TagIDs);
+                Assert.Equal(project3.UserIDs, project.UserIDs);
+                Assert.Equal(project3.BucketIDs, project.BucketIDs);
            }
         );
     }
@@ -303,7 +320,8 @@ public class ProjectRepositoryTests : IDisposable
 
         var project1 = new ProjectDTO(1, 1, "Best Project", "Simply the best project to be a part of.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         var project2 = new ProjectDTO(2, 1, "Worst Project", "Don't join this project.", ProjectStatus.PUBLIC, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
-        var project3 = new ProjectDTO(3, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
+        var project3 = new ProjectDTO(3, 1, "Deleted Project", "It's deleted.", ProjectStatus.DELETED, 5, 2, new List<int>(){2}, new List<string>(){"Testing"}, new List<int>(), new List<int>());
+        var project4 = new ProjectDTO(3, 2, "Test Project", "This is a test project", ProjectStatus.PUBLIC, 3, 1, new List<int>(){1}, new List<string>(){"Programming"}, new List<int>(), new List<int>());
         
         var projects = await _repository.ReadAllAuthoredAsync(1);
 
@@ -333,12 +351,7 @@ public class ProjectRepositoryTests : IDisposable
                 Assert.Equal(project2.TagIDs, project.TagIDs);
                 Assert.Equal(project2.UserIDs, project.UserIDs);
                 Assert.Equal(project2.BucketIDs, project.BucketIDs);
-           }
-        );
-
-        var projects2 = await _repository.ReadAllAuthoredAsync(2);
-
-        Assert.Collection(projects2,
+           },
            project => 
            {
                 Assert.Equal(project3.Id, project.Id);
@@ -351,6 +364,24 @@ public class ProjectRepositoryTests : IDisposable
                 Assert.Equal(project3.TagIDs, project.TagIDs);
                 Assert.Equal(project3.UserIDs, project.UserIDs);
                 Assert.Equal(project3.BucketIDs, project.BucketIDs);
+           }
+        );
+
+        var projects2 = await _repository.ReadAllAuthoredAsync(2);
+
+        Assert.Collection(projects2,
+           project => 
+           {
+                Assert.Equal(project4.Id, project.Id);
+                Assert.Equal(project4.AuthorID, project.AuthorID);
+                Assert.Equal(project4.Title, project.Title);
+                Assert.Equal(project4.Description, project.Description);
+                Assert.Equal(project4.Status, project.Status);
+                Assert.Equal(project4.MaxStudents, project.MaxStudents);
+                Assert.Equal(project4.CategoryID, project.CategoryID);
+                Assert.Equal(project4.TagIDs, project.TagIDs);
+                Assert.Equal(project4.UserIDs, project.UserIDs);
+                Assert.Equal(project4.BucketIDs, project.BucketIDs);
            }
         );
     }
@@ -584,15 +615,11 @@ public class ProjectRepositoryTests : IDisposable
     public async void UpdateAsync_returns_NotFound_if_project_does_not_exist()
     {
         var NonExistingID = new ProjectUpdateDTO{Id = 999, AuthorID = 1, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
-        var NonExistingAuthor = new ProjectUpdateDTO{Id = 1, AuthorID = 999, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+        //var NonExistingAuthor = new ProjectUpdateDTO{Id = 1, AuthorID = 999, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
 
         var CreatedNonExistingID = await _repository.UpdateAsync(-1,NonExistingID);
-        //not really the responsibility of UpdateAsync to make sure a project has an author
-        //if it can find project by ID, the project should have an author
-        //var CreatedNonExistingAuthor = await _repository.UpdateAsync(-1,NonExistingAuthor);
 
         Assert.Equal(Response.NotFound, CreatedNonExistingID);
-        //Assert.Equal(Response.NotFound, CreatedNonExistingAuthor);
     } 
 
     [Fact]
@@ -603,6 +630,66 @@ public class ProjectRepositoryTests : IDisposable
         var CreatedNonExistingCategory = await _repository.UpdateAsync(-1,NonExistingCategory);
 
         Assert.Equal(Response.NotFound, CreatedNonExistingCategory);
+    }
+
+    [Fact]
+    public async void DeleteAsync_returns_NotFound_if_provided_project_does_not_exists()
+    {
+        //Arrange
+        var NonExistingID = new ProjectUpdateDTO{Id = 99, AuthorID = 1, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 2, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+        
+        //Act
+        var response = await _repository.DeleteAsync(99, NonExistingID);
+
+        //Assert
+        Assert.Equal(Response.NotFound, response);
+    }
+
+    [Fact]
+    public async void DeleteAsync_returns_NotFound_if_provided_category_does_not_exists()
+    {
+        //Arrange
+        var NonExistingCategory = new ProjectUpdateDTO{Id = 1, AuthorID = 1, Title = "Best Updated Project", Description = "Simply the updated project", Status = ProjectStatus.PUBLIC, MaxStudents = 3, CategoryID = 999, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+        
+        //Act
+        var response = await _repository.DeleteAsync(1,NonExistingCategory);
+
+        //Assert
+        Assert.Equal(Response.NotFound, response);
+    }
+
+    [Fact]
+    public async void DeleteAsync_returns_Conflict_if_provided_project_is_already_deleted_exists()
+    {
+        //Arrange
+        var Deletedproject = new ProjectUpdateDTO{Id = 3, AuthorID = 1, Title = "Deleted Project", Description = "It's deleted.", Status = ProjectStatus.DELETED, MaxStudents = 5, CategoryID = 1, TagIDs = new List<int>(){1}, UserIDs = new List<int>(), BucketIDs = new List<int>()};
+        //Act
+        var response = await _repository.DeleteAsync(3, Deletedproject);
+        //Assert
+        Assert.Equal(Response.Conflict, response);
+    }
+
+    [Fact]
+    public async void DeleteAsync_returns_Deleted_if_succes()
+    {
+        //Arrange
+        var DeletedProject = new ProjectUpdateDTO
+        {
+           Id = 1,
+           AuthorID = 1,
+           Title = "Best Updated Project",
+           Description = "Simply the updated project",
+           Status = ProjectStatus.PUBLIC,
+           MaxStudents = 3,
+           CategoryID = 2,
+           TagIDs = new List<int>(){1},
+           UserIDs = new List<int>(),
+           BucketIDs = new List<int>()
+        };
+        //Act
+        var response = await _repository.DeleteAsync(1, DeletedProject);
+        //Assert
+        Assert.Equal(Response.Deleted, response);
     }
 
     protected virtual void Dispose(bool disposing)
