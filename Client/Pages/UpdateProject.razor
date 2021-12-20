@@ -33,10 +33,16 @@
                     </div>
                     <div class="form-group">
                         <label for="Description">Update description</label>
-                        <InputTextArea id="Description" @bind-Value="@tempProject.Description" class="form-control" rows="7"/>
+                        <InputTextArea id="Description" @bind-Value="tempProject.Description" class="form-control" rows="7"/>
                     </div>
 
-                    <div class="form-group">
+                     <div class="form-group">
+                <label for="MaxStudents">Max Students</label>
+                <InputNumber id="MaxStudents" class="form-control" @bind-Value="tempProject.MaxStudents"/>
+            </div>
+
+
+                    <div class="form-group mt-4">
                     <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
                         <div class="TagContainer">
                             <ul>
@@ -112,6 +118,7 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private UserDTO CurrentUser;
+
     string title = "Loading title...";
     string empty = string.Empty;
     string description = "Loading description...";
@@ -171,7 +178,7 @@
             Title = tempProject.Title,
             Description = tempProject.Description,
             Status = tempProject.Status,
-            MaxStudents = project.MaxStudents,
+            MaxStudents = tempProject.MaxStudents,
             CategoryID = tempProject.CategoryID, 
             BucketIDs = new List<int>(),
             UserIDs = new List<int>(),

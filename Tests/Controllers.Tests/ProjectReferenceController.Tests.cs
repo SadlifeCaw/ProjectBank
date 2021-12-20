@@ -24,7 +24,7 @@ public class ProjectReferenceControllerTests
     }*/
     
 
-    /* Testing code mainly taken from Rasmus Lybæk
+    /* Testing code mainly taken from Rasmus Lystrøm
     *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
     */
   /*  [Fact]
@@ -54,7 +54,7 @@ public class ProjectReferenceControllerTests
         Assert.IsType<NoContentResult>(response);
     }*/
 
-    /* Testing code mainly taken from Rasmus Lybæk
+    /* Testing code mainly taken from Rasmus Lystrøm
     *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
     */
  /*   [Fact]
