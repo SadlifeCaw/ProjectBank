@@ -173,13 +173,4 @@ public class BucketRepository : IBucketRepository
             yield return project;
         }
     }
-
-    private async Task<Project> GetProjectAsync(int projectID)//Not in use
-    {
-        return await _dbcontext.Projects
-                    .Where(p => p.Id == projectID)
-                    .Select(p => p)
-                    .FirstOrDefaultAsync();
-
-    }
 }

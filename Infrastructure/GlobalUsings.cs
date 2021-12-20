@@ -5,4 +5,3 @@ global using System.Collections.Concurrent;
 global using ProjectBank.Core;
 global using ProjectBank.Core.EF.DTO;
 global using ProjectBank.Core.EF.Repository;
-global using static ProjectBank.Core.ProjectStatus;

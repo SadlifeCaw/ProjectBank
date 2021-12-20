@@ -1,7 +1,5 @@
 using System.Data;
 using System.Text;
-using System.Linq;
-using System.Collections.Concurrent;
 using ProjectBank.Infrastructure.Entities;
 
 namespace ProjectBank.Infrastructure.ReferenceSystem
@@ -9,8 +7,8 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
     public class LocalitySensitiveHashTable<Tagable> 
     where Tagable : ITagable
     {
-        private int groupSize = 2;
-        private int k = 6;
+        private readonly int groupSize = 2;
+        private readonly int k = 6;
         public int NumberOfGroups;
         public ConcurrentDictionary<string, Bucket<Tagable>> Map;
 

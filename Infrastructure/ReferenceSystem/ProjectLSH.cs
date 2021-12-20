@@ -4,9 +4,9 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
 {
     public class ProjectLSH : LocalitySensitiveHashTable<IProject>, IProjectLSH
     {
-        private IProjectRepository _projectRepository;
-        private ITagRepository _tagRepository;
-        private ICategoryRepository _categoryRepository;
+        private readonly IProjectRepository _projectRepository;
+        private readonly ITagRepository _tagRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public ProjectLSH(IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
         {

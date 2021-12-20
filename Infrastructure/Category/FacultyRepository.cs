@@ -1,4 +1,3 @@
-
 namespace ProjectBank.Infrastructure;
 
  public class FacultyRepository : IFacultyRepository
