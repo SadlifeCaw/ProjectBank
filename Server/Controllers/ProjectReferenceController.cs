@@ -17,7 +17,7 @@ namespace ProjectBank.Server.Controllers
 
 
 
-        public ProjectReferenceController(ILogger<ProjectReferenceController> logger, IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository) //IProjectLSH LSH)
+        public ProjectReferenceController(ILogger<ProjectReferenceController> logger, IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
         {
             _logger = logger;
             if (ProjectReferenceData._LSH == null)
