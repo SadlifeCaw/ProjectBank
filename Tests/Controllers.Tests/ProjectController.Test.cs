@@ -28,7 +28,7 @@ public class ProjectControllersTests
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
         var repository = new Mock<IProjectRepository>();
-        var project = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<int>{2}, new List<int>{1, 2, 3});
+        var project = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<string>(){""}, new List<int>{2}, new List<int>{1, 2, 3});
         repository.Setup(m => m.ReadByIDAsync(42)).ReturnsAsync(project);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
@@ -63,7 +63,7 @@ public class ProjectControllersTests
         var logger = new Mock<ILogger<ProjectsController>>();
         var repository = new Mock<IProjectRepository>();
         var toCreate = new ProjectCreateDTO();
-        var created = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<int>{2}, new List<int>{1, 2, 3});
+        var created = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<string>(){""}, new List<int>{2}, new List<int>{1, 2, 3});
         repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
         var controller = new ProjectsController(logger.Object, repository.Object);
 
@@ -83,7 +83,7 @@ public class ProjectControllersTests
         var logger = new Mock<ILogger<ProjectsController>>();
         var repository = new Mock<IProjectRepository>();
         var existing = new ProjectCreateDTO();
-        var created = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<int>{2}, new List<int>{1, 2, 3});
+        var created = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<string>(){""}, new List<int>{2}, new List<int>{1, 2, 3});
         repository.Setup(m => m.CreateAsync(existing)).ReturnsAsync((Response.Conflict, created));
         var controller = new ProjectsController(logger.Object, repository.Object);
 
@@ -100,7 +100,7 @@ public class ProjectControllersTests
         var logger = new Mock<ILogger<ProjectsController>>();
         var repository = new Mock<IProjectRepository>();
         var existing = new ProjectCreateDTO();
-        var created = new ProjectDTO(1, -10, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<int>{2}, new List<int>{1, 2, 3});
+        var created = new ProjectDTO(1, -10, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<string>(){""}, new List<int>{2}, new List<int>{1, 2, 3});
         repository.Setup(m => m.CreateAsync(existing)).ReturnsAsync((Response.NotFound, created));
         var controller = new ProjectsController(logger.Object, repository.Object);
 

@@ -24,7 +24,7 @@ public class CategoriesControllerTests
         // Arrange
         var logger = new Mock<ILogger<ProjectsController>>();
         var repository = new Mock<IProjectRepository>();
-        var project = new ProjectDTO(42, 1, "My project", "My description", ProjectStatus.PUBLIC, 5, 1, new List<int>(), new List<int>(), new List<int>());
+        var project = new ProjectDTO(42, 1, "My project", "My description", ProjectStatus.PUBLIC, 5, 1, new List<int>(), new List<string>(), new List<int>(), new List<int>());
         repository.Setup(m => m.ReadByIDAsync(42)).ReturnsAsync(project);
         var controller = new ProjectsController(logger.Object, repository.Object);
 
