@@ -18,6 +18,5 @@ public class TeachingProgram : CodedCategory
         this.Courses = Courses;
     }
 
-    // Empty constructor to please the EF Gods
     public TeachingProgram() {}
 }

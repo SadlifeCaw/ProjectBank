@@ -26,7 +26,6 @@ namespace ProjectBank.Infrastructure;
             }
 
             //finds the Faculty related to the institution by its id
-            //this should (maybe?) not be this class's responsibility
             var EntityFaculty =
                 await _dbcontext.Faculties
                               .Where(f => f.Title == program.FacultyName)

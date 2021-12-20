@@ -7,8 +7,6 @@ namespace ReferenceSystem.Tests
     public class HashBuilderTests
     {
 
-        HashBuilder builder = new HashBuilder();
-
         [Fact]
         public void HashString_Returns_SHA1()
         {
@@ -17,7 +15,7 @@ namespace ReferenceSystem.Tests
             var teststring = "algorithms";
 
             //Act
-            var actual = builder.HashString(teststring, SHA1.Create());
+            var actual = HashBuilder.HashString(teststring, SHA1.Create());
 
             //Assert
             Assert.Equal(expected, actual);
@@ -31,7 +29,7 @@ namespace ReferenceSystem.Tests
             var teststring = "datastructures";
 
             //Act
-            var actual = builder.HashString(teststring, SHA256.Create());
+            var actual = HashBuilder.HashString(teststring, SHA256.Create());
 
             //Assert
             Assert.Equal(expected, actual);
@@ -45,8 +43,7 @@ namespace ReferenceSystem.Tests
             var teststring = "stringtheory";
 
             //Act
-            var actual = builder.HashString(teststring, SHA384.Create());
-
+            var actual = HashBuilder.HashString(teststring, SHA384.Create());
             //Assert
             Assert.Equal(expected, actual);
         }
@@ -59,8 +56,7 @@ namespace ReferenceSystem.Tests
             var teststring = "globaldevelopment";
 
             //Act
-            var actual = builder.HashString(teststring, SHA512.Create());
-
+            var actual = HashBuilder.HashString(teststring, SHA512.Create());
             //Assert
             Assert.Equal(expected, actual);
         }
@@ -73,8 +69,8 @@ namespace ReferenceSystem.Tests
             var teststring = "islamichistory";
 
             //Act
-            var actual = builder.HashString(teststring, MD5.Create());
             
+            var actual = HashBuilder.HashString(teststring, MD5.Create());
             //Assert
             Assert.Equal(expected, actual);
         }

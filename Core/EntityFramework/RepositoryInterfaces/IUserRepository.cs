@@ -11,5 +11,4 @@ public interface IUserRepository
     Task<IReadOnlyCollection<UserDTO>> ReadAllAsync();
     Task<IReadOnlyCollection<StudentDTO>> ReadAllStudentsAsync();
     Task<IReadOnlyCollection<SupervisorDTO>> ReadAllSupervisorsAsync();
-    Task<Response> UpdateUserProjects(int userID, ProjectKeyDTO project);
 }
