@@ -12,8 +12,8 @@ using ProjectBank.Infrastructure;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectBankContext))]
-    [Migration("20211220174748_LastMigration")]
-    partial class LastMigration
+    [Migration("20211220205653_NewMigration")]
+    partial class NewMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
