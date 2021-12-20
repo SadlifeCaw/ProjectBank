@@ -391,7 +391,6 @@
     {
         foreach (var userID in userIDs)
         {
-            //yield return await Http.GetFromJsonAsync<UserDTO>($"api/Users/Students/{userID}");
             UserDTO user = new UserDTO(-1, string.Empty, string.Empty, string.Empty, new List<int>());
             try
             {
@@ -424,8 +423,7 @@
         this.loadingRelatedProjects = true;
         try
         {
-            //this.related = await GetRelated(project.Id, this.maxRelatedProjects);
-            //this.relatedProjects = await ReferenceToProject(related);
+            
         }
         catch (Exception exception)
         {

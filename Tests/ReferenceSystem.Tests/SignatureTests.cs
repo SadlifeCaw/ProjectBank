@@ -14,8 +14,6 @@ namespace ReferenceSystem.Tests
         static readonly string expectedAgricultureSHA512 = "8e92a5e09ab90a391102756ea6496af289b5eefd9c6ffa3453b1987f725381953ffa3b43fc63d7dd5b6af3859e40e3bf654da02b722392f10d204f354e2d9e1e";
         static readonly string expectedAgricultureNoHash = "agriculture";
         static readonly List<string> expectedAgriculture = new List<string> { expectedAgricultureSHA1, expectedAgricultureSHA256, expectedAgricultureMD5, expectedAgricultureSHA384, expectedAgricultureSHA512, expectedAgricultureNoHash };
-
-        //computer sciencereadonly 
         static readonly string expectedComputerScienceSHA256 = "13a5670cc77404aa14b878e0b1a82651e705d21f7ba2956918a1406b26871a1f";
         static readonly string expectedComputerScienceSHA384 = "8c067704ddd0e69aee028cfec66fe56f1d192a65ce51e7512adee32e5c0b53e4cb76b92af6ca49302301e4a775a8016c";
         

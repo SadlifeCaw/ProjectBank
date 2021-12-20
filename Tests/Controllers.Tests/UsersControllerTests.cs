@@ -169,7 +169,6 @@ public class UsersControllers
         // Assert
         Assert.Equal(created, result?.Value);
         Assert.Equal("Get", result?.ActionName);
-        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 
     [Fact]
