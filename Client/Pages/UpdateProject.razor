@@ -173,9 +173,9 @@
             Status = tempProject.Status,
             MaxStudents = project.MaxStudents,
             CategoryID = tempProject.CategoryID, 
-            BucketIDs = new List<int>(),
-            UserIDs = new List<int>(),
-            TagIDs = new List<int>(),
+            BucketIDs = project.BucketIDs,
+            UserIDs = project.UserIDs,
+            TagIDs = project.TagIDs,
         };
 
         Console.WriteLine("The category id is: " + updateproject.CategoryID);
