@@ -2,6 +2,99 @@ namespace ProjectBank.Tests.Controllers.Tests;
 
 public class ProjectReferenceControllerTests
 {
+   /*  [Fact]
+    public async Task Get_given_non_existing_returns_NotFound()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<ProjectReferenceController>>();
+        
+        //Repository
+        var ProjectRepository = new Mock<IProjectRepository>();
+        var TagRepository = new Mock<ITagRepository>();
+        var CategoryRepository = new Mock<ICategoryRepository>();
+
+        ProjectRepository.Setup(m => m.ReadByIDAsync(2002)).ReturnsAsync(default(ProjectDTO));
+        var controller = new ProjectReferenceController(logger.Object, ProjectRepository.Object, TagRepository.Object, CategoryRepository.Object);
+
+        // Act
+        var response = await controller.GetSorted(42, 10);
+
+        // Assert
+        Assert.IsType<NotFoundResult>(response.Result);
+    }*/
+    
+
+    /* Testing code mainly taken from Rasmus Lybæk
+    *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+    */
+  /*  [Fact]
+    public async Task GetSorted_Returns_Sorted()
+    {
+        var logger = new Mock<ILogger<ProjectReferenceController>>();
+        
+        //Repository
+        var ProjectRepository = new Mock<IProjectRepository>();
+        var TagRepository = new Mock<ITagRepository>();
+        var CategoryRepository = new Mock<ICategoryRepository>();
+
+        ProjectRepository.Setup(m => m.ReadByIDAsync(42)).ReturnsAsync(default(ProjectDTO));
+        //ProjectRepository.Setup(m => m.ReadByIDAsync(199)).ReturnsAsync(default(ProjectDTO));
+       // ProjectRepository.Setup(m => m.ReadByIDAsync(199)).ReturnsAsync(default(ProjectDTO));
+
+        var controller = new ProjectReferenceController(logger.Object, ProjectRepository.Object, TagRepository.Object, CategoryRepository.Object);
+
+        // Act
+        var response = await controller.GetSorted(42, 10);
+       // Assert.();
+/*
+        // Act
+        var response = await controller.Put(1, project);
+
+        // Assert
+        Assert.IsType<NoContentResult>(response);
+    }*/
+
+    /* Testing code mainly taken from Rasmus Lybæk
+    *  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+    */
+ /*   [Fact]
+    public async Task Post_Adds_Project()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<ProjectsController>>();
+        var repository = new Mock<IProjectRepository>();
+        var toCreate = new ProjectCreateDTO();
+        var created = new ProjectDTO(1, 1, "Project: ", "Description", ProjectStatus.PUBLIC, 3, 1, new List<int>{1}, new List<int>{2}, new List<int>{1, 2, 3}
+        );
+        repository.Setup(m => m.CreateAsync(toCreate)).ReturnsAsync((Response.Created, created));
+        var controller = new ProjectsController(logger.Object, repository.Object);
+
+        // Act
+        var result = await controller.Post(toCreate) as CreatedAtActionResult;
+
+        // Assert
+        Assert.Equal(created, result?.Value);
+        Assert.Equal("Get", result?.ActionName);
+        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
+    }*/
+
+
+     /*[Fact]
+    public async Task Put_given_unknown_id_returns_NotFound()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<ProjectsController>>();
+        var project = new ProjectUpdateDTO{Id = 2};
+        var repository = new Mock<IProjectRepository>();
+        repository.Setup(m => m.UpdateAsync(2, project)).ReturnsAsync(Response.NotFound);
+        var controller = new ProjectsController(logger.Object, repository.Object);
+
+        // Act
+        var response = await controller.Put(2, project);
+
+        // Assert
+        Assert.IsType<ConflictResult>(response);
+    }*/
     /*[Fact]
     public async Task Get_given_non_existing_returns_NotFound()
     {

@@ -5,7 +5,7 @@ public class Course : CodedCategory
     [Required]
     public IEnumerable<TeachingProgram> Programs {get; set;}
 
-    public override IReadOnlyCollection<IHierarchy> GetAllRelated()
+   /* public override IReadOnlyCollection<IHierarchy> GetAllRelated()
     {
         var related = new List<IHierarchy>();
         related.Add(this);
@@ -14,7 +14,7 @@ public class Course : CodedCategory
         related.AddRange(Faculties);
         related.AddRange(Faculties.Select(s => s.Institution));
         return related.AsReadOnly();
-    }
+    }*/
 
     
     public IEnumerable<Student> Students {get; set;}

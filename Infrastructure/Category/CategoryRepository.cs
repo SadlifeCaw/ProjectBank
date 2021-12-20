@@ -3,6 +3,10 @@ namespace ProjectBank.Infrastructure;
 public class CategoryRepository : ICategoryRepository
 {
     private readonly ProjectBankContext _dbcontext;
+    /*private readonly ICourseRepository _courseRepository;
+    private readonly IFacultyRepository _facultyRepository;
+    private readonly IInstitutionRepository _insitutionRepository;
+    private readonly ITeachingProgramRepository _teachingProgramRepository;*/
 
     public CategoryRepository(ProjectBankContext context)
     {
