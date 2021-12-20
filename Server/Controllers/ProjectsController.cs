@@ -80,7 +80,7 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Route("Delete/{id}")]
-    [HttpPut("{id}")]
+    [HttpPut]
     public async Task<IActionResult> Delete(int id, ProjectUpdateDTO project)
     {
         if(id != project.Id)
