@@ -53,7 +53,6 @@ namespace ReferenceSystem.Tests
         IList<ProjectLSH> LSHList;
         public ProjectLSHTests()
         {
-            //SQL lite
             var connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
 
@@ -75,7 +74,6 @@ namespace ReferenceSystem.Tests
             context.Users.Add(Villum);
             context.Users.Add(Anton);
             context.Users.Add(Supervisor1);
-            //await context.SaveChanges();
 
             context.Tags.Add(Agriculture);
             context.Tags.Add(ComputerScience);
@@ -94,15 +92,12 @@ namespace ReferenceSystem.Tests
 
             context.SaveChanges();
 
-
-            //SMALL LSH:
             AgricultureFood = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 1, Author = Supervisor1, Title = "AgricultureFood", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
             ComputerScienceSimulationAlgorithmsAgriculture = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 2, Author = Supervisor1, Title = "ComputerScienceSimulationAlgorithms", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
             ComputerScienceAlgorithmsSecurity = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 3, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSecurity", Description = "ComputerScienceAlgorithmsSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
             AgricultureFarming = new Project { Category = UIDesign, Tags = new List<Tag> { Agriculture, Farming, Food }, Id = 4, Author = Supervisor1, Title = "AgricultureFarming", Description = "AgricultureFarming", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
             ComputerScienceAlgorithmsSimulationSecurity = new Project { Category = InteractiveDesign, Tags = new List<Tag> { ComputerScience, Algorithms, Simulation, Security }, Id = 5, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSimulationSecurity", Description = "ComputerScienceAlgorithmsSimulationSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
 
-            //LARGE LSH:
             AgricultureFoodIdentical = new Project { Category = ITU, Tags = new List<Tag> { Agriculture, Food }, Id = 6, Author = Supervisor1, Title = "AgricultureFoodIdentical", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
             ComputerScienceSimulationAlgorithmsAgricultureIdentical = new Project { Category = ITU, Tags = new List<Tag> { ComputerScience, Simulation, Algorithms, Agriculture }, Id = 7, Author = Supervisor1, Title = "ComputerScienceSimulationAlgorithmsIdentical", Description = "ComputerScienceSimulationAlgorithmsAgriculture", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
             ComputerScienceAlgorithmsSecurityIdentical = new Project { Category = IntroductoryProgramming, Tags = new List<Tag> { ComputerScience, Algorithms, Security }, Id = 8, Author = Supervisor1, Title = "ComputerScienceAlgorithmsSecurityIdentical", Description = "ComputerScienceAlgorithmsSecurityIdentical", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
@@ -167,19 +162,10 @@ namespace ReferenceSystem.Tests
             var _tagRepository = new TagRepository(_context);
             var _categoryRepository = new CategoryRepository(_context);
 
-            /*LSH = new ProjectLSH(_bucketRepository, _projectRepository, _context);
-            
-            LSH.Insert(AgricultureFarming);
-            LSH.Insert(ComputerScienceSimulationAlgorithmsAgriculture);
-            LSH.Insert(ComputerScienceAlgorithmsSecurity);
-            LSH.Insert(AgricultureFood);
-            LSH.Insert(ComputerScienceAlgorithmsSimulationSecurity);*/
-
             LargeLSH = new ProjectLSH(_projectRepository, _tagRepository, _categoryRepository);
 
             LSHList = new List<ProjectLSH>();
-            //LSHList.Add(LSH); //Index 0
-            LSHList.Add(LargeLSH); //Index 1
+            LSHList.Add(LargeLSH); 
         }
 
         private async Task<Response> inserts()
@@ -298,7 +284,7 @@ namespace ReferenceSystem.Tests
             IEnumerable<Tag> expectedTags = new List<Tag> { Agriculture, Farming, Food }.AsEnumerable();
 
             //Act
-            await LargeLSH.Update(AgricultureFarming);
+            LargeLSH.Update(AgricultureFarming);
 
             IEnumerable<Tag> actualTags = new List<Tag> { };
 
@@ -444,7 +430,7 @@ namespace ReferenceSystem.Tests
         }
         //TAKE THIS BACK
         [Fact]
-        public async void Insert_Adds_BucketGroup_If_Non_Existant()
+        public void Insert_Adds_BucketGroup_If_Non_Existant()
         {
             //Arrange
             //_context.Users.;
@@ -469,9 +455,9 @@ namespace ReferenceSystem.Tests
             var AgriFoodSignature = new Signature(AgricultureFood.Tags);
 
             //Act
-            await TestLSH.Insert(AgricultureFarming);
+            TestLSH.Insert(AgricultureFarming);
             var bucketSizeBeforeInsert = TestLSH.Map.Count();//(await bucketRepo.ReadAllAsync()).Count();//_context.Buckets.Count();//
-            await TestLSH.Insert(AgricultureFood);
+            TestLSH.Insert(AgricultureFood);
             var bucketSizeAfterInsert = TestLSH.Map.Count();//(await bucketRepo.ReadAllAsync()).Count();//_context.Buckets.Count();// 
             int notCommon = 0;
             for (int i = 0; i < AgriFarmSignature.Hashes.Count(); i++)
@@ -496,7 +482,7 @@ namespace ReferenceSystem.Tests
             var ComputerSecurity = new Project { Tags = new List<Tag> { ComputerScience, Security }, Id = 8, Author = null, Title = "ComputerSecurity", Description = "ComputerScienceSecurity", Status = ProjectBank.Core.ProjectStatus.PUBLIC };
 
             //Act
-            var actual = await LargeLSH.Update(ComputerSecurity);
+            var actual = LargeLSH.Update(ComputerSecurity);
 
             //Assert
             Assert.Equal(Response.NotFound, actual);
@@ -506,7 +492,7 @@ namespace ReferenceSystem.Tests
         public async void Insert_Returns_Conflict_If_Project_Exists()
         {
             await LargeLSH.InsertAll();
-            var actual = await LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
+            var actual = LargeLSH.Insert(ComputerScienceAlgorithmsSecurity);
             Assert.Equal(Response.Conflict, actual);
             //Assert.Throws<ArgumentException>(() => LargeLSH.Insert(ComputerScienceAlgorithmsSecurity));
         }
@@ -516,7 +502,7 @@ namespace ReferenceSystem.Tests
 
         
         [Fact]
-        public async void If_signature_group_exists_it_gets_added_to_existing_bucket()
+        public void If_signature_group_exists_it_gets_added_to_existing_bucket()
         {
             //Arrange
 
@@ -552,14 +538,14 @@ namespace ReferenceSystem.Tests
             }
 
             //Act
-            await TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
+            TestLSH.Insert(ComputerScienceAlgorithmsSecurity);
             var SizeBefore = TestLSH.Map.Count();
             for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
             {
                 expected.Add(TestLSH.Map[buckets[i]].Projects.Count() + 1);
             }
 
-            await TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
+            TestLSH.Insert(ComputerScienceAlgorithmsSecurityIdentical);
             var SizeAfter = TestLSH.Map.Count();
             for (int i = 0; i < LargeLSH.NumberOfGroups; i++)
             {
@@ -635,7 +621,7 @@ namespace ReferenceSystem.Tests
             await inserts();
             //Arrange
             var example = new Project { Category = null, Tags = new List<Tag> { Agriculture, ComputerScience, Security, Algorithms, Simulation, Food, Farming }, Id = 500, Author = Supervisor1, Title = "Title6", Description = "AgricultureFood", Status = ProjectBank.Core.ProjectStatus.PUBLIC, Buckets = new List<ProjectBucket>(), Users = new List<User>(), Collaborators = new List<Supervisor>(), MaxStudents = 5 };
-            var actual =await LargeLSH.Insert(example);
+            var actual =LargeLSH.Insert(example);
             Assert.Equal(Response.Conflict, actual);
             //Act & Assert
             //Assert.Equal(test.Category, null);
@@ -968,7 +954,7 @@ namespace ReferenceSystem.Tests
                 expected += entry.Value.Projects.Count();
             }
             //Act
-            await LargeLSH.Delete(AgricultureFarming);
+            LargeLSH.Delete(AgricultureFarming);
 
             int actual = 0;
             foreach (var entry in LargeLSH.Map)

@@ -5,8 +5,7 @@ namespace ProjectBank.Infrastructure.Entities
     {
         [Required]
         public int Id {get; set;}
-        //public ISet<Tagable> Projects = new HashSet<Tagable>(); 
-        public ISet<Tagable> Projects = new HashSet<Tagable>(); //CHANGES THIS. MIGHT CAUSE PROBLEMS
+        public ISet<Tagable> Projects = new HashSet<Tagable>(); 
 
         public Bucket() {}
     }
@@ -15,7 +14,7 @@ namespace ProjectBank.Infrastructure.Entities
     [Index(nameof(Key), IsUnique = true)]
     public class ProjectBucket : Bucket<Project>
     {
-        public ISet<Project> Projects = new HashSet<Project>();
+        public new ISet<Project> Projects = new HashSet<Project>();
 
         [Required]
         public string Key {get; set;}
