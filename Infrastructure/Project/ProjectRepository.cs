@@ -282,7 +282,7 @@ public class ProjectRepository : IProjectRepository
 
     private async IAsyncEnumerable<User> GetUsersAsync(ICollection<int> inUsers)
     {
-        var existing = await _dbcontext.Users.OfType<Student>()
+        var existing = await _dbcontext.Users
                         .Where(u => inUsers
                                     .Any(inS => inS == u.Id))
                         .Select(u => u)
