@@ -25,6 +25,11 @@
             </div>
 
             <div class="form-group">
+                <label for="MaxStudents">Max Students</label>
+                <InputNumber id="MaxStudents" class="form-control" @bind-Value="project.MaxStudents"/>
+            </div>
+
+            <div class="form-group mt-4">
             <button type="button" class="btn btn-sm btn-primary" @onclick="() => GetTags()">Generate Tags</button>  
                 <div class="TagContainer">
                     <ul>
@@ -92,7 +97,7 @@
     private ProjectCreateDTO project = new();
     private ProjectStatus newStatus = ProjectStatus.DRAFT;
     private TagGenerator tagGenerator = new TagGenerator();
-
+    private int MaxStudents;
     private ISet<string> AllTags = new HashSet<string>();
     private ISet<string> CreatedTags = new HashSet<string>();
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
@@ -133,6 +138,7 @@
         Console.WriteLine(project.Status);
         Console.WriteLine(Author.Id);
         Console.WriteLine(Author.FirstName);
+        Console.WriteLine(project.MaxStudents);
 
         foreach (var item in AllTags)
         {

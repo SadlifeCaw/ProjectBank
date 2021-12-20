@@ -26,12 +26,14 @@
 }
 
 .tagdiv ul li{
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
-    min-width: 60px;
-    border-radius: 10px;
-    color: black;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  min-width: 120px;
+  min-height: 30px;
+  border-radius: 5mm;
+  align-self: center;
+  color: black;
 }
 
 .description {
