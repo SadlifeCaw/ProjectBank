@@ -29,7 +29,11 @@ namespace ProjectBank.Server.Controllers
         public ProjectReferenceController(ILogger<ProjectReferenceController> logger, IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository) //IProjectLSH LSH)
         {
             _logger = logger;
-            Task.Run(() => ProjectReferenceData.LoadLSH(projectRepository, tagRepository, categoryRepository)).Wait();
+            if (ProjectReferenceData._LSH == null)
+            {
+                ProjectReferenceData._LSH = new ProjectLSH(projectRepository, tagRepository, categoryRepository);
+                Task.Run(() => ProjectReferenceData._LSH.InsertAll()).Wait();
+            }
             _projectRepository = projectRepository;
             _tagRepository = tagRepository;
             _categoryRepository = categoryRepository;

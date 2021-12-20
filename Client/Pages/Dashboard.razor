@@ -393,8 +393,8 @@
         this.loadingRelatedProjects = true;
         try
         {
-            //this.related = await GetRelated(project.Id, this.maxRelatedProjects);
-            //this.relatedProjects = await ReferenceToProject(related);
+            this.related = await GetRelated(project.Id, this.maxRelatedProjects);
+            this.relatedProjects = await ReferenceToProject(related);
         }
         catch (Exception exception)
         {

@@ -25,11 +25,11 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             Map[bucketString] = new Bucket<Tagable>();
         }
 
-        public virtual Response Insert(Tagable tagable)
+        public virtual async Task<Response> Insert(Tagable tagable)
         {
             if (tagable.Tags.Count == 0) { return Response.Conflict; }
             var bucketStrings = HashesToBucketString(tagable.Signature);
-            foreach (string bucketString in bucketStrings)
+            await foreach (string bucketString in bucketStrings.ToAsyncEnumerable())
             {
                 if (!Map.ContainsKey(bucketString)) AddSignature(bucketString);
                 if (Map[bucketString].Projects.Where(x => x.Id == tagable.Id).ToList().Count != 0 || !Map[bucketString].Projects.Add(tagable)) { return Response.Conflict;; }
@@ -37,10 +37,10 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
             return Response.Created;
         }
 
-        public Response Update(Tagable tagable)
+        public async Task<Response> Update(Tagable tagable)
         {
             if(Delete(tagable) != Response.Deleted) return Response.NotFound;
-            return Insert(tagable);
+            return await Insert(tagable);
         }
 
         public Response Delete(Tagable tagable)

@@ -22,13 +22,13 @@ namespace Performance.Tests
 
         [Theory]
         [InlineData(10)]
-        public void Insert_performance(float seconds)
+        public async void Insert_performance(float seconds)
         {
             LocalitySensitiveHashTable<ITagable> LSHTest = new LocalitySensitiveHashTable<ITagable>();
             var timer = Stopwatch.StartNew();
             foreach (ITagable tagable in Projects)
             {
-                LSHTest.Insert(tagable);
+                await LSHTest.Insert(tagable);
             }
 
             timer.Stop();
@@ -64,7 +64,7 @@ namespace Performance.Tests
         private async static Task<LocalitySensitiveHashTable<ITagable>> GetInsertedLSH(List<ITagable> Projects){
             LocalitySensitiveHashTable<ITagable> LSH = new LocalitySensitiveHashTable<ITagable>();
             await foreach(ITagable tagable in Projects.ToAsyncEnumerable()){
-                LSH.Insert(tagable);
+                await LSH.Insert(tagable);
             }
             return LSH;
         }
