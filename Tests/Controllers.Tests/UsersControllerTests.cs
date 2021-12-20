@@ -1,3 +1,7 @@
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+*/
+
 namespace ProjectBank.Tests.Controllers.Tests;
 
 public class UsersControllers
@@ -5,7 +9,7 @@ public class UsersControllers
     [Fact]
     public async Task Get_given_existing_returns_given()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
 
@@ -24,7 +28,7 @@ public class UsersControllers
     [Fact]
     public async Task Get_given_non_existing_returns_NotFound()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
         var controller = new UsersController(logger.Object, repository.Object);
@@ -36,12 +40,10 @@ public class UsersControllers
         Assert.IsType<NotFoundResult>(response.Result);
     }
 
-    //makes sure that the controller doesn't return the student entity when looking for supervisor,
-    //even if given a proper ID 
     [Fact]
     public async Task Get_given_supervisor_non_existing_returns_NotFound()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
         var controller = new UsersController(logger.Object, repository.Object);
@@ -56,12 +58,10 @@ public class UsersControllers
         Assert.IsType<NotFoundResult>(response.Result);
     }
 
-    //makes sure that the controller doesn't return the supervisor entity when looking for student,
-    //even if given a proper ID 
     [Fact]
     public async Task Get_given_student_non_existing_returns_NotFound()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
         var controller = new UsersController(logger.Object, repository.Object);
@@ -79,7 +79,7 @@ public class UsersControllers
     [Fact]
     public async Task Get_given_student_existing_returns_given()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
         var controller = new UsersController(logger.Object, repository.Object);
@@ -97,7 +97,7 @@ public class UsersControllers
     [Fact]
     public async Task Get_given_Supervisor_existing_returns_given()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
         var controller = new UsersController(logger.Object, repository.Object);
@@ -115,7 +115,7 @@ public class UsersControllers
     [Fact]
     public async Task Get_given_email_returns_given()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
 
@@ -134,7 +134,7 @@ public class UsersControllers
     [Fact]
     public async Task Get_given_email_non_existing_returns_NotFound()
     {
-        //Arrange
+        // Arrange
         var logger = new Mock<ILogger<UsersController>>();
         var repository = new Mock<IUserRepository>();
 
@@ -231,7 +231,6 @@ public class UsersControllers
         // Assert
         Assert.Equal(created, result?.Value);
         Assert.Equal("Get", result?.ActionName);
-        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 
     [Fact]

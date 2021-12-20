@@ -22,7 +22,6 @@ public record FacultyCreateDTO
     [StringLength(1000)]
     public string Description { get; init; }
 
-    //assume InstitutionName to be unique
     [Required]
     public string InstitutionName { get; init; }
 };

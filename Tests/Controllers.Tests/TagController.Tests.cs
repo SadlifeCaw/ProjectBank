@@ -1,3 +1,7 @@
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+*/
+
 namespace ProjectBank.Tests.Controllers.Tests;
 
 public class TagControllerTests
@@ -53,6 +57,5 @@ public class TagControllerTests
         // Assert
         Assert.Equal(created, result?.Value);
         Assert.Equal("Get", result?.ActionName);
-        //Assert.Equal(KeyValuePair.Create("Id", (object?)1), result?.RouteValues?.Single());
     }
 }

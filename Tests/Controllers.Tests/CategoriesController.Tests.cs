@@ -1,3 +1,7 @@
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Server.Tests/Controllers/CharactersControllerTests.cs
+*/
+
 namespace ProjectBank.Tests.Controllers.Tests;
 
 public class CategoriesControllerTests

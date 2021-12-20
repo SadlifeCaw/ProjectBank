@@ -1,3 +1,7 @@
+/* Testing code greatly 'inspired' by Rasmus Lystrøm
+*  @ https://github.com/ondfisk/BDSA2021/blob/main/MyApp.Infrastructure.Tests/CharacterRepositoryTests.cs
+*/
+
 namespace EntityFramework.Tests;
 
 public class BucketRepositoryTests : IDisposable
@@ -88,8 +92,10 @@ public class BucketRepositoryTests : IDisposable
     {
         //Arrange
         var Expected = new BucketDTO(new HashSet<int>(), "Algorithm", 1);
+
         //Act
         var Actual = await _repository.ReadBucketByKeyAsync("Algorithm");
+
         //Assert
         Assert.Equal(Expected.Id, Actual.Id);
         Assert.Equal(Expected.ProjectIds, Actual.ProjectIds);
@@ -339,7 +345,6 @@ public class BucketRepositoryTests : IDisposable
 
     public void Dispose()
     {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
