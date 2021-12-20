@@ -118,17 +118,17 @@
                         </p>
                         <div class="form-group">
                             <label for="InviteFormGroup">Email Address: </label>
-                            <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com" @bind="InviteEmail">
+                            <input type="email" class="form-control" id="InviteFormGroupInput" placeholder="name@example.com" @bind="InviteEmail" @onkeypress="ClearInviteStatus">
                         </div>
                         @if(InviteStatus == "Error while inviting user. Please make sure the email is correct.")
                         {
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-danger mt-2" role="alert">
                                 @InviteStatus
                             </div>
                         }
                         else if(InviteStatus == "Supervisor has been added to the project.")
                         {
-                            <div class="alert alert-success" role="alert">
+                            <div class="alert alert-success mt-2" role="alert">
                                 @InviteStatus
                             </div>
                         }
@@ -485,7 +485,10 @@
     {
         try
         {
-            var supervisor = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{InviteEmail}");
+            var user = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Mail/{InviteEmail}");
+
+            //make sure user is a supervisor
+            var supervisor = await Http.GetFromJsonAsync<UserDTO>($"api/Users/Supervisors/{user.Id}");
 
             var newProject = new ProjectUpdateDTO{
                 Id = project.Id,
@@ -526,5 +529,10 @@
             InviteStatus = "Error while inviting user. Please make sure the email is correct.";
             StateHasChanged();
         }
+    }
+
+    private void ClearInviteStatus()
+    {
+        InviteStatus = string.Empty;
     }
 }
