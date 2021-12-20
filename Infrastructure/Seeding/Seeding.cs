@@ -66,7 +66,7 @@ public class Seeding
        "Christiansen",
        "Poulsen",
        "Møller",
-       "Slette Frederiksen",
+       "Slette-Frederiksen",
        "Mortensen"
     };
 
