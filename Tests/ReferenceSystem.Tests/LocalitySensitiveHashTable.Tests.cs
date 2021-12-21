@@ -142,10 +142,8 @@ namespace ReferenceSystem.Tests
             context.SaveChanges();
             _context = context;
             var _projectRepository = new ProjectRepository(_context);
-            var _tagRepository = new TagRepository(_context);
-            var _categoryRepository = new CategoryRepository(_context);
 
-            LargeLSH = new ProjectLSH(_projectRepository, _tagRepository, _categoryRepository);
+            LargeLSH = new ProjectLSH(_projectRepository);
 
             LSHList = new List<ProjectLSH>();
             LSHList.Add(LargeLSH); 
@@ -348,18 +346,15 @@ namespace ReferenceSystem.Tests
             context.Database.EnsureCreated();
 
             var projectRepo = new ProjectRepository(context);
-            var tagRepo = new TagRepository(context);
-            var categoryRepo = new CategoryRepository(context);
-
-            var TestLSH = new ProjectLSH(projectRepo, tagRepo, categoryRepo);
+            var TestLSH = new ProjectLSH(projectRepo);
 
             var AgriFarmSignature = new Signature(AgricultureFarming.Tags);
             var AgriFoodSignature = new Signature(AgricultureFood.Tags);
 
             //Act
-            TestLSH.Insert(AgricultureFarming);
+            await TestLSH.Insert(AgricultureFarming);
             var bucketSizeBeforeInsert = TestLSH.Map.Count();
-            TestLSH.Insert(AgricultureFood);
+            await TestLSH.Insert(AgricultureFood);
             var bucketSizeAfterInsert = TestLSH.Map.Count();
             int notCommon = 0;
             for (int i = 0; i < AgriFarmSignature.Hashes.Count(); i++)
@@ -421,7 +416,7 @@ namespace ReferenceSystem.Tests
             var tagRepo = new TagRepository(context);
             var categoryRepo = new CategoryRepository(context);
 
-            var TestLSH = new ProjectLSH(projectRepo, tagRepo, categoryRepo);
+            var TestLSH = new ProjectLSH(projectRepo);
 
             var Signature = ComputerScienceAlgorithmsSecurity.Signature;
             var expected = new List<int>();
@@ -474,7 +469,7 @@ namespace ReferenceSystem.Tests
             var tagRepo = new TagRepository(context);
             var categoryRepo = new CategoryRepository(context);
 
-            var TestLSH = new ProjectLSH(projectRepo, tagRepo, categoryRepo);
+            var TestLSH = new ProjectLSH(projectRepo);
 
             var Signature = AllUnrelatedTags.Signature;
             var expected = new string[TestLSH.NumberOfGroups];

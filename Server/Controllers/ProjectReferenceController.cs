@@ -11,23 +11,19 @@ namespace ProjectBank.Server.Controllers
     {
         private readonly ILogger<ProjectReferenceController> _logger;
 
-        private IProjectRepository _projectRepository;
-        private ITagRepository _tagRepository;
-        private ICategoryRepository _categoryRepository;
+        private ProjectRepository _projectRepository;
 
 
 
-        public ProjectReferenceController(ILogger<ProjectReferenceController> logger, IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
+        public ProjectReferenceController(ILogger<ProjectReferenceController> logger, IProjectRepository projectRepository)
         {
             _logger = logger;
             if (ProjectReferenceData._LSH == null)
             {
-                ProjectReferenceData._LSH = new ProjectLSH(projectRepository, tagRepository, categoryRepository);
+                ProjectReferenceData._LSH = new ProjectLSH(projectRepository);
                 Task.Run(() => ProjectReferenceData._LSH.InsertAll()).Wait();
             }
-            _projectRepository = projectRepository;
-            _tagRepository = tagRepository;
-            _categoryRepository = categoryRepository;
+            _projectRepository = (ProjectRepository) projectRepository;
         }
 
         [Authorize]
@@ -36,7 +32,7 @@ namespace ProjectBank.Server.Controllers
         [HttpGet("{projectID},{size}")]
         public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSortedInCategory(int projectID, int size)
         {
-            var project = await getProjectById(projectID);
+            var project = await _projectRepository.ReadProjectReferenceAsync(projectID);
             return await ProjectReferenceData._LSH.GetSortedInCategory(project, size);
         }
 
@@ -47,7 +43,7 @@ namespace ProjectBank.Server.Controllers
         [HttpPut]
         public async Task<Response> Delete(int projectID)
         {
-            var project = await getProjectById(projectID);
+            var project = await _projectRepository.ReadProjectReferenceAsync(projectID);
             return ProjectReferenceData._LSH.Delete(project);
         }
 
@@ -58,21 +54,8 @@ namespace ProjectBank.Server.Controllers
         [HttpGet]
         public async Task<IReadOnlyCollection<ProjectReferenceDTO>> GetSorted(int projectID, int size)
         {
-            var project = await getProjectById(projectID);
+            var project = await _projectRepository.ReadProjectReferenceAsync(projectID);
             return await ProjectReferenceData._LSH.GetSorted(project, size);
-        }
-
-        private async Task<IProject> getProjectById(int id)
-        {
-            var dto = (await _projectRepository.ReadByIDAsync(id)).Value;
-            var tags = new List<Tag>();
-            foreach (var tagid in dto.TagIDs)
-            {
-                var tagdto = (await _tagRepository.ReadTagByIDAsync(tagid)).Value;
-                tags.Add(new Tag(tagdto.Name));
-            }
-            var categoryDTO = (await _categoryRepository.Read(dto.CategoryID));
-            return (new ProjectReference() { Id = dto.Id, Tags = tags, Category = new Category() { Id = categoryDTO.Id, Description = categoryDTO.Description, Title = categoryDTO.Title }, Signature = new Signature(tags) });
         }
     }
 }
