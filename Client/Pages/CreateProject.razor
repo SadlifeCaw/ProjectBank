@@ -51,6 +51,16 @@
                             <button type="button" class="btn btn-success" @onclick="() => AddTagToList()"><i class="oi oi-plus"></i></button>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-4">
+                            @if(TagWarning != string.Empty)
+                            {
+                                <div class="alert alert-danger m-0 mt-2" role="alert">
+                                    @TagWarning
+                                </div>
+                            } 
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -100,6 +110,7 @@
     private ICollection<CategoryDTO> AllCategories = new List<CategoryDTO>();
     private UserDTO Author;
     private string NewTag = string.Empty;
+    private string TagWarning = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,6 +128,14 @@
     }
     private async Task HandleValidSubmit()
     {   
+        if(AllTags.Count() <= 0)
+        {
+            TagWarning = "A project must have at least one tag";
+            return;
+        }
+
+        TagWarning = string.Empty;
+
         project.TagIDs = new List<int>();
 
         project.UserIDs = new List<int>();
@@ -182,6 +201,9 @@
         {
             CreatedTags.Add(NewTag);
             AllTags.UnionWith(CreatedTags);
+            
+            TagWarning = string.Empty;
+
             StateHasChanged();
         }
     }

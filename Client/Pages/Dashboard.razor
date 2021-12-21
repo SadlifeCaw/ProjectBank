@@ -15,9 +15,24 @@
             <div class="ProjectHeader">
                 <h1 class="ProjectTitle">@title</h1>
                 <!--Idea is to only show Status to the author of the project-->
-                <div class="Status Public">
-                    <p>@ProjectStatus</p>
-                </div>
+                @if(ProjectStatus == "DRAFT")
+                {
+                    <div class="Status Draft">
+                        <p>@ProjectStatus</p>
+                    </div>
+                }
+                else if(ProjectStatus == "PRIVATE")
+                {
+                    <div class="Status Draft">
+                        <p>@ProjectStatus</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="Status Public">
+                        <p>@ProjectStatus</p>
+                    </div>
+                }
             </div>
             <div class="Buffer_20"></div>   
 
@@ -248,7 +263,7 @@
                                             <ul>
                                                 @foreach (var tag in relatedProject.TagNames)
                                                 {
-                                                    <li class="tag tagbtn mx-1 px-1">@tag</li>
+                                                    <li class="tag tagbtn mx-1 px-2">@tag</li>
                                                 }
                                             </ul>
                                         </div>
