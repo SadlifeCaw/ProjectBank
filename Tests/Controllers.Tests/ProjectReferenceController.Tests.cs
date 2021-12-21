@@ -83,7 +83,7 @@ public class ProjectReferenceControllerTests
     {
        // Arrange
         var logger = new Mock<ILogger<ProjectReferenceController>>();
-        var controller = new ProjectReferenceController(logger.Object, _projectRepository, _tagRepository, _categoryRepository);
+        var controller = new ProjectReferenceController(logger.Object, _projectRepository);
 
         // Act
         var expected = new List<int>{3, 4};
@@ -100,7 +100,7 @@ public class ProjectReferenceControllerTests
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectReferenceController>>();
-        var controller = new ProjectReferenceController(logger.Object, _projectRepository, _tagRepository, _categoryRepository);
+        var controller = new ProjectReferenceController(logger.Object, _projectRepository);
 
         // Act
         var expected = new List<int>{3};
@@ -117,7 +117,7 @@ public class ProjectReferenceControllerTests
     {
         // Arrange
         var logger = new Mock<ILogger<ProjectReferenceController>>();
-        var controller = new ProjectReferenceController(logger.Object, _projectRepository, _tagRepository, _categoryRepository);
+        var controller = new ProjectReferenceController(logger.Object, _projectRepository);
 
         // Act
         var expected = new List<int>{};

@@ -346,4 +346,12 @@ public class ProjectRepository : IProjectRepository
                         .ToListAsync())
                         .AsReadOnly());
     }
+    public async Task<IProject> ReadProjectReferenceAsync(int id)
+    {        
+           return ((await _dbcontext.Projects
+                        .Where(a => a.Id == id)
+                        .Select(p => new ProjectReference{Id = p.Id, Tags = p.Tags.Select( t => new Tag(t.Name)).ToList(), Category = new Category{Id = p.Category.Id}, Signature = new Signature(p.Tags.Select( t => new Tag(t.Name)).ToList())})
+                        .ToListAsync())
+                        .AsReadOnly()).FirstOrDefault();
+    }
 }

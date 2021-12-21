@@ -6,14 +6,10 @@ namespace ProjectBank.Infrastructure.ReferenceSystem
     public class ProjectLSH : LocalitySensitiveHashTable<IProject>, IProjectLSH
     {
         private readonly ProjectRepository _projectRepository;
-        private readonly ITagRepository _tagRepository;
-        private readonly ICategoryRepository _categoryRepository;
 
-        public ProjectLSH(IProjectRepository projectRepository, ITagRepository tagRepository, ICategoryRepository categoryRepository)
+        public ProjectLSH(IProjectRepository projectRepository)
         {
             _projectRepository = (ProjectRepository) projectRepository;
-            _tagRepository = tagRepository;
-            _categoryRepository = categoryRepository;
         }
         public override async Task<Response> Insert(IProject project)
         {
