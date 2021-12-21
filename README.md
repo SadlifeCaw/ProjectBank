@@ -1,5 +1,9 @@
 # ProjectBank
 
+## Invites
+
+Rasmys Lystrøm and Paulo Tell have been added to the Azure Directory and should have recieved an e-mail on the 21-12/2021 with an invite. 
+
 ## How to Run Program
 
 You need a GUID password. You must generate your own however you like, and insert it in place of {password}
