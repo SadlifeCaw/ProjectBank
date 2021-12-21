@@ -26,4 +26,15 @@ dotnet run
 ```
 
 ## Tips
-If no data is showing you try logging out and in again.
+
+### Loading...
+If the program is stuck loading projects after your initial login, try to log out and in again. 
+
+
+### Invite Supervisor
+If you want to test the feature, here is a list of supervisor mails likely to be in your seeding of the system:
+- martinpedersen@itu.dk
+- annajensen@ku.dk
+- olenielsen@ku.dk
+
+You can manually check the database for user-mails with Azure Data Studio if so pleased
